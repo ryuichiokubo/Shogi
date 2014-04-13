@@ -15,6 +15,11 @@ Roadmap
 - Client only (UI with event handling) --> vs Computer --> vs Human
 
 
+TBD
+-------
+- better font-family
+
+
 Note
 -------
 - GAE Java server, HTML+CSS+Javascript client
