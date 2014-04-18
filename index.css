@@ -24,6 +24,10 @@
     height: 90px;
 }
 
+.overwrap {
+    margin-left: -40px;
+}
+
 .piece {
     width: 60px;
     height: 60px;

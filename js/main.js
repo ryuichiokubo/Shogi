@@ -27,7 +27,7 @@ var main = function () {
             selected.style["background-color"] = '';
         }
         selected = event.target;
-        event.target.style['background-color'] = 'yellow';
+        event.target.style['background-color'] = 'rgba(255, 255, 0, 0.75)';
     };
 
     var set = document.querySelector("#set");
@@ -60,8 +60,22 @@ var main = function () {
                 // move to my mochigoma
                 if (selected) {
                     var myMochi = document.querySelector("#myMochi");
+                    var inserted;
                     event.target.setAttribute('class', 'piece');
-                    myMochi.appendChild(event.target);
+                    
+                    if (myMochi.children) {
+                        var tmp = event.target.getAttribute('class');
+
+                        for (i = 0; i < myMochi.children.length; i++) {
+                            if (myMochi.children[i].getAttribute('src') === event.target.getAttribute('src')) {
+                                inserted = myMochi.insertBefore(event.target, myMochi.children[i+1]);
+                                inserted.setAttribute('class', tmp + ' ' + 'overwrap');
+                            }
+                        }
+                    }
+                    if (!inserted) {
+                        myMochi.appendChild(event.target);
+                    }
                 }
             } else {
                 // my piece
