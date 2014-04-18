@@ -30,11 +30,11 @@ var main = function () {
         event.target.style['background-color'] = 'yellow';
     };
 
-    var set = document.querySelector(".set");
+    var set = document.querySelector("#set");
     set.addEventListener('click', function(event) {
         var x, y, row, column, posClass, classes, rowHit, columnHit;
-
-        if (event.target.className === 'board') {
+        
+        if (event.target.id === 'board') {
             // no piece where it is clicked
             x = event.offsetX;
             y = event.offsetY;
@@ -56,8 +56,13 @@ var main = function () {
                     }
                 }
                 posClass = rowHit + ' ' + columnHit;
-                
-                // XXX TODO: move to my mochigoma
+
+                // move to my mochigoma
+                if (selected) {
+                    var myMochi = document.querySelector("#myMochi");
+                    event.target.setAttribute('class', 'piece');
+                    myMochi.appendChild(event.target);
+                }
             } else {
                 // my piece
                 pieceSelect(event);

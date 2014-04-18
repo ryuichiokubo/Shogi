@@ -1,12 +1,27 @@
-.set {
-    position: absolute;
-    top: 100px;
-    left: 10px;
+#oppoMochi {
+    position: relative;
 }
 
-.board {
+#set {
+    position: relative;
+    top: 10px;
+    left: 0px;
+}
+
+#board {
     width: 540px;
     height: 540px;
+}
+
+#myMochi {
+    position: relative;
+    top: 10px;
+    left: 0px;
+}
+
+.mochi {
+    width: 540px;
+    height: 90px;
 }
 
 .piece {
