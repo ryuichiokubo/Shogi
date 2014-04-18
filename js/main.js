@@ -5,25 +5,25 @@ var main = function () {
 
     var i = 0;
     var set = document.querySelector(".set");    
-    var hu = [];
     var classAttr = '';
     var srcPath = '';
+    var p;
     for (i = 0; i < initPieces.length; i++) {
         
         console.log(initPieces[i]);
         
-        hu[i] = document.createElement('img');
+        p = document.createElement('img');
         
         srcPath = 'svg/' +  initPieces[i].piece + '.svg';
-        hu[i].setAttribute('src', srcPath);
+        p.setAttribute('src', srcPath);
         
         classAttr = 'piece' + ' ' + initPieces[i].pos;
         if (initPieces[i].mine === false) {
             classAttr += ' oppoPiece';
         }
-        hu[i].setAttribute('class', classAttr);
+        p.setAttribute('class', classAttr);
 
-        set.appendChild(hu[i]);
+        set.appendChild(p);
     }
 
 };
