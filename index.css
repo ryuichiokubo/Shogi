@@ -1,9 +1,4 @@
-.piece {
-    width: 60px;
-    height: 60px;
-}
-
-.position {
+.set {
     position: absolute;
     top: 100px;
     left: 10px;
@@ -14,6 +9,20 @@
     height: 540px;
 }
 
+.piece {
+    width: 60px;
+    height: 60px;
+}
+
+.oppoPiece {
+    -moz-transform:    rotate( 180deg );  /* Firefox */
+    -webkit-transform: rotate( 180deg );  /* Chrome,Safari */
+    -o-transform:      rotate( 180deg );  /* Opera */
+    -ms-transform:     rotate( 180deg );  /* IE */
+    transform:         rotate( 180deg );  /* CSS3 */
+}
+
+/* Piece position below */
 .ichi {
     position: absolute;
     top: 0px;
