@@ -70,6 +70,9 @@ var main = function () {
         }
 
         if (selected && posClass) {
+            if (selected.parentElement.className === 'mochi') {
+                set.appendChild(selected);
+            }
             selected.setAttribute('class', 'piece ' + posClass);
             selected.style["background-color"] = '';
             selected = null;
