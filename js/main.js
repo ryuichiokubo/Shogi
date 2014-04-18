@@ -85,6 +85,13 @@ var main = function () {
 
         if (selected && posClass) {
             if (selected.parentElement.className === 'mochi') {
+                if (selected.nextElementSibling) {
+                    var thisHasWrap = selected.className.indexOf('overwrap') > -1 ? true : false;
+                    var nextHasWrap = selected.nextElementSibling.className.indexOf('overwrap') > -1 ? true : false;
+                    if (!thisHasWrap && nextHasWrap) {
+                        selected.nextSibling.setAttribute('class', 'piece');
+                    }
+                }
                 set.appendChild(selected);
             }
             selected.setAttribute('class', 'piece ' + posClass);
