@@ -18,7 +18,7 @@ Roadmap
 TBD
 -------
 - better font-family
-- use js file management (import library)
+- require.js
 
 
 Note
