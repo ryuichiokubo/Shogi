@@ -1,6 +1,3 @@
-/*jslint browser:true, indent:4 */
-/*global def, board*/
-
 (function() {
     
     var set; // board area, not including mochigoma
@@ -69,7 +66,7 @@
 	    } else {
 	    	return val + 1;
 	    }
-	}
+	};
 
         var checkMoveAndMark = function(moveX, moveY, continuous) {
             var avail = [], currentPiece, availClass, div, newX, newY;

@@ -1,5 +1,3 @@
-/*jslint browser:true, indent:4 */
-
 (function() {
 
 // keep track of where and what kind of pieces are on board

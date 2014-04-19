@@ -1,5 +1,3 @@
-/*jslint browser:true, indent:4 */
-
 (function() {
 
     // move:    array of available position relative to current position
