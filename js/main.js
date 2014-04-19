@@ -1,5 +1,5 @@
 /*jslint browser:true, indent:4 */
-/*global initPieces*/
+/*global def*/
 
 (function() {
     
@@ -11,26 +11,21 @@
     var columnNames = ['ichi', 'ni', 'san', 'yon', 
                        'go', 'roku', 'nana', 'hachi', 'kyu'];
 
+    // Num: indexed from 0, Class: indexed from 'one' or 'ichi'
     var convertPosNumToClass = function(row, column) {
-        return rowNames[row-1] + ' ' + columnNames[column-1];
+        return rowNames[row] + ' ' + columnNames[column];
     };
 
-    var pieceSelect = function(event) {
-        if (event.target.className.indexOf('oppoPiece') > -1) {
-            return;
-        }
-
-        if (selected) {
-            selected.style["background-color"] = '';
-        }
-        selected = event.target;
-        event.target.style['background-color'] = 'rgba(255, 255, 0, 0.75)';
-    };
-
-    var moveSelected = function(posClass) {
-        selected.setAttribute('class', 'piece ' + posClass);
-        selected.style["background-color"] = '';
-        selected = null;
+    var convertPosClassToNum = function(posClass) {
+        var posClassArr, rowName, columnName, rowNum, columnNum;
+        
+        posClassArr = posClass.split(' ');
+        rowName = posClassArr[0];
+        columnName = posClassArr[1];
+        rowNum = rowNames.indexOf(rowName);
+        columnNum = columnNames.indexOf(columnName);
+        
+        return [rowNum, columnNum];
     };
 
     var getPosClassFromCoordinate = function(event) {
@@ -38,9 +33,86 @@
         
         x = event.offsetX;
         y = event.offsetY;
-        row = Math.ceil(x / 60);
-        column = Math.ceil(y / 60);
+        row = Math.floor(x / 60);
+        column = Math.floor(y / 60);
         return convertPosNumToClass(row, column);
+    };
+
+    var getPosClassFromElement = function(element) {
+        var classes, rowHit, columnHit;
+        
+        classes = element.className.split(' ');
+        for (var i = 0; i < classes.length; i++) {
+            if (rowNames.indexOf(classes[i]) > -1) {
+                rowHit = rowNames[rowNames.indexOf(classes[i])];
+            }
+            if (columnNames.indexOf(classes[i]) > -1 ) {
+                columnHit = columnNames[columnNames.indexOf(classes[i])];
+            }
+        }
+        
+        return rowHit + ' ' + columnHit;
+    };
+
+    var markAvailable = function() {
+        var type, move, posClass, posNum, avail = [], availClass;
+        
+        type = selected.getAttribute('data-piece');
+        move = def.piece[type].move;
+        posClass = getPosClassFromElement(selected);
+        posNum = convertPosClassToNum(posClass);
+        
+        for (var i = 0; i < move.length; i++) {
+            if (move[i][0] === 0 && move[i][1] === 0) {
+                console.error("Invalid definition"); // XXX add check def function
+                return;
+            }
+            
+            if (move[i][2]) {
+                // add moves to anywhere in the direction of x, y
+                // (current position + board size at max)
+                var j = 2;
+                while (Math.abs(move[i][0]*j) < 9 && Math.abs(move[i][1]*j) < 9) {
+                    move.push([move[i][0]*j, move[i][1]*j]);
+                    j++;
+                }
+                move[i][2] = false; // no need to add moves anymore
+            }
+
+            avail[0] = posNum[0] + move[i][0];
+            avail[1] = posNum[1] + move[i][1];
+            
+            console.log('move len: ', move.length);
+            console.log('move: ', move[i]);
+            console.log('num: ', avail);
+
+            availClass = convertPosNumToClass(avail[0], avail[1]);
+            
+            console.log('class: ', availClass);
+            // XXX TODO: highlight availClass position if not undefined
+        }
+    };
+    
+    var pieceSelect = function(event) {
+        if (event.target.className.indexOf('oppoPiece') > -1) {
+            return;
+        }
+        
+        event.stopPropagation(); // prevent event on board
+        
+        if (selected) {
+            selected.style["background-color"] = '';
+        }
+        selected = event.target;
+        selected.style['background-color'] = 'rgba(255, 255, 0, 0.75)';
+        
+        markAvailable();
+    };
+
+    var moveSelected = function(posClass) {
+        selected.setAttribute('class', 'piece ' + posClass);
+        selected.style["background-color"] = '';
+        selected = null;
     };
 
     var placeSelect = function(event) {
@@ -67,22 +139,6 @@
         moveSelected(posClass);
     };
     
-    var getPosClassFromTarget = function(target) {
-        var classes, rowHit, columnHit;
-        
-        classes = target.className.split(' ');
-        for (var i = 0; i < classes.length; i++) {
-            if (rowNames.indexOf(classes[i]) > -1) {
-                rowHit = rowNames[rowNames.indexOf(classes[i])];
-            }
-            if (columnNames.indexOf(classes[i]) > -1 ) {
-                columnHit = columnNames[columnNames.indexOf(classes[i])];
-            }
-        }
-        
-        return rowHit + ' ' + columnHit;
-    };
-
     var moveToMochigoma = function(target) {
         var myMochi, targetSrc, inserted;
         
@@ -113,7 +169,7 @@
             return;
         }
         
-        posClass = getPosClassFromTarget(event.target);
+        posClass = getPosClassFromElement(event.target);
         moveSelected(posClass);
         moveToMochigoma(event.target);        
     };
@@ -121,18 +177,20 @@
     var setInitialPieces = function() {
         var classAttr, srcPath, p;
 
-        for (var i = 0; i < initPieces.length; i++) {
+        for (var i = 0; i < def.init.length; i++) {
             p = document.createElement('img');
 
-            srcPath = 'svg/' +  initPieces[i].piece + '.svg';
+            srcPath = 'svg/' +  def.init[i].piece + '.svg';
             p.setAttribute('src', srcPath);
 
-            classAttr = 'piece' + ' ' + initPieces[i].pos;
-            if (initPieces[i].mine === false) {
+            classAttr = 'piece' + ' ' + def.init[i].pos;
+            if (def.init[i].mine === false) {
                 classAttr += ' oppoPiece';
             }
             p.setAttribute('class', classAttr);
 
+            p.setAttribute('data-piece', def.init[i].piece);
+            
             p.addEventListener('click', pieceSelect);
 
             set.appendChild(p);
