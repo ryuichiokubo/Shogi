@@ -1,4 +1,5 @@
 (function() {
+    "use strict";
     
     var set; // board area, not including mochigoma
     var selected = null; // currently selected piece as DOM Element
@@ -69,7 +70,7 @@
 	};
 
         var checkMoveAndMark = function(moveX, moveY, continuous) {
-            var avail = [], currentPiece, availClass, div, newX, newY;
+            var avail = [], currentPiece, availClass, div;
             
             avail[0] = posNum[0] + moveX;
             avail[1] = posNum[1] + moveY;

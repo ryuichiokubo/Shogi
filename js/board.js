@@ -1,6 +1,7 @@
 (function() {
+    "use strict";
 
-// keep track of where and what kind of pieces are on board
+    // keep track of where and what kind of pieces are on board
     var board = {
         
         places: [],

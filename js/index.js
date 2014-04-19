@@ -1,6 +1,6 @@
 (function () {
 
     "use strict";
-    document.addEventListener("DOMContentLoaded", main, false);
 
+    document.addEventListener("DOMContentLoaded", main, false);
 })();

@@ -1,4 +1,5 @@
 (function() {
+    "use strict";
 
     // move:    array of available position relative to current position
     //          [x, y, anywhere in this direction]
