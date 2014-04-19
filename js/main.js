@@ -61,19 +61,46 @@
     var markAvailable = function() {
         var type, move, posClass, posNum;
         
-        var checkMoveAndMark = function(moveX, moveY) {
-            var avail = [], availClass, div;
+	var nextVal = function(val) {
+	    if (val < 0) {
+	    	return val - 1;
+	    } else if (val === 0) {
+	    	return val;
+	    } else {
+	    	return val + 1;
+	    }
+	}
+
+        var checkMoveAndMark = function(moveX, moveY, continuous) {
+            var avail = [], currentPiece, availClass, div, newX, newY;
             
             avail[0] = posNum[0] + moveX;
             avail[1] = posNum[1] + moveY;
             
+            currentPiece = board.getPiece(avail[0], avail[1]);
+            
+            console.log('x: ', avail[0]);
+            console.log('y: ', avail[1]);
+            console.log('continue: ', continuous);
+            console.log('piece: ', currentPiece);
+            
             availClass = convertPosNumToClass(avail[0], avail[1]);
             
-            if (availClass) {
+            if (availClass && (!currentPiece || !currentPiece.mine)) {
                 div = document.createElement('div');
                 div.setAttribute('class', 'available ' + availClass);
                 set.appendChild(div);
-            }
+
+		if (currentPiece && !currentPiece.mine) {
+			continuous = false;
+		}
+	    } else {
+		continuous = false;
+	    }
+
+	    if (continuous) {
+		checkMoveAndMark(nextVal(moveX), nextVal(moveY), continuous);
+	    }
         };
         
         type = selected.getAttribute('data-piece');
@@ -82,18 +109,7 @@
         posNum = convertPosClassToNum(posClass);
         
         for (var i = 0; i < move.length; i++) {
-            if (move[i][2]) {
-                // add moves to anywhere in the direction of x, y
-                // (current position + board size at max)
-                var j = 2;
-                while (Math.abs(move[i][0]*j) < 9 && Math.abs(move[i][1]*j) < 9) {
-                    move.push([move[i][0]*j, move[i][1]*j]);
-                    j++;
-                }
-                move[i][2] = false; // no need to add moves anymore
-            }
-
-            checkMoveAndMark(move[i][0], move[i][1]);
+            checkMoveAndMark(move[i][0], move[i][1], move[i][2]);
         }
     };
     
