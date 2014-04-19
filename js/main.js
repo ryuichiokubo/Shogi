@@ -1,10 +1,10 @@
 /*jslint browser:true, indent:4 */
-/*global def*/
+/*global def, board*/
 
 (function() {
     
     var set; // board area, not including mochigoma
-    var selected = null; // currently selected piece
+    var selected = null; // currently selected piece as DOM Element
 
     var rowNames = ['one', 'two', 'three', 'four',
                     'five', 'six', 'seven', 'eight', 'nine'];
@@ -59,7 +59,22 @@
     };
 
     var markAvailable = function() {
-        var type, move, posClass, posNum, avail = [], availClass, div;
+        var type, move, posClass, posNum;
+        
+        var checkMoveAndMark = function(moveX, moveY) {
+            var avail = [], availClass, div;
+            
+            avail[0] = posNum[0] + moveX;
+            avail[1] = posNum[1] + moveY;
+            
+            availClass = convertPosNumToClass(avail[0], avail[1]);
+            
+            if (availClass) {
+                div = document.createElement('div');
+                div.setAttribute('class', 'available ' + availClass);
+                set.appendChild(div);
+            }
+        };
         
         type = selected.getAttribute('data-piece');
         move = def.piece[type].move;
@@ -67,11 +82,6 @@
         posNum = convertPosClassToNum(posClass);
         
         for (var i = 0; i < move.length; i++) {
-            if (move[i][0] === 0 && move[i][1] === 0) {
-                console.error("Invalid definition"); // XXX add check def function
-                return;
-            }
-            
             if (move[i][2]) {
                 // add moves to anywhere in the direction of x, y
                 // (current position + board size at max)
@@ -83,16 +93,7 @@
                 move[i][2] = false; // no need to add moves anymore
             }
 
-            avail[0] = posNum[0] + move[i][0];
-            avail[1] = posNum[1] + move[i][1];
-            
-            availClass = convertPosNumToClass(avail[0], avail[1]);
-            
-            if (availClass) {
-                div = document.createElement('div');
-                div.setAttribute('class', 'available ' + availClass);
-                set.appendChild(div);
-            }
+            checkMoveAndMark(move[i][0], move[i][1]);
         }
     };
     
@@ -112,10 +113,21 @@
         markAvailable();
     };
 
-    var moveSelected = function(posClass) {
-        selected.setAttribute('class', 'piece ' + posClass);
+    var moveSelected = function(newPosClass) {
+        var newPosNum, oldPosClass, oldPosNum;
+        
+        newPosNum = convertPosClassToNum(newPosClass);
+        board.setPiece(newPosNum[0], newPosNum[1], selected.getAttribute('data-piece'), true);
+
+        oldPosClass = getPosClassFromElement(selected);
+        oldPosNum = convertPosClassToNum(oldPosClass);
+        board.removePiece(oldPosNum[0], oldPosNum[1]);
+
+        selected.setAttribute('class', 'piece ' + newPosClass);
         selected.style["background-color"] = '';
         selected = null;
+        
+        board.debug();
     };
 
     var placeSelect = function(event) {
@@ -142,30 +154,30 @@
         moveSelected(posClass);
     };
     
-    var moveToMochigoma = function(target) {
-        var myMochi, targetSrc, inserted;
-        
-        myMochi = document.querySelector("#myMochi");
-        target.setAttribute('class', 'piece');
+    var attackSelect = function(event) {
+        var moveToMochigoma = function(target) {
+            var myMochi, targetSrc, inserted;
 
-        if (myMochi.children) {
-            // Put same kind of pieces on top of existing pieces
-            targetSrc = target.getAttribute('src');
+            myMochi = document.querySelector("#myMochi");
+            target.setAttribute('class', 'piece');
 
-            for (var i = 0; i < myMochi.children.length; i++) {
-                if (myMochi.children[i].getAttribute('src') === targetSrc) {
-                    inserted = myMochi.insertBefore(target, myMochi.children[i+1]);
-                    inserted.setAttribute('class', 'piece overwrap');
+            if (myMochi.children) {
+                // Put same kind of pieces on top of existing pieces
+                targetSrc = target.getAttribute('src');
+
+                for (var i = 0; i < myMochi.children.length; i++) {
+                    if (myMochi.children[i].getAttribute('src') === targetSrc) {
+                        inserted = myMochi.insertBefore(target, myMochi.children[i+1]);
+                        inserted.setAttribute('class', 'piece overwrap');
+                    }
                 }
             }
-        }
-        if (!inserted) {
-            // Put new kind of piece next to existing one or at the beginning
-            myMochi.appendChild(target);
-        }
-    };
+            if (!inserted) {
+                // Put new kind of piece next to existing one or at the beginning
+                myMochi.appendChild(target);
+            }
+        };
 
-    var attackSelect = function(event) {
         var posClass;
         
         if (!selected || selected.parentElement.className === 'mochi') {
@@ -177,30 +189,31 @@
         moveToMochigoma(event.target);        
     };
     
-    var setInitialPieces = function() {
-        var classAttr, srcPath, p;
-
-        for (var i = 0; i < def.init.length; i++) {
-            p = document.createElement('img');
-
-            srcPath = 'svg/' +  def.init[i].piece + '.svg';
-            p.setAttribute('src', srcPath);
-
-            classAttr = 'piece' + ' ' + def.init[i].pos;
-            if (def.init[i].mine === false) {
-                classAttr += ' oppoPiece';
-            }
-            p.setAttribute('class', classAttr);
-
-            p.setAttribute('data-piece', def.init[i].piece);
-            
-            p.addEventListener('click', pieceSelect);
-
-            set.appendChild(p);
-        }
-    };
-
     var main = function () {
+        var setInitialPieces = function() {
+            var classAttr, srcPath, img, posNum;
+
+            for (var i = 0; i < def.init.length; i++) {
+                img = document.createElement('img');
+
+                srcPath = 'svg/' +  def.init[i].piece + '.svg';
+
+                classAttr = 'piece' + ' ' + def.init[i].pos;
+                if (def.init[i].mine === false) {
+                    classAttr += ' oppoPiece';
+                }
+
+                img.setAttribute('src', srcPath);
+                img.setAttribute('class', classAttr);
+                img.setAttribute('data-piece', def.init[i].piece);
+                img.addEventListener('click', pieceSelect);
+                set.appendChild(img);
+
+                posNum = convertPosClassToNum(def.init[i].pos);
+                board.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
+            }
+        };
+
         set = document.querySelector("#set");
         set.addEventListener('click', function(event) {
             if (event.target.id === 'board') {

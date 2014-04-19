@@ -28,3 +28,5 @@ Note
 - For AI, enough to calculate one step ahead but should be easy to extend and adaptable to any rules
 
 - SVG: object tag didn't work with other HTML elements... using img tag instead
+
+- Or no server ... use web worker
