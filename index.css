@@ -28,9 +28,13 @@
     margin-left: -40px;
 }
 
-.piece {
+.piece, .available {
     width: 60px;
     height: 60px;
+}
+
+.available {
+    background-color: rgba(0, 0, 255, 0.25);
 }
 
 .oppoPiece {

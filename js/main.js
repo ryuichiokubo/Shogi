@@ -13,7 +13,11 @@
 
     // Num: indexed from 0, Class: indexed from 'one' or 'ichi'
     var convertPosNumToClass = function(row, column) {
-        return rowNames[row] + ' ' + columnNames[column];
+        if (rowNames[row] && columnNames[column]) {
+            return rowNames[row] + ' ' + columnNames[column];
+        } else {
+            return false;
+        }
     };
 
     var convertPosClassToNum = function(posClass) {
@@ -55,7 +59,7 @@
     };
 
     var markAvailable = function() {
-        var type, move, posClass, posNum, avail = [], availClass;
+        var type, move, posClass, posNum, avail = [], availClass, div;
         
         type = selected.getAttribute('data-piece');
         move = def.piece[type].move;
@@ -82,14 +86,13 @@
             avail[0] = posNum[0] + move[i][0];
             avail[1] = posNum[1] + move[i][1];
             
-            console.log('move len: ', move.length);
-            console.log('move: ', move[i]);
-            console.log('num: ', avail);
-
             availClass = convertPosNumToClass(avail[0], avail[1]);
             
-            console.log('class: ', availClass);
-            // XXX TODO: highlight availClass position if not undefined
+            if (availClass) {
+                div = document.createElement('div');
+                div.setAttribute('class', 'available ' + availClass);
+                set.appendChild(div);
+            }
         }
     };
     
