@@ -66,14 +66,27 @@
 	},
 
 	getMochiAvailPos: function(type) {
-	    // XXX if type hu
-	    var pos = [];
+	    var i, j, k, pos = [];
 
-	    board.debug();
-	    for (var i = 0; i < board.places.length; i++) {
-		for (var j = 0; j < board.places[i].length; j++) {
-		    console.log(board.places[i][j]);
-		    if (!board.places[i][j] || !board.places[i][j].type) {
+	    var placeAvailable = function(place) {
+		return (!place || !place.type);
+	    };
+
+	    var isNihu = function(x) {
+		if (type !== 'hu') {
+		    return false;
+		}
+		
+		for (k = 0; k < board.places[x].length; k++) {
+		    if (board.places[x][k] && board.places[x][k].type === 'hu' && board.places[x][k].mine === true) {
+			return true;
+		    }
+		}
+	    };
+
+	    for (i = 0; i < board.places.length; i++) {
+		for (j = 0; j < board.places[i].length; j++) {
+		    if (placeAvailable(board.places[i][j]) && !isNihu(i)) {
 			pos.push([i, j]);
 		    }
 		}
