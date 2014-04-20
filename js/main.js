@@ -51,7 +51,16 @@
     };
 
     var markAvailable = function() {
-        var type, move, selectedClass, selectedNum;
+        var i, type, move, selectedClass, selectedNum, mochiAvailPos, mochiAvailClass;
+
+	var render = function(availClass) {
+	    var div;
+
+	    div = document.createElement('div');
+	    div.setAttribute('class', 'available ' + availClass);
+	    div.addEventListener('click', placeSelect);
+	    set.appendChild(div);
+	};
         
 	var nextVal = function(val) {
 	    if (val < 0) {
@@ -64,23 +73,19 @@
 	};
 
         var checkMoveAndMark = function(moveX, moveY, continuous) {
-            var avail = [], currentPiece, availClass, div;
+            var avail = [], currentPiece, availClass;
             
             avail[0] = selectedNum[0] + moveX;
             avail[1] = selectedNum[1] + moveY;
             
             currentPiece = board.getPiece(avail[0], avail[1]);
-            
             availClass = convertPosNumToClass(avail[0], avail[1]);
-            
-            if (availClass && (!currentPiece || !currentPiece.mine)) {
-                div = document.createElement('div');
-                div.setAttribute('class', 'available ' + availClass);
-		div.addEventListener('click', placeSelect);
-                set.appendChild(div);
+
+            if (availClass && (!currentPiece || currentPiece.mine !== true)) {
+		render(availClass);
 		board.setAvailable(avail[0], avail[1]);
 
-		if (currentPiece && !currentPiece.mine) {
+		if (currentPiece && currentPiece.mine === true) {
 		    continuous = false;
 		}
 	    } else {
@@ -93,13 +98,23 @@
         };
         
         type = selected.getAttribute('data-piece');
-        move = def.piece[type].move;
-        selectedClass = getPosClassFromElement(selected);
-        selectedNum = convertPosClassToNum(selectedClass);
-        
-        for (var i = 0; i < move.length; i++) {
-            checkMoveAndMark(move[i][0], move[i][1], move[i][2]);
-        }
+
+        if (selected.parentElement.className === 'mochi') {
+	    mochiAvailPos = board.getMochiAvailPos(type);
+	    for (i = 0; i < mochiAvailPos.length; i++) {
+		mochiAvailClass = convertPosNumToClass(mochiAvailPos[i][0], mochiAvailPos[i][1]);
+		render(mochiAvailClass);
+	    }
+	
+	} else {
+	    move = def.piece[type].move;
+            selectedClass = getPosClassFromElement(selected);
+            selectedNum = convertPosClassToNum(selectedClass);
+            
+            for (i = 0; i < move.length; i++) {
+                checkMoveAndMark(move[i][0], move[i][1], move[i][2]);
+            }
+	}
     };
     
     var resetAvailable = function() {
@@ -114,8 +129,6 @@
     };
 
     var pieceSelect = function(event) {
-	console.log('piece:', event);
-
         if (hasClass(event.target, 'oppoPiece')) {
             attackSelect(event);
             return;
@@ -152,10 +165,10 @@
     };
 
     var placeSelect = function(event) {
-	console.log('place', event);
-
         var posClass;
         
+	// XXX check board.getAvailable?
+
         if (!selected) {
             return;
         }

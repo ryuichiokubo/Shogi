@@ -65,6 +65,23 @@
 	    }
 	},
 
+	getMochiAvailPos: function(type) {
+	    // XXX if type hu
+	    var pos = [];
+
+	    board.debug();
+	    for (var i = 0; i < board.places.length; i++) {
+		for (var j = 0; j < board.places[i].length; j++) {
+		    console.log(board.places[i][j]);
+		    if (!board.places[i][j] || !board.places[i][j].type) {
+			pos.push([i, j]);
+		    }
+		}
+	    }
+	    
+	    return pos;
+	},
+
         debug: function() {
             console.log(JSON.stringify(board.places));
         }
