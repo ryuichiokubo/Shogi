@@ -51,7 +51,7 @@
     };
 
     var markAvailable = function() {
-        var type, move, posClass, posNum;
+        var type, move, selectedClass, selectedNum;
         
 	var nextVal = function(val) {
 	    if (val < 0) {
@@ -66,8 +66,8 @@
         var checkMoveAndMark = function(moveX, moveY, continuous) {
             var avail = [], currentPiece, availClass, div;
             
-            avail[0] = posNum[0] + moveX;
-            avail[1] = posNum[1] + moveY;
+            avail[0] = selectedNum[0] + moveX;
+            avail[1] = selectedNum[1] + moveY;
             
             currentPiece = board.getPiece(avail[0], avail[1]);
             
@@ -78,9 +78,10 @@
                 div.setAttribute('class', 'available ' + availClass);
 		div.addEventListener('click', placeSelect);
                 set.appendChild(div);
+		board.setAvailable(avail[0], avail[1]);
 
 		if (currentPiece && !currentPiece.mine) {
-			continuous = false;
+		    continuous = false;
 		}
 	    } else {
 		continuous = false;
@@ -93,8 +94,8 @@
         
         type = selected.getAttribute('data-piece');
         move = def.piece[type].move;
-        posClass = getPosClassFromElement(selected);
-        posNum = convertPosClassToNum(posClass);
+        selectedClass = getPosClassFromElement(selected);
+        selectedNum = convertPosClassToNum(selectedClass);
         
         for (var i = 0; i < move.length; i++) {
             checkMoveAndMark(move[i][0], move[i][1], move[i][2]);
@@ -108,6 +109,8 @@
         for (var i = 0; i < availElems.length; i++) {
             set.removeChild(availElems[i]);
         }
+
+	board.resetAvailable();
     };
 
     var pieceSelect = function(event) {
@@ -146,8 +149,6 @@
         selected = null;
         
 	resetAvailable();
-
-        //board.debug();
     };
 
     var placeSelect = function(event) {
@@ -200,15 +201,15 @@
             }
         };
 
-        var posClass;
-        
-        if (!selected || selected.parentElement.className === 'mochi') {
-            return;
-        }
+        var posClass, posNum;
         
         posClass = getPosClassFromElement(event.target);
-        moveSelected(posClass);
-        moveToMochigoma(event.target);        
+        posNum = convertPosClassToNum(posClass);
+
+	if (board.getAvailable(posNum[0], posNum[1])) {
+	    moveSelected(posClass);
+	    moveToMochigoma(event.target);
+	}
     };
     
     var main = function () {
