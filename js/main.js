@@ -146,11 +146,30 @@
     };
 
     var moveSelected = function(newPosClass) {
-        var newPosNum, oldPosClass, oldPosNum;
+        var type, newPosNum, oldPosClass, oldPosNum;
         
+	var checkNari = function(type) {
+	    var srcPath;
+
+	    // XXX TODO: mochigoma
+
+	    // XXX ask
+	    if (newPosNum[1] < 3 && def.piece[type].nari) {
+                srcPath = 'svg/' +  def.piece[type].nari + '.svg';
+                selected.setAttribute('src', srcPath);
+		selected.setAttribute('data-piece', def.piece[type].nari);
+		type = def.piece[type].nari;
+	    }
+
+	    return type;
+	};
+
+	type = selected.getAttribute('data-piece');
+
 	// update board object
         newPosNum = convertPosClassToNum(newPosClass);
-        board.setPiece(newPosNum[0], newPosNum[1], selected.getAttribute('data-piece'), true);
+	type = checkNari(type);
+        board.setPiece(newPosNum[0], newPosNum[1], type, true);
 
         oldPosClass = getPosClassFromElement(selected);
         oldPosNum = convertPosClassToNum(oldPosClass);
@@ -159,16 +178,14 @@
 	// move selected and remove color
         selected.setAttribute('class', 'piece ' + newPosClass);
         selected.style["background-color"] = '';
-        selected = null;
-        
 	resetAvailable();
+        
+        selected = null;
     };
 
     var placeSelect = function(event) {
         var posClass;
         
-	// XXX check board.getAvailable?
-
         if (!selected) {
             return;
         }
@@ -191,6 +208,8 @@
     };
     
     var attackSelect = function(event) {
+        var posClass, posNum;
+        
         var moveToMochigoma = function(target) {
             var myMochi, targetSrc, inserted;
 
@@ -214,8 +233,6 @@
             }
         };
 
-        var posClass, posNum;
-        
         posClass = getPosClassFromElement(event.target);
         posNum = convertPosClassToNum(posClass);
 

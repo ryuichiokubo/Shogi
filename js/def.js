@@ -6,36 +6,60 @@
     var piece = {
         hu: {
             move: [[0, -1]],
-            naru: 'tokin'
+            nari: 'tokin'
         },
         kyosha: {
             move: [[0, -1, true]],
-            naru: 'narikyo'
+            nari: 'narikyo'
         },
         keima: {
             move: [[-1, -2], [1, -2]],
-            naru: 'narikei'
+            nari: 'narikei'
         },
         gin: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 1], [1, 1]],
-            naru: 'narigin'
+            nari: 'narigin'
         },
         kin: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
-            naru: ''
+            nari: ''
         },
         o: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]],
-            naru: ''
+            nari: ''
         },
         hisha: {
             move: [[0, -1, true], [1, 0, true], [0, 1, true], [-1, 0, true]],
-            naru: 'uma'
+            nari: 'ryu'
         },
         kaku: {
             move: [[-1, -1, true], [1, -1, true], [-1, 1, true], [1, 1, true]],
-            naru: 'uma'
-        }
+            nari: 'uma'
+        },
+        tokin: {
+            move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
+            nari: ''
+        },
+        narikyo: {
+            move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
+            nari: ''
+        },
+        narikei: {
+            move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
+            nari: ''
+        },
+        narigin: {
+            move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
+            nari: ''
+        },
+        ryu: {
+            move: [[0, -1, true], [1, 0, true], [0, 1, true], [-1, 0, true], [-1, -1], [1, -1], [-1, 1], [1, 1]],
+            nari: 'ryu'
+        },
+        uma: {
+            move: [[-1, -1, true], [1, -1, true], [-1, 1, true], [1, 1, true], [0, -1], [1, 0], [0, 1], [-1, 0]],
+            nari: 'uma'
+        },
     };
 
     var init = [
