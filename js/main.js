@@ -85,7 +85,7 @@
 		render(availClass);
 		board.setAvailable(avail[0], avail[1]);
 
-		if (currentPiece && currentPiece.mine === true) {
+		if (currentPiece && currentPiece.mine === false) {
 		    continuous = false;
 		}
 	    } else {
