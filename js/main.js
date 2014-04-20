@@ -9,6 +9,10 @@
     var columnNames = ['ichi', 'ni', 'san', 'yon', 
                        'go', 'roku', 'nana', 'hachi', 'kyu'];
 
+    var hasClass = function(element, className) {
+        return (element.className.indexOf(className) > -1);
+    };
+
     // Num: indexed from 0, Class: indexed from 'one' or 'ichi'
     var convertPosNumToClass = function(row, column) {
         if (rowNames[row] && columnNames[column]) {
@@ -28,16 +32,6 @@
         columnNum = columnNames.indexOf(columnName);
         
         return [rowNum, columnNum];
-    };
-
-    var getPosClassFromCoordinate = function(event) {
-        var x, y, row, column;
-        
-        x = event.offsetX;
-        y = event.offsetY;
-        row = Math.floor(x / 60);
-        column = Math.floor(y / 60);
-        return convertPosNumToClass(row, column);
     };
 
     var getPosClassFromElement = function(element) {
@@ -77,16 +71,12 @@
             
             currentPiece = board.getPiece(avail[0], avail[1]);
             
-            console.log('x: ', avail[0]);
-            console.log('y: ', avail[1]);
-            console.log('continue: ', continuous);
-            console.log('piece: ', currentPiece);
-            
             availClass = convertPosNumToClass(avail[0], avail[1]);
             
             if (availClass && (!currentPiece || !currentPiece.mine)) {
                 div = document.createElement('div');
                 div.setAttribute('class', 'available ' + availClass);
+		div.addEventListener('click', placeSelect);
                 set.appendChild(div);
 
 		if (currentPiece && !currentPiece.mine) {
@@ -111,12 +101,24 @@
         }
     };
     
+    var resetAvailable = function() {
+	var availElems;
+
+        availElems = set.querySelectorAll(".available");
+        for (var i = 0; i < availElems.length; i++) {
+            set.removeChild(availElems[i]);
+        }
+    };
+
     var pieceSelect = function(event) {
-        if (event.target.className.indexOf('oppoPiece') > -1) {
+	console.log('piece:', event);
+
+        if (hasClass(event.target, 'oppoPiece')) {
+            attackSelect(event);
             return;
         }
         
-        event.stopPropagation(); // prevent event on board
+	resetAvailable();
         
         if (selected) {
             selected.style["background-color"] = '';
@@ -130,6 +132,7 @@
     var moveSelected = function(newPosClass) {
         var newPosNum, oldPosClass, oldPosNum;
         
+	// update board object
         newPosNum = convertPosClassToNum(newPosClass);
         board.setPiece(newPosNum[0], newPosNum[1], selected.getAttribute('data-piece'), true);
 
@@ -137,14 +140,19 @@
         oldPosNum = convertPosClassToNum(oldPosClass);
         board.removePiece(oldPosNum[0], oldPosNum[1]);
 
+	// move selected and remove color
         selected.setAttribute('class', 'piece ' + newPosClass);
         selected.style["background-color"] = '';
         selected = null;
         
-        board.debug();
+	resetAvailable();
+
+        //board.debug();
     };
 
     var placeSelect = function(event) {
+	console.log('place', event);
+
         var posClass;
         
         if (!selected) {
@@ -154,8 +162,8 @@
         if (selected.parentElement.className === 'mochi') {
             // Keep left-most piece of same kind without 'overwrap'
             if (selected.nextElementSibling) {
-                var thisHasWrap = selected.className.indexOf('overwrap') > -1 ? true : false;
-                var nextHasWrap = selected.nextElementSibling.className.indexOf('overwrap') > -1 ? true : false;
+                var thisHasWrap = hasClass(selected, 'overwrap') ? true : false;
+                var nextHasWrap = hasClass(selected.nextElementSibling, 'overwrap') ? true : false;
                 if (!thisHasWrap && nextHasWrap) {
                     selected.nextSibling.setAttribute('class', 'piece');
                 }
@@ -164,7 +172,7 @@
             set.appendChild(selected);
         }
 
-        posClass = getPosClassFromCoordinate(event);
+        posClass = getPosClassFromElement(event.target);
         moveSelected(posClass);
     };
     
@@ -229,16 +237,6 @@
         };
 
         set = document.querySelector("#set");
-        set.addEventListener('click', function(event) {
-            if (event.target.id === 'board') {
-                placeSelect(event);
-            } else if (event.target.className.indexOf('oppoPiece') > -1) {
-                attackSelect(event);
-            } else {
-                pieceSelect(event);
-            }
-        });
-
         setInitialPieces();
     };
     

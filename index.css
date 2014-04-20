@@ -11,6 +11,7 @@
 #board {
     width: 540px;
     height: 540px;
+    z-index: 0;
 }
 
 #myMochi {
@@ -33,8 +34,13 @@
     height: 60px;
 }
 
+.piece {
+    z-index: 200;
+}
+
 .available {
     background-color: rgba(0, 0, 255, 0.25);
+    z-index: 100;
 }
 
 .oppoPiece {
