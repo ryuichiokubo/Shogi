@@ -151,10 +151,18 @@
 	var checkNari = function(type) {
 	    var srcPath;
 
-	    // XXX TODO: mochigoma
+	    var nariCondition = function() {
+		// XXX mochigoma
+		//console.log(selected.parentElement);
+		//if (selected.parentElement.className === 'mochi') {
+		//    return false;
+		//} else {
+		//    return (newPosNum[1] < 3 && def.piece[type].nari);
+		//}
+		return ((newPosNum[1] < 3) && !!def.piece[type].nari);
+	    };
 
-	    // XXX ask
-	    if (newPosNum[1] < 3 && def.piece[type].nari) {
+	    if (nariCondition() && confirm('成りますか？')) {
                 srcPath = 'svg/' +  def.piece[type].nari + '.svg';
                 selected.setAttribute('src', srcPath);
 		selected.setAttribute('data-piece', def.piece[type].nari);
