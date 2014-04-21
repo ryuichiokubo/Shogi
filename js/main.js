@@ -47,18 +47,14 @@
         return rowHit + ' ' + columnHit;
     };
 
-    var markAvailable = function() {
-        var i, type, move, selectedClass, selectedNum, mochiAvailPos, mochiAvailClass;
+    var setAvailable = function() {
+        var i, type, move, selectedClass, inhandAvailPos, inhandAvailClass;
 
-	var render = function(availClass) {
-	    var div;
-
-	    div = document.createElement('div');
-	    div.setAttribute('class', 'available ' + availClass);
-	    div.addEventListener('click', placeSelect);
-	    ui.set.appendChild(div);
+	var set = function(availClass, availPosX, availPosY) {
+	    ui.setAvailable(availClass, squareSelect);
+	    board.setAvailable(availPosX, availPosY);
 	};
-        
+
 	var nextVal = function(val) {
 	    if (val < 0) {
 	    	return val - 1;
@@ -69,47 +65,53 @@
 	    }
 	};
 
-        var checkMoveAndMark = function(moveX, moveY, continuous) {
+        var checkMoveAndSet = function(moveX, moveY, continuous, selectedNum) {
             var avail = [], currentPiece, availClass;
+            
+	    if (!selectedNum) {
+	        selectedClass = getPosClassFromElement(ui.selected);
+		selectedNum = convertPosClassToNum(selectedClass);
+	    }
             
             avail[0] = selectedNum[0] + moveX;
             avail[1] = selectedNum[1] + moveY;
             
+            availClass = convertPosNumToClass(avail[0], avail[1]); // false if out of board
             currentPiece = board.getPiece(avail[0], avail[1]);
-            availClass = convertPosNumToClass(avail[0], avail[1]);
 
             if (availClass && (!currentPiece || currentPiece.mine !== true)) {
-		render(availClass);
-		board.setAvailable(avail[0], avail[1]);
+		// in board, square is empty or opponent piece
+		set(availClass, avail[0], avail[1]);
 
 		if (currentPiece && currentPiece.mine === false) {
+		    // square has opponent piece --> next square is not available
 		    continuous = false;
 		}
 	    } else {
+		// this square is not available --> next square is not available
 		continuous = false;
 	    }
 
 	    if (continuous) {
-		checkMoveAndMark(nextVal(moveX), nextVal(moveY), continuous);
+		// check adjacent square in the same direction (eg. kyosha, hisha, kaku)
+		checkMoveAndSet(nextVal(moveX), nextVal(moveY), continuous, selectedNum);
 	    }
         };
         
-        type = ui.selected.getAttribute('data-piece');
+        type = ui.getSelectedType();
 
-        if (ui.selected.parentElement.className === 'mochi') {
-	    mochiAvailPos = board.getMochiAvailPos(type);
-	    for (i = 0; i < mochiAvailPos.length; i++) {
-		mochiAvailClass = convertPosNumToClass(mochiAvailPos[i][0], mochiAvailPos[i][1]);
-		render(mochiAvailClass);
+	// Calculate possible moves from selected position and move definition of each piece type.
+        if (ui.isSelectedInhand()) {
+	    // mochigoma
+	    inhandAvailPos = board.getInhandAvailPos(type);
+	    for (i = 0; i < inhandAvailPos.length; i++) {
+		inhandAvailClass = convertPosNumToClass(inhandAvailPos[i][0], inhandAvailPos[i][1]);
+		set(inhandAvailClass, inhandAvailPos[i][0], inhandAvailPos[i][1]);
 	    }
-	
 	} else {
 	    move = def.piece[type].move;
-            selectedClass = getPosClassFromElement(ui.selected);
-            selectedNum = convertPosClassToNum(selectedClass);
-            
             for (i = 0; i < move.length; i++) {
-                checkMoveAndMark(move[i][0], move[i][1], move[i][2]);
+                checkMoveAndSet(move[i][0], move[i][1], move[i][2]);
             }
 	}
     };
@@ -127,7 +129,7 @@
         
 	ui.setSelected(event);
 	resetAvailable();
-        markAvailable();
+        setAvailable();
     };
 
     var moveSelected = function(newPosClass, isMochigoma) {
@@ -178,7 +180,7 @@
         ui.selected = null;
     };
 
-    var placeSelect = function(event) {
+    var squareSelect = function(event) {
 	// XXX do not allow such a place where it will make the piece unmovable
         var posClass, isMochigoma;
         
@@ -186,7 +188,7 @@
             return;
         }
         
-        if (ui.selected.parentElement.className === 'mochi') {
+        if (ui.isSelectedInhand()) {
             // Keep left-most piece of same kind without 'overwrap'
             if (ui.selected.nextElementSibling) {
                 var thisHasWrap = hasClass(ui.selected, 'overwrap') ? true : false;

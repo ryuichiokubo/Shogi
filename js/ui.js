@@ -3,8 +3,8 @@
 
     var ui = {
 
-	set: null, // board area, not including mochigoma
-	selected: null, // currently selected piece as DOM Element
+	set: null, // board area element, not including inhand area
+	selected: null, // currently selected piece as DOM Element // XXX as object with method?
 
 	init: function() {
 	    ui.set = document.querySelector("#set");
@@ -37,6 +37,15 @@
             ui.selected.style['background-color'] = 'rgba(255, 255, 0, 0.75)';
 	},
 
+	setAvailable: function(availClass, handler) {
+	    var div;
+
+	    div = document.createElement('div');
+	    div.setAttribute('class', 'available ' + availClass);
+	    div.addEventListener('click', handler);
+	    ui.set.appendChild(div);
+	},
+
 	resetAvailable: function() {
 	    var availElems;
 
@@ -44,6 +53,14 @@
             for (var i = 0; i < availElems.length; i++) {
                 ui.set.removeChild(availElems[i]);
             }
+	},
+
+	getSelectedType: function() {
+	    return ui.selected.getAttribute('data-piece');
+	},
+
+	isSelectedInhand: function() {
+	    return (ui.selected.parentElement.className === 'inhand');
 	}
     };
 
