@@ -15,10 +15,11 @@ Roadmap
 - Client only (UI with event handling) --> vs Computer --> vs Human
 
 
-TBD
+TODO
 -------
 - better font-family
 - require.js
+- sennichite, uchihudume
 
 
 Note

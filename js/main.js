@@ -1,7 +1,6 @@
 (function() {
     "use strict";
     
-    var set; // board area, not including mochigoma
     var selected = null; // currently selected piece as DOM Element
 
     var rowNames = ['one', 'two', 'three', 'four',
@@ -59,7 +58,7 @@
 	    div = document.createElement('div');
 	    div.setAttribute('class', 'available ' + availClass);
 	    div.addEventListener('click', placeSelect);
-	    set.appendChild(div);
+	    ui.set.appendChild(div);
 	};
         
 	var nextVal = function(val) {
@@ -120,9 +119,9 @@
     var resetAvailable = function() {
 	var availElems;
 
-        availElems = set.querySelectorAll(".available");
+        availElems = ui.set.querySelectorAll(".available");
         for (var i = 0; i < availElems.length; i++) {
-            set.removeChild(availElems[i]);
+            ui.set.removeChild(availElems[i]);
         }
 
 	board.resetAvailable();
@@ -211,7 +210,7 @@
                 }
             }
             // Move selected to Set area from Mochigoma
-            set.appendChild(selected);
+            ui.set.appendChild(selected);
 
 	    isMochigoma = true;
         }
@@ -267,30 +266,17 @@
     
     var main = function () {
         var setInitialPieces = function() {
-            var classAttr, srcPath, img, posNum;
+            var posNum;
 
             for (var i = 0; i < def.init.length; i++) {
-                img = document.createElement('img');
+		ui.setPiece(def.init[i].piece, def.init[i].pos, def.init[i].mine, pieceSelect);
 
-                srcPath = 'svg/' +  def.init[i].piece + '.svg';
-
-                classAttr = 'piece' + ' ' + def.init[i].pos;
-                if (def.init[i].mine === false) {
-                    classAttr += ' oppoPiece';
-                }
-
-                img.setAttribute('src', srcPath);
-                img.setAttribute('class', classAttr);
-                img.setAttribute('data-piece', def.init[i].piece);
-                img.addEventListener('click', pieceSelect);
-                set.appendChild(img);
-
-                posNum = convertPosClassToNum(def.init[i].pos);
+                posNum = convertPosClassToNum(def.init[i].pos, def.init[i].mine);
                 board.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
             }
         };
 
-        set = document.querySelector("#set");
+	ui.init();
         setInitialPieces();
     };
     
