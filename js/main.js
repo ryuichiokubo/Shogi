@@ -164,6 +164,7 @@
 	    };
 
 	    if (nariCondition() && confirm('成りますか？')) {
+		// XXX do not allow non-nari if that will make the piece unmovable
                 srcPath = 'svg/' +  def.piece[type].nari + '.svg';
                 selected.setAttribute('src', srcPath);
 		selected.setAttribute('data-piece', def.piece[type].nari);
@@ -193,6 +194,7 @@
     };
 
     var placeSelect = function(event) {
+	// XXX do not allow such a place where it will make the piece unmovable
         var posClass, isMochigoma;
         
         if (!selected) {
@@ -221,6 +223,14 @@
     var attackSelect = function(event) {
         var posClass, posNum;
         
+	var winCheck = function() {
+	    var type = event.target.getAttribute('data-piece');
+
+	    if (type === 'o') {
+		alert("You won!!");
+	    }
+	};
+
         var moveToMochigoma = function(target) {
             var myMochi, targetSrc, inserted;
 
@@ -250,6 +260,8 @@
 	if (board.getAvailable(posNum[0], posNum[1])) {
 	    moveSelected(posClass);
 	    moveToMochigoma(event.target);
+
+	    winCheck();
 	}
     };
     
