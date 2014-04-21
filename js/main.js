@@ -1,8 +1,6 @@
 (function() {
     "use strict";
     
-    var selected = null; // currently selected piece as DOM Element
-
     var rowNames = ['one', 'two', 'three', 'four',
                     'five', 'six', 'seven', 'eight', 'nine'];
     var columnNames = ['ichi', 'ni', 'san', 'yon', 
@@ -96,9 +94,9 @@
 	    }
         };
         
-        type = selected.getAttribute('data-piece');
+        type = ui.selected.getAttribute('data-piece');
 
-        if (selected.parentElement.className === 'mochi') {
+        if (ui.selected.parentElement.className === 'mochi') {
 	    mochiAvailPos = board.getMochiAvailPos(type);
 	    for (i = 0; i < mochiAvailPos.length; i++) {
 		mochiAvailClass = convertPosNumToClass(mochiAvailPos[i][0], mochiAvailPos[i][1]);
@@ -107,7 +105,7 @@
 	
 	} else {
 	    move = def.piece[type].move;
-            selectedClass = getPosClassFromElement(selected);
+            selectedClass = getPosClassFromElement(ui.selected);
             selectedNum = convertPosClassToNum(selectedClass);
             
             for (i = 0; i < move.length; i++) {
@@ -117,13 +115,7 @@
     };
     
     var resetAvailable = function() {
-	var availElems;
-
-        availElems = ui.set.querySelectorAll(".available");
-        for (var i = 0; i < availElems.length; i++) {
-            ui.set.removeChild(availElems[i]);
-        }
-
+	ui.resetAvailable();
 	board.resetAvailable();
     };
 
@@ -133,14 +125,8 @@
             return;
         }
         
+	ui.setSelected(event);
 	resetAvailable();
-        
-        if (selected) {
-            selected.style["background-color"] = '';
-        }
-        selected = event.target;
-        selected.style['background-color'] = 'rgba(255, 255, 0, 0.75)';
-        
         markAvailable();
     };
 
@@ -165,17 +151,17 @@
 	    if (nariCondition() && confirm('成りますか？')) {
 		// XXX do not allow non-nari if that will make the piece unmovable
                 srcPath = 'svg/' +  def.piece[type].nari + '.svg';
-                selected.setAttribute('src', srcPath);
-		selected.setAttribute('data-piece', def.piece[type].nari);
+                ui.selected.setAttribute('src', srcPath);
+		ui.selected.setAttribute('data-piece', def.piece[type].nari);
 		type = def.piece[type].nari;
 	    }
 
 	    return type;
 	};
 
-	type = selected.getAttribute('data-piece');
+	type = ui.selected.getAttribute('data-piece');
 
-        oldPosClass = getPosClassFromElement(selected);
+        oldPosClass = getPosClassFromElement(ui.selected);
         oldPosNum = convertPosClassToNum(oldPosClass);
         board.removePiece(oldPosNum[0], oldPosNum[1]);
 
@@ -185,32 +171,32 @@
         board.setPiece(newPosNum[0], newPosNum[1], type, true);
 
 	// move selected and remove color
-        selected.setAttribute('class', 'piece ' + newPosClass);
-        selected.style["background-color"] = '';
+        ui.selected.setAttribute('class', 'piece ' + newPosClass);
+        ui.selected.style["background-color"] = '';
 	resetAvailable();
         
-        selected = null;
+        ui.selected = null;
     };
 
     var placeSelect = function(event) {
 	// XXX do not allow such a place where it will make the piece unmovable
         var posClass, isMochigoma;
         
-        if (!selected) {
+        if (!ui.selected) {
             return;
         }
         
-        if (selected.parentElement.className === 'mochi') {
+        if (ui.selected.parentElement.className === 'mochi') {
             // Keep left-most piece of same kind without 'overwrap'
-            if (selected.nextElementSibling) {
-                var thisHasWrap = hasClass(selected, 'overwrap') ? true : false;
-                var nextHasWrap = hasClass(selected.nextElementSibling, 'overwrap') ? true : false;
+            if (ui.selected.nextElementSibling) {
+                var thisHasWrap = hasClass(ui.selected, 'overwrap') ? true : false;
+                var nextHasWrap = hasClass(ui.selected.nextElementSibling, 'overwrap') ? true : false;
                 if (!thisHasWrap && nextHasWrap) {
-                    selected.nextSibling.setAttribute('class', 'piece');
+                    ui.selected.nextSibling.setAttribute('class', 'piece');
                 }
             }
             // Move selected to Set area from Mochigoma
-            ui.set.appendChild(selected);
+            ui.set.appendChild(ui.selected);
 
 	    isMochigoma = true;
         }
