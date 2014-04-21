@@ -145,21 +145,22 @@
         markAvailable();
     };
 
-    var moveSelected = function(newPosClass) {
+    var moveSelected = function(newPosClass, isMochigoma) {
         var type, newPosNum, oldPosClass, oldPosNum;
         
 	var checkNari = function(type) {
 	    var srcPath;
 
 	    var nariCondition = function() {
-		// XXX mochigoma
-		//console.log(selected.parentElement);
-		//if (selected.parentElement.className === 'mochi') {
-		//    return false;
-		//} else {
-		//    return (newPosNum[1] < 3 && def.piece[type].nari);
-		//}
-		return ((newPosNum[1] < 3) && !!def.piece[type].nari);
+		if (isMochigoma) {
+		    return false;
+		} else {
+		    if (!!def.piece[type].nari) {
+			return ((newPosNum[1] < 3) || (oldPosNum[1] < 3));
+		    } else {
+			return false;
+		    }
+		}
 	    };
 
 	    if (nariCondition() && confirm('成りますか？')) {
@@ -174,14 +175,14 @@
 
 	type = selected.getAttribute('data-piece');
 
-	// update board object
-        newPosNum = convertPosClassToNum(newPosClass);
-	type = checkNari(type);
-        board.setPiece(newPosNum[0], newPosNum[1], type, true);
-
         oldPosClass = getPosClassFromElement(selected);
         oldPosNum = convertPosClassToNum(oldPosClass);
         board.removePiece(oldPosNum[0], oldPosNum[1]);
+
+	// update board object
+        newPosNum = convertPosClassToNum(newPosClass);
+	type = checkNari(type); // XXX pass args, return boolean, don't change value inside
+        board.setPiece(newPosNum[0], newPosNum[1], type, true);
 
 	// move selected and remove color
         selected.setAttribute('class', 'piece ' + newPosClass);
@@ -192,7 +193,7 @@
     };
 
     var placeSelect = function(event) {
-        var posClass;
+        var posClass, isMochigoma;
         
         if (!selected) {
             return;
@@ -209,10 +210,12 @@
             }
             // Move selected to Set area from Mochigoma
             set.appendChild(selected);
+
+	    isMochigoma = true;
         }
 
         posClass = getPosClassFromElement(event.target);
-        moveSelected(posClass);
+        moveSelected(posClass, isMochigoma);
     };
     
     var attackSelect = function(event) {
