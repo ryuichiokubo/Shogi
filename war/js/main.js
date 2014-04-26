@@ -125,8 +125,6 @@
 
 	ui.moveSelected(newPosClass);
 	resetAvailable();
-        
-	// XXX POST to server what piece was moved to where
     };
 
     var squareSelect = function(event) {
@@ -161,9 +159,9 @@
         posNum = ui.util.convertPosClassToNum(posClass);
 
 	if (board.getAvailable(posNum[0], posNum[1])) {
+	    winCheck();
 	    moveSelected(posClass);
 	    ui.moveToHand(event.target);
-	    winCheck();
 	}
     };
     
