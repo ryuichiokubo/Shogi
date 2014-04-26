@@ -1,0 +1,13 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+*.DS_Store
+
+war/WEB-INF/appengine-generated/
+
+.classpath
+.project
+.settings
