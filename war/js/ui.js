@@ -8,14 +8,16 @@
     var columnNames = ['ichi', 'ni', 'san', 'yon', 
                        'go', 'roku', 'nana', 'hachi', 'kyu'];
 
+    var elems = {
+	set: null // board area element, not including inhand area
+    };
+
     var ui = {
 
-	// XXX move this outside var ui to make it private
-	set: null, // board area element, not including inhand area
 	selected: null, // currently selected piece as DOM Element // XXX as object with method?
 
 	init: function() {
-	    ui.set = document.querySelector("#set");
+	    elems.set = document.querySelector("#set");
 	},
 
 	setPiece: function(piece, pos, mine, handler) {
@@ -34,7 +36,7 @@
             img.setAttribute('class', classAttr);
             img.setAttribute('data-piece', piece);
             img.addEventListener('click', handler);
-            ui.set.appendChild(img);
+            elems.set.appendChild(img);
 	},
 
 	setSelected: function(event) {
@@ -51,15 +53,15 @@
 	    div = document.createElement('div');
 	    div.setAttribute('class', 'available ' + availClass);
 	    div.addEventListener('click', handler);
-	    ui.set.appendChild(div);
+	    elems.set.appendChild(div);
 	},
 
 	resetAvailable: function() {
 	    var availElems;
 
-            availElems = ui.set.querySelectorAll(".available");
+            availElems = elems.set.querySelectorAll(".available");
             for (var i = 0; i < availElems.length; i++) {
-                ui.set.removeChild(availElems[i]);
+                elems.set.removeChild(availElems[i]);
             }
 	},
 
@@ -104,7 +106,7 @@
                 }
             }
             // Move selected to Set area from Mochigoma
-            ui.set.appendChild(ui.selected);
+            elems.set.appendChild(ui.selected);
 	},
 
 	moveSelected: function(newPosClass) {

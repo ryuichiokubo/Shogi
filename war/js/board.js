@@ -4,64 +4,64 @@
     // Board controller
     // keep track of where and what kind of pieces are on board
  
+    var square = [];
+        
     var board = {
         
-        square: [],
-        
         setPiece: function(x, y, type, mine) {
-            if (!board.square[x]) {
-                board.square[x] = [];
+            if (!square[x]) {
+                square[x] = [];
             }
-            board.square[x][y] = {
+            square[x][y] = {
                 type: type,
                 mine: mine
             };
         },
 
         getPiece: function(x, y) {
-            if (!board.square[x]) {
+            if (!square[x]) {
                 return null;
             } else {
-                return board.square[x][y] || null;
+                return square[x][y] || null;
             }
         },
 
         removePiece: function(x, y) {
-            if (!board.square[x] || !board.square[x][y]) {
+            if (!square[x] || !square[x][y]) {
                 return null;
             }
-            delete board.square[x][y];
+            delete square[x][y];
         },
         
 	setAvailable: function(x, y) {
-            if (!board.square[x]) {
-                board.square[x] = [];
+            if (!square[x]) {
+                square[x] = [];
             }
 
-	    if (board.square[x][y]) {
-		board.square[x][y].available = true;
+	    if (square[x][y]) {
+		square[x][y].available = true;
 	    } else {
-		board.square[x][y] = {
+		square[x][y] = {
 		    available: true
 		};
 	    }
 	},
 
 	getAvailable: function(x, y) {
-            if (!board.square[x]) {
+            if (!square[x]) {
                 return false;
-            } else if (!board.square[x][y]) {
+            } else if (!square[x][y]) {
 		return false;
 	    } else {
-		return !!board.square[x][y].available;
+		return !!square[x][y].available;
 	    }
 	},
 
 	resetAvailable: function() {
-	    for (var i = 0; i < board.square.length; i++) {
-		for (var j = 0; j < board.square[i].length; j++) {
-		    if (board.square[i] && board.square[i][j]) {
-			board.square[i][j].available = false;
+	    for (var i = 0; i < square.length; i++) {
+		for (var j = 0; j < square[i].length; j++) {
+		    if (square[i] && square[i][j]) {
+			square[i][j].available = false;
 		    }
 		}
 	    }
@@ -79,16 +79,16 @@
 		    return false;
 		}
 		
-		for (k = 0; k < board.square[x].length; k++) {
-		    if (board.square[x][k] && board.square[x][k].type === 'hu' && board.square[x][k].mine === true) {
+		for (k = 0; k < square[x].length; k++) {
+		    if (square[x][k] && square[x][k].type === 'hu' && square[x][k].mine === true) {
 			return true;
 		    }
 		}
 	    };
 
-	    for (i = 0; i < board.square.length; i++) {
-		for (j = 0; j < board.square[i].length; j++) {
-		    if (squareAvailable(board.square[i][j]) && !isNihu(i)) {
+	    for (i = 0; i < square.length; i++) {
+		for (j = 0; j < square[i].length; j++) {
+		    if (squareAvailable(square[i][j]) && !isNihu(i)) {
 			pos.push([i, j]);
 		    }
 		}
@@ -98,7 +98,7 @@
 	},
 
         debug: function() {
-            console.log(JSON.stringify(board.square));
+            console.log(JSON.stringify(square));
         }
     };
     

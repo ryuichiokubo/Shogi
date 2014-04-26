@@ -95,7 +95,7 @@
 	var checkPromotionAndType = function(newPosNum, oldPosNum, isInhand) {
 	    // XXX do not allow non-nari if that will make the piece unmovable
 
-	    var type = ui.selected.getAttribute('data-piece');
+	    var type = ui.getSelectedType();
 
 	    var canPromote = function() {
 		if (isInhand || !def.piece[type].prom) {
