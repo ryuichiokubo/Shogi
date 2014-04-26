@@ -3,48 +3,6 @@
 
     // Main controller
     
-    var rowNames = ['one', 'two', 'three', 'four',
-                    'five', 'six', 'seven', 'eight', 'nine'];
-    var columnNames = ['ichi', 'ni', 'san', 'yon', 
-                       'go', 'roku', 'nana', 'hachi', 'kyu'];
-
-    // Num: indexed from 0, Class: indexed from 'one' or 'ichi'
-    var convertPosNumToClass = function(row, column) {
-        if (rowNames[row] && columnNames[column]) {
-            return rowNames[row] + ' ' + columnNames[column];
-        } else {
-            return false;
-        }
-    };
-
-    var convertPosClassToNum = function(posClass) {
-        var posClassArr, rowName, columnName, rowNum, columnNum;
-        
-        posClassArr = posClass.split(' ');
-        rowName = posClassArr[0];
-        columnName = posClassArr[1];
-        rowNum = rowNames.indexOf(rowName);
-        columnNum = columnNames.indexOf(columnName);
-        
-        return [rowNum, columnNum];
-    };
-
-    var getPosClassFromElement = function(element) {
-        var classes, rowHit, columnHit;
-        
-        classes = element.className.split(' ');
-        for (var i = 0; i < classes.length; i++) {
-            if (rowNames.indexOf(classes[i]) > -1) {
-                rowHit = rowNames[rowNames.indexOf(classes[i])];
-            }
-            if (columnNames.indexOf(classes[i]) > -1 ) {
-                columnHit = columnNames[columnNames.indexOf(classes[i])];
-            }
-        }
-        
-        return rowHit + ' ' + columnHit;
-    };
-
     var setAvailable = function() {
 	// XXX do not allow such a place where it will make the piece unmovable
 
@@ -69,14 +27,14 @@
             var avail = [], currentPiece, availClass;
             
 	    if (!selectedNum) {
-	        selectedClass = getPosClassFromElement(ui.selected);
-		selectedNum = convertPosClassToNum(selectedClass);
+	        selectedClass = ui.util.getPosClassFromElement(ui.selected);
+		selectedNum = ui.util.convertPosClassToNum(selectedClass);
 	    }
             
             avail[0] = selectedNum[0] + moveX;
             avail[1] = selectedNum[1] + moveY;
             
-            availClass = convertPosNumToClass(avail[0], avail[1]); // false if out of board
+            availClass = ui.util.convertPosNumToClass(avail[0], avail[1]); // false if out of board
             currentPiece = board.getPiece(avail[0], avail[1]);
 
             if (availClass && (!currentPiece || currentPiece.mine !== true)) {
@@ -105,7 +63,7 @@
 	    // mochigoma
 	    inhandAvailPos = board.getInhandAvailPos(type);
 	    for (i = 0; i < inhandAvailPos.length; i++) {
-		inhandAvailClass = convertPosNumToClass(inhandAvailPos[i][0], inhandAvailPos[i][1]);
+		inhandAvailClass = ui.util.convertPosNumToClass(inhandAvailPos[i][0], inhandAvailPos[i][1]);
 		set(inhandAvailClass, inhandAvailPos[i][0], inhandAvailPos[i][1]);
 	    }
 	} else {
@@ -122,7 +80,7 @@
     };
 
     var pieceSelect = function(event) {
-        if (ui.hasClass(event.target, 'oppoPiece')) {
+        if (ui.util.hasClass(event.target, 'oppoPiece')) {
             attackSelect(event);
         } else {
 	    ui.setSelected(event);
@@ -156,9 +114,9 @@
 	};
 
 
-        newPosNum = convertPosClassToNum(newPosClass);
-        oldPosClass = getPosClassFromElement(ui.selected);
-        oldPosNum = convertPosClassToNum(oldPosClass);
+        newPosNum = ui.util.convertPosClassToNum(newPosClass);
+        oldPosClass = ui.util.getPosClassFromElement(ui.selected);
+        oldPosNum = ui.util.convertPosClassToNum(oldPosClass);
 
 	type = checkPromotionAndType(newPosNum, oldPosNum, isInhand);
 
@@ -184,7 +142,7 @@
 	    ui.prepareInhandMove();
         }
 
-        posClass = getPosClassFromElement(event.target);
+        posClass = ui.util.getPosClassFromElement(event.target);
         moveSelected(posClass, isInhand);
     };
     
@@ -199,8 +157,8 @@
 	    }
 	};
 
-        posClass = getPosClassFromElement(event.target);
-        posNum = convertPosClassToNum(posClass);
+        posClass = ui.util.getPosClassFromElement(event.target);
+        posNum = ui.util.convertPosClassToNum(posClass);
 
 	if (board.getAvailable(posNum[0], posNum[1])) {
 	    moveSelected(posClass);
@@ -216,7 +174,7 @@
             for (var i = 0; i < def.init.length; i++) {
 		ui.setPiece(def.init[i].piece, def.init[i].pos, def.init[i].mine, pieceSelect);
 
-                posNum = convertPosClassToNum(def.init[i].pos, def.init[i].mine);
+                posNum = ui.util.convertPosClassToNum(def.init[i].pos, def.init[i].mine);
                 board.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
             }
         };

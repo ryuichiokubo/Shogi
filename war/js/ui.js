@@ -3,18 +3,20 @@
 
     // DOM handling view
 
+    var rowNames = ['one', 'two', 'three', 'four',
+                    'five', 'six', 'seven', 'eight', 'nine'];
+    var columnNames = ['ichi', 'ni', 'san', 'yon', 
+                       'go', 'roku', 'nana', 'hachi', 'kyu'];
+
     var ui = {
 
+	// XXX move this outside var ui to make it private
 	set: null, // board area element, not including inhand area
 	selected: null, // currently selected piece as DOM Element // XXX as object with method?
 
 	init: function() {
 	    ui.set = document.querySelector("#set");
 	},
-
-	hasClass: function(element, className) {
-    	    return (element.className.indexOf(className) > -1);
-    	},
 
 	setPiece: function(piece, pos, mine, handler) {
 	    var classAttr, srcPath, img;
@@ -95,8 +97,8 @@
 	prepareInhandMove: function() {
             // Keep left-most piece of same kind without 'overwrap'
             if (ui.selected.nextElementSibling) {
-                var thisHasWrap = ui.hasClass(ui.selected, 'overwrap') ? true : false;
-                var nextHasWrap = ui.hasClass(ui.selected.nextElementSibling, 'overwrap') ? true : false;
+                var thisHasWrap = util.hasClass(ui.selected, 'overwrap') ? true : false;
+                var nextHasWrap = util.hasClass(ui.selected.nextElementSibling, 'overwrap') ? true : false;
                 if (!thisHasWrap && nextHasWrap) {
                     ui.selected.nextSibling.setAttribute('class', 'piece');
                 }
@@ -135,6 +137,52 @@
     };
 
 
+    var util = {
+    
+	// Num: indexed from 0, Class: indexed from 'one' or 'ichi'
+	convertPosNumToClass: function(row, column) {
+    	    if (rowNames[row] && columnNames[column]) {
+    	        return rowNames[row] + ' ' + columnNames[column];
+    	    } else {
+    	        return false;
+    	    }
+    	},
+
+	convertPosClassToNum: function(posClass) {
+    	    var posClassArr, rowName, columnName, rowNum, columnNum;
+    	    
+    	    posClassArr = posClass.split(' ');
+    	    rowName = posClassArr[0];
+    	    columnName = posClassArr[1];
+    	    rowNum = rowNames.indexOf(rowName);
+    	    columnNum = columnNames.indexOf(columnName);
+    	    
+    	    return [rowNum, columnNum];
+    	},
+
+	getPosClassFromElement: function(element) {
+    	    var classes, rowHit, columnHit;
+    	    
+    	    classes = element.className.split(' ');
+    	    for (var i = 0; i < classes.length; i++) {
+    	        if (rowNames.indexOf(classes[i]) > -1) {
+    	            rowHit = rowNames[rowNames.indexOf(classes[i])];
+    	        }
+    	        if (columnNames.indexOf(classes[i]) > -1 ) {
+    	            columnHit = columnNames[columnNames.indexOf(classes[i])];
+    	        }
+    	    }
+    	    
+    	    return rowHit + ' ' + columnHit;
+    	},
+
+	hasClass: function(element, className) {
+    	    return (element.className.indexOf(className) > -1);
+    	}
+    };
+
+
+    ui.util = util;
     ui.dialog = dialog;
     this.ui = ui;
     
