@@ -1,67 +1,82 @@
 (function() {
     "use strict";
 
+    // Definition
+    //
+
+    // Character of each piece
+    //
     // move:    array of available position relative to current position
     //          [x, y, anywhere in this direction]
     var piece = {
         hu: {
             move: [[0, -1]],
-            nari: 'tokin'
+            prom: 'tokin'
         },
         kyosha: {
             move: [[0, -1, true]],
-            nari: 'narikyo'
+            prom: 'narikyo'
         },
         keima: {
             move: [[-1, -2], [1, -2]],
-            nari: 'narikei'
+            prom: 'narikei'
         },
         gin: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 1], [1, 1]],
-            nari: 'narigin'
+            prom: 'narigin'
         },
         kin: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
-            nari: ''
+            prom: ''
         },
         o: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [-1, 1], [0, 1], [1, 1]],
-            nari: ''
+            prom: ''
         },
         hisha: {
             move: [[0, -1, true], [1, 0, true], [0, 1, true], [-1, 0, true]],
-            nari: 'ryu'
+            prom: 'ryu'
         },
         kaku: {
             move: [[-1, -1, true], [1, -1, true], [-1, 1, true], [1, 1, true]],
-            nari: 'uma'
+            prom: 'uma'
         },
         tokin: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
-            nari: ''
+            prom: ''
         },
         narikyo: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
-            nari: ''
+            prom: ''
         },
         narikei: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
-            nari: ''
+            prom: ''
         },
         narigin: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
-            nari: ''
+            prom: ''
         },
         ryu: {
             move: [[0, -1, true], [1, 0, true], [0, 1, true], [-1, 0, true], [-1, -1], [1, -1], [-1, 1], [1, 1]],
-            nari: ''
+            prom: ''
         },
         uma: {
             move: [[-1, -1, true], [1, -1, true], [-1, 1, true], [1, 1, true], [0, -1], [1, 0], [0, 1], [-1, 0]],
-            nari: ''
+            prom: ''
         },
     };
 
+
+    // Board setting
+    var board = {
+	row: 9,
+	column: 9,
+	promoteRow: 3 // piece can promote if in opponent's side within this row
+    };
+
+
+    // Initial pieces and their position
     var init = [
         {
             piece: 'hu',
@@ -267,6 +282,7 @@
 
     this.def = {
         piece: piece,
+	board: board,
         init: init
     };
     

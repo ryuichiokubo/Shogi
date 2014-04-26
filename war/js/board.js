@@ -1,7 +1,9 @@
 (function() {
     "use strict";
 
+    // Board controller
     // keep track of where and what kind of pieces are on board
+ 
     var board = {
         
         square: [],
