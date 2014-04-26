@@ -16,8 +16,6 @@
                 type: type,
                 mine: mine
             };
-
-	    board.upload(x, y, type, mine);
         },
 
         getPiece: function(x, y) {
@@ -99,14 +97,9 @@
 	    return pos;
 	},
 
-	upload: function(x, y, type, mine) {
+	// Send the whole board info at once (no need to save state in server)
+	upload: function() {
 	    var xhr = new XMLHttpRequest();
-	    var data = {
-		x: x,
-		y: y,
-		type: type,
-		mine: mine
-	    };
 
 	    xhr.onload = function() {
 		console.log("!!!"); // XXX get AI's hand
@@ -114,7 +107,9 @@
 
 	    xhr.open("POST", "ai");
 	    xhr.setRequestHeader("Content-Type", "application/json");
-	    xhr.send(JSON.stringify(data));
+	    xhr.send(JSON.stringify(square));
+
+	    board.debug();
 	},
 
         debug: function() {

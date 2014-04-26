@@ -18,13 +18,18 @@ public class AiServlet extends HttpServlet {
 
 		Gson gson = new Gson();
 		BufferedReader reader = req.getReader();
-		Map data = gson.fromJson(reader, HashMap.class);
-		
-		Logger.global.info("data: " + data.toString());
+		Map[][] data = gson.fromJson(reader, HashMap[][].class);
 		
 		Board board = new Board(9, 9);
-		board.setPiece(data);
 		
+		for (int i = 0; i < data.length; i++) {			
+			for (int j = 0; j < data[i].length; j++) {
+				if (data[i][j] != null) {
+					board.setPiece(i, j, data[i][j]);
+				}
+			}
+		}
+
 		Logger.global.info("board: " + board.toString());
 	}
 }

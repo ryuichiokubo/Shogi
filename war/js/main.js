@@ -125,6 +125,8 @@
 
 	ui.moveSelected(newPosClass);
 	resetAvailable();
+        
+	board.upload(); // AI's turn
     };
 
     var squareSelect = function(event) {

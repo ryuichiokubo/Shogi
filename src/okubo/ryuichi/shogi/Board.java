@@ -10,10 +10,10 @@ final class Board {
 		square = new Piece[row][column];
 	}
 
-	public void setPiece(Map data) {
+	public void setPiece(int x, int y, Map data) {
 		Piece piece = new Piece(data);
-		int x = (int) (double) data.get("x");
-		int y = (int) (double) data.get("y");
+		//int x = (int) (double) data.get("x");
+		//int y = (int) (double) data.get("y");
 		square[x][y] = piece;
 	}
 	
