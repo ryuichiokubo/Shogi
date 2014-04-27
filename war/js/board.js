@@ -98,11 +98,11 @@
 	},
 
 	// Send the whole board info at once (no need to save state in server)
-	upload: function() {
+	upload: function(success) {
 	    var xhr = new XMLHttpRequest();
 
 	    xhr.onload = function() {
-		console.log("!!!"); // XXX get AI's hand
+		success(JSON.parse(this.responseText));
 	    };
 
 	    xhr.open("POST", "ai");

@@ -12,6 +12,25 @@ final class Board {
 		square[x][y] = piece;
 	}
 	
+	public Hand getNextHand() {
+		String type;
+		int toX;
+		int toY;
+		int fromX;
+		int fromY;
+		boolean prom;
+		
+		// XXX
+		type = "hu";
+		toX = 0;
+		toY = 3;
+		fromX = 0;
+		fromY = 2;
+		prom = false;
+		
+		return new Hand(type, fromX, fromY, toX, toY, prom);
+	}
+	
 	@Override
 	public String toString() {
 		String res = "";

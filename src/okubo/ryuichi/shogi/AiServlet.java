@@ -35,9 +35,14 @@ public class AiServlet extends HttpServlet {
 				}
 			}
 		}
-
+		
 		Logger.global.info("board: " + board.toString());
 		
-		// TODO: Calculate next move and respond
+		Hand hand = board.getNextHand();
+		String json = gson.toJson(hand);
+
+		resp.setContentType("application/json");
+		resp.setCharacterEncoding("utf-8");
+		resp.getWriter().write(json);
 	}
 }

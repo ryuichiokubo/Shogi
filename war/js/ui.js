@@ -35,8 +35,16 @@
             img.setAttribute('src', srcPath);
             img.setAttribute('class', classAttr);
             img.setAttribute('data-piece', piece);
-            img.addEventListener('click', handler);
+	    if (handler) {
+		img.addEventListener('click', handler);
+	    }
             elems.set.appendChild(img);
+	},
+
+	removePiece: function(x, y) {
+	    var pos = "." + rowNames[x] + "." + columnNames[y];
+            var piece = document.querySelector(pos);
+	    elems.set.removeChild(piece);
 	},
 
 	setSelected: function(event) {

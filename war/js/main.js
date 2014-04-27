@@ -89,6 +89,17 @@
 	}
     };
 
+    var moveAi = function(data) {
+	var posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
+	ui.setPiece(data.type, posClass, false);
+	ui.removePiece(data.fromX, data.fromY);
+
+        board.setPiece(data.toX, data.toY, data.type, false);
+        board.removePiece(data.fromX, data.fromY);
+	board.resetAvailable();
+	board.debug();
+    };
+
     var moveSelected = function(newPosClass, isInhand) {
         var type, newPosNum, oldPosClass, oldPosNum;
         
@@ -126,7 +137,7 @@
 	ui.moveSelected(newPosClass);
 	resetAvailable();
         
-	board.upload(); // AI's turn
+	board.upload(moveAi);
     };
 
     var squareSelect = function(event) {
