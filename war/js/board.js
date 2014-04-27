@@ -107,7 +107,7 @@
 
 	    xhr.open("POST", "ai");
 	    xhr.setRequestHeader("Content-Type", "application/json");
-	    xhr.send(JSON.stringify(square));
+	    xhr.send(JSON.stringify(square)); // XXX upload mochigoma too
 
 	    board.debug();
 	},

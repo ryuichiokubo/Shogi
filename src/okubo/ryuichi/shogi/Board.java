@@ -1,7 +1,4 @@
 package okubo.ryuichi.shogi;
-
-import java.util.Map;
-
 final class Board {
 
 	private final Piece[][] square;
@@ -10,10 +7,8 @@ final class Board {
 		square = new Piece[row][column];
 	}
 
-	public void setPiece(int x, int y, Map data) {
-		Piece piece = new Piece(data);
-		//int x = (int) (double) data.get("x");
-		//int y = (int) (double) data.get("y");
+	public void setPiece(String type, int x, int y, boolean mine) {
+		Piece piece = Piece.getInstance(type, x, y, mine);
 		square[x][y] = piece;
 	}
 	

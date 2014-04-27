@@ -22,14 +22,22 @@ public class AiServlet extends HttpServlet {
 		
 		Board board = new Board(9, 9);
 		
+		String type;
+		boolean mine;
+		
 		for (int i = 0; i < data.length; i++) {			
 			for (int j = 0; j < data[i].length; j++) {
 				if (data[i][j] != null) {
-					board.setPiece(i, j, data[i][j]);
+					type 		= (String) data[i][j].get("type");
+					mine 		= (boolean) data[i][j].get("mine");
+
+					board.setPiece(type, i, j, mine);
 				}
 			}
 		}
 
 		Logger.global.info("board: " + board.toString());
+		
+		// TODO: Calculate next move and respond
 	}
 }
