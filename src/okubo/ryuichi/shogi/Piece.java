@@ -1,11 +1,14 @@
 package okubo.ryuichi.shogi;
 
+import java.util.Set;
+import java.util.logging.Logger;
+
 abstract class Piece {
 
 	protected String type;
 	protected int x;
 	protected int y;
-	protected boolean mine;
+	protected boolean mine; // true: human, false: AI
 	protected String prom;
 	protected int[][] move;	// available position relative to current position [x, y, anywhere in this direction(1: true)]
 	
@@ -41,6 +44,18 @@ abstract class Piece {
 		this.y = y;
 		this.mine = mine;
 	};
+	
+	public boolean isMine() {
+		return mine;
+	}
+	
+	public int[][] getMove() {
+		return move;
+	}
+
+	public String getType() {
+		return type;
+	}
 
 	@Override
 	public String toString() {
