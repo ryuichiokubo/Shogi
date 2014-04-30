@@ -27,9 +27,14 @@ public class AiServlet extends HttpServlet {
 		
 		for (int i = 0; i < data.length; i++) {			
 			for (int j = 0; j < data[i].length; j++) {
-				if (data[i][j] != null) {
-					type 		= (String) data[i][j].get("type");
-					mine 		= (boolean) data[i][j].get("mine");
+				if (data[i][j] != null && data[i][j].get("type") != null) {
+					// XXX assert type, mine etc?
+					type = (String) data[i][j].get("type");
+					if (data[i][j].get("mine") == null) {
+						mine = false;
+					} else {
+						mine = (boolean) data[i][j].get("mine");
+					}
 
 					board.setPiece(type, i, j, mine);
 				}

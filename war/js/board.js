@@ -61,7 +61,15 @@
 	    for (var i = 0; i < square.length; i++) {
 		for (var j = 0; j < square[i].length; j++) {
 		    if (square[i] && square[i][j]) {
-			square[i][j].available = false;
+			if (square[i][j].type) {
+			    // There is a piece on i,j. Set available: false
+			    square[i][j].available = false;
+			} else {
+			    // There is no piece on i,j. Delete.
+			    delete square[i][j];
+			}
+			// XXX works but not good to have meaningless object
+			//square[i][j].available = false;
 		    }
 		}
 	    }
