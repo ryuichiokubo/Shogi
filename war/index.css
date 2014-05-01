@@ -49,6 +49,9 @@
     -o-transform:      rotate( 180deg );  /* Opera */
     -ms-transform:     rotate( 180deg );  /* IE */
     transform:         rotate( 180deg );  /* CSS3 */
+
+    -webkit-transition: top 2s, left 2s; /* For Safari 3.1 to 6.0 */
+    transition: top 1s, left 1s;
 }
 
 /* Piece position below */

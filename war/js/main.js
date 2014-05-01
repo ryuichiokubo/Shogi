@@ -102,17 +102,19 @@
     };
 
     var moveAi = function(data) {
-	var posClass, piece;
+	var posClass, fromPiece, toPiece;
 
 	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
-	ui.setPiece(data.type, posClass, false, pieceSelect);
-	ui.removePiece(data.fromX, data.fromY);
+	//ui.setPiece(data.type, posClass, false, pieceSelect);
+	//ui.removePiece(data.fromX, data.fromY);
+	fromPiece = ui.getPiece(data.fromX, data.fromY);
+	fromPiece.setAttribute('class', 'piece oppoPiece ' + posClass); // XXX add proper method in ui
 
 	// move to InHand area if there is an existing piece
 	if (board.getPiece(data.toX, data.toY)) {
-	    piece = ui.getPiece(data.toX, data.toY);
-	    ui.moveToHand(piece, false);
-	    winCheck(piece, true);
+	    toPiece = ui.getPiece(data.toX, data.toY);
+	    ui.moveToHand(toPiece, false);
+	    winCheck(toPiece, true);
 	}
 
         board.setPiece(data.toX, data.toY, data.type, false);
