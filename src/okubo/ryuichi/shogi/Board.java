@@ -1,10 +1,7 @@
 package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
 final class Board {
@@ -16,7 +13,7 @@ final class Board {
 	}
 
 	public void setPiece(String type, int x, int y, boolean mine) {
-		Piece piece = Piece.getInstance(type, x, y, mine);
+		Piece piece = Game.getPiece(type, x, y, mine);
 		square[x][y] = piece;
 	}
 	
@@ -40,7 +37,7 @@ final class Board {
 	}
 
 	// Get available hands for one piece
-	private Collection<? extends Hand> getNextHand(Piece piece, int x, int y) {
+	private List<Hand> getAvailableHands(Piece piece, int x, int y) {
 		List<Hand> hands = new ArrayList<Hand>();
 		
 		Logger.global.info("piece: " + piece.toString());
@@ -86,21 +83,19 @@ final class Board {
 	}
 	
 	// Check all available hands and return the best one
-	public Hand getNextHand() {
+	public List<Hand> getAvailableHands() {
 		List<Hand> hands = new ArrayList<Hand>();
 		
 		for (int i = 0; i < square.length; i++) {			
 			for (int j = 0; j < square[i].length; j++) {
 				if (square[i][j] != null && square[i][j].isMine() == false) {
-					hands.addAll(getNextHand(square[i][j], i, j));
+					hands.addAll(getAvailableHands(square[i][j], i, j));
 				}
 			}
 		}
 		Logger.global.info("hands: " + hands.toString());
 
-		// XXX get highest score from hands
-		int rand = (int) Math.floor(Math.random() * hands.size());
-		return hands.get(rand);
+		return hands;
 	}
 
 	@Override

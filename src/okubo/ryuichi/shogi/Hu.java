@@ -2,8 +2,7 @@ package okubo.ryuichi.shogi;
 
 final class Hu extends Piece {
 
-	Hu() {
-		this.prom = "tokin";
-		this.move = new int[][] {{0, 1}};
+	Hu(int x, int y, boolean mine) {
+		super("hu", x, y, mine, "tokin", new int[][] {{0, 1}});
 	}
 }

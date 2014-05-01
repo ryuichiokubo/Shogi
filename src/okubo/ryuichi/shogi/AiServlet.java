@@ -43,7 +43,8 @@ public class AiServlet extends HttpServlet {
 		
 		Logger.global.info("board: " + board.toString());
 		
-		Hand hand = board.getNextHand();
+		Game game = new Game(board);
+		Hand hand = game.getNextHand();
 		String json = gson.toJson(hand);
 
 		resp.setContentType("application/json");
