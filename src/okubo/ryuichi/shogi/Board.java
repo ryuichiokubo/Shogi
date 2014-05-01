@@ -65,9 +65,9 @@ final class Board {
 					}
 
 					if (newPlace == null || newPlace.isMine() == true) {
-						hands.add(new Hand(piece.getType(), x, y, newX, newY, false));
+						hands.add(new Hand(piece.getType(), x, y, newX, newY));
 						if (canPromote(piece, y, newY)) {
-							hands.add(new Hand(piece.getType(), x, y, newX, newY, true));							
+							hands.add(new Hand(piece.getPromType(), x, y, newX, newY));							
 						}
 					}
 				}					

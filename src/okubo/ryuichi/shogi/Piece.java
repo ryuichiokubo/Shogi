@@ -57,6 +57,10 @@ abstract class Piece {
 		return type;
 	}
 
+	public String getPromType() {
+		return prom;
+	}
+
 	@Override
 	public String toString() {
 		return type + "(" + mine + ")";

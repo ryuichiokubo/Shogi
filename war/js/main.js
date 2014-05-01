@@ -107,7 +107,7 @@
 	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
 	fromPiece = ui.getPiece(data.fromX, data.fromY);
 	fromType = ui.util.getTypeFromElem(fromPiece);
-	if (data.prom && def.piece[fromType]) {
+	if (data.type !== fromType) {
 	    ui.promote(fromPiece, fromType);
 	}
 	fromPiece.setAttribute('class', 'piece oppoPiece ' + posClass); // XXX add proper method in ui

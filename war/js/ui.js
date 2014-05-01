@@ -184,7 +184,7 @@
 	},
 
 	lose: function() {
-	    alert("You lose...");
+	    alert("You lost...");
 	}
     };
 
