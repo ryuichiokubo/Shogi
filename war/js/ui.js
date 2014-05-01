@@ -81,7 +81,7 @@
 	},
 
 	getSelectedType: function() {
-	    return ui.selected.getAttribute('data-piece');
+	    return util.getTypeFromElem(ui.selected);
 	},
 
 	isSelectedInhand: function() {
@@ -90,6 +90,8 @@
 
 	moveToHand: function(piece, mine) {
             var handAreaId, handArea, newClass, targetSrc, inserted;
+
+	    ui.demote(piece);
 
 	    if (mine) {
 		handAreaId = "#myMochi";
@@ -139,11 +141,25 @@
 	},
 
 	promote: function(type) {
+	    // XXX separate with promoteSelected method and extract common logic from demote
 	    var srcPath;
 
             srcPath = 'svg/' +  def.piece[type].prom + '.svg';
             ui.selected.setAttribute('src', srcPath);
 	    ui.selected.setAttribute('data-piece', def.piece[type].prom);
+	},
+
+	demote: function(piece) {
+	    var type, srcPath, dem;
+
+	    type = util.getTypeFromElem(piece);
+	    dem = def.piece[type].dem
+
+	    if (dem) {
+		srcPath = 'svg/' +  dem + '.svg';
+		piece.setAttribute('src', srcPath);
+		piece.setAttribute('data-piece', dem);
+	    }
 	}
     };
 
@@ -202,7 +218,12 @@
 
 	hasClass: function(element, className) {
     	    return (element.className.indexOf(className) > -1);
-    	}
+    	},
+
+	getTypeFromElem: function(elem) {
+	    return elem.getAttribute('data-piece');
+	}
+	
     };
 
 
