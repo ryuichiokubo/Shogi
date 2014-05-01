@@ -173,6 +173,10 @@
 
 	win: function() {
 	    alert("You won!!");
+	},
+
+	lose: function() {
+	    alert("You lose...");
 	}
     };
 

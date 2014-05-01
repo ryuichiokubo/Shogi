@@ -89,19 +89,31 @@
 	}
     };
 
+    var winCheck = function(piece, mine) {
+        var type = ui.util.getTypeFromElem(piece);
+    
+        if (type === 'o') {
+	   if (mine) {
+    	       ui.dialog.lose();
+    	   } else {
+    	       ui.dialog.win();
+    	   }
+        }
+    };
+
     var moveAi = function(data) {
 	var posClass, piece;
+
+	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
+	ui.setPiece(data.type, posClass, false, pieceSelect);
+	ui.removePiece(data.fromX, data.fromY);
 
 	// move to InHand area if there is an existing piece
 	if (board.getPiece(data.toX, data.toY)) {
 	    piece = ui.getPiece(data.toX, data.toY);
 	    ui.moveToHand(piece, false);
-	    //ui.removePiece(data.toX, data.toY);
+	    winCheck(piece, true);
 	}
-
-	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
-	ui.setPiece(data.type, posClass, false, pieceSelect);
-	ui.removePiece(data.fromX, data.fromY);
 
         board.setPiece(data.toX, data.toY, data.type, false);
         board.removePiece(data.fromX, data.fromY);
@@ -168,21 +180,14 @@
     };
     
     var attackSelect = function(event) {
+	console.log("@@@@@@@@ attackSelect: ", event);
         var posClass, posNum;
         
-	var winCheck = function() {
-	    var type = event.target.getAttribute('data-piece');
-
-	    if (type === 'o') {
-		ui.dialog.win();
-	    }
-	};
-
         posClass = ui.util.getPosClassFromElement(event.target);
         posNum = ui.util.convertPosClassToNum(posClass);
 
 	if (board.getAvailable(posNum[0], posNum[1])) {
-	    winCheck();
+	    winCheck(event.target, false);
 	    moveSelected(posClass);
 	    ui.moveToHand(event.target, true);
 	}
