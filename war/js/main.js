@@ -102,12 +102,14 @@
     };
 
     var moveAi = function(data) {
-	var posClass, fromPiece, toPiece;
+	var posClass, fromPiece, fromType, toPiece;
 
 	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
-	//ui.setPiece(data.type, posClass, false, pieceSelect);
-	//ui.removePiece(data.fromX, data.fromY);
 	fromPiece = ui.getPiece(data.fromX, data.fromY);
+	fromType = ui.util.getTypeFromElem(fromPiece);
+	if (data.prom && def.piece[fromType]) {
+	    ui.promote(fromPiece, fromType);
+	}
 	fromPiece.setAttribute('class', 'piece oppoPiece ' + posClass); // XXX add proper method in ui
 
 	// move to InHand area if there is an existing piece
@@ -141,7 +143,7 @@
 	    };
 
 	    if (canPromote() && ui.dialog.askPromote()) {
-		ui.promote(type);
+		ui.promote(ui.selected, type);
 		type = def.piece[type].prom;
 	    }
 

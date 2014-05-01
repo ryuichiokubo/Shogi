@@ -140,25 +140,33 @@
 	    ui.selected = null;
 	},
 
-	promote: function(type) {
-	    // XXX separate with promoteSelected method and extract common logic from demote
+	changePieceType: function(piece, changeTo) {
 	    var srcPath;
 
-            srcPath = 'svg/' +  def.piece[type].prom + '.svg';
-            ui.selected.setAttribute('src', srcPath);
-	    ui.selected.setAttribute('data-piece', def.piece[type].prom);
+	    srcPath = 'svg/' +  changeTo + '.svg';
+            piece.setAttribute('src', srcPath);
+	    piece.setAttribute('data-piece', changeTo);
 	},
 
-	demote: function(piece) {
-	    var type, srcPath, dem;
+	promote: function(piece, type) {
+	    var prom;
 
-	    type = util.getTypeFromElem(piece);
-	    dem = def.piece[type].dem
+	    type = type || util.getTypeFromElem(piece);
+	    prom = def.piece[type].prom;
+
+	    if (prom) {
+		ui.changePieceType(piece, prom);
+	    }
+	},
+
+	demote: function(piece, type) {
+	    var dem;
+
+	    type = type || util.getTypeFromElem(piece);
+	    dem = def.piece[type].dem;
 
 	    if (dem) {
-		srcPath = 'svg/' +  dem + '.svg';
-		piece.setAttribute('src', srcPath);
-		piece.setAttribute('data-piece', dem);
+		ui.changePieceType(piece, dem);
 	    }
 	}
     };

@@ -29,6 +29,16 @@ final class Board {
 		}
 	}
 
+	private boolean canPromote(Piece piece, int oldY, int newY) {
+		boolean pieceOk = false;
+		boolean placeOk = false;
+		
+		pieceOk = (piece.prom != null && piece.prom.length() > 0);
+		placeOk = (oldY >= 6 || newY >= 6);
+		
+		return pieceOk && placeOk;
+	}
+
 	// Get available hands for one piece
 	private Collection<? extends Hand> getNextHand(Piece piece, int x, int y) {
 		List<Hand> hands = new ArrayList<Hand>();
@@ -56,6 +66,9 @@ final class Board {
 
 					if (newPlace == null || newPlace.isMine() == true) {
 						hands.add(new Hand(piece.getType(), x, y, newX, newY, false));
+						if (canPromote(piece, y, newY)) {
+							hands.add(new Hand(piece.getType(), x, y, newX, newY, true));							
+						}
 					}
 				}					
 				
