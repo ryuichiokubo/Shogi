@@ -91,7 +91,7 @@
 
     var moveAi = function(data) {
 	var posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
-	ui.setPiece(data.type, posClass, false);
+	ui.setPiece(data.type, posClass, false, pieceSelect);
 	ui.removePiece(data.fromX, data.fromY);
 
         board.setPiece(data.toX, data.toY, data.type, false);
