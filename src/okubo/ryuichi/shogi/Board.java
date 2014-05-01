@@ -1,6 +1,7 @@
 package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,32 +20,66 @@ final class Board {
 		square[x][y] = piece;
 	}
 	
+	private boolean isInBoard(int newX, int newY) {
+		// XXX row and column number is same for now
+		if (newX >= 0 && newX < square.length && newY >= 0 && newY < square.length) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// Get available hands for one piece
+	private Collection<? extends Hand> getNextHand(Piece piece, int x, int y) {
+		List<Hand> hands = new ArrayList<Hand>();
+		
+		Logger.global.info("piece: " + piece.toString());
+		
+		int[][] move = piece.getMove();
+		for (int i = 0; i < move.length; i++) {		
+			for (int j = 1; ; j++) {
+				boolean stop = false;
+				Piece newPlace = null;
+				int newX = x + move[i][0] * j;
+				int newY = y + move[i][1] * j;
+				
+				Logger.global.info("newXY: " + newX + ", " + newY);
+				
+				if (isInBoard(newX, newY)) {
+					newPlace = square[newX][newY];
+					
+					if (newPlace != null) {
+						Logger.global.info("newPlace: " + newPlace.toString());
+					} else {
+						Logger.global.info("newPlace: " + "null");								
+					}
+
+					if (newPlace == null || newPlace.isMine() == true) {
+						hands.add(new Hand(piece.getType(), x, y, newX, newY, false));
+					}
+				}					
+				
+				if (newPlace != null || !isInBoard(newX, newY)) {
+					stop = true;
+				}
+				
+				if (move[i].length < 3 || move[i][2] != 1 || stop) {
+					break;
+				}
+			}
+		}
+		
+		return hands;	
+	}
+	
+	// Check all available hands and return the best one
 	public Hand getNextHand() {
 		List<Hand> hands = new ArrayList<Hand>();
 		
 		for (int i = 0; i < square.length; i++) {			
 			for (int j = 0; j < square[i].length; j++) {
 				if (square[i][j] != null && square[i][j].isMine() == false) {
-					Logger.global.info("square[i][j]: " + square[i][j].toString());
-					int[][] move = square[i][j].getMove();
-					for (int k = 0; k < move.length; k++) {
-						//Logger.global.info("move2: " + move[i][2]);
-						int newX = i+move[k][0];
-						int newY = j+move[k][1];
-						Logger.global.info("newXY: " + newX + ", " + newY);
-						if (newX >= 0 && newX < square.length && newY >= 0 && newY < square[i].length) {
-							Piece newPlace = square[newX][newY];
-							if (newPlace == null || newPlace.isMine() == true) {
-								if (newPlace != null) {
-									Logger.global.info("newPlace: " + newPlace.toString());
-								} else {
-									Logger.global.info("newPlace: " + "null");								
-								}
-								hands.add(new Hand(square[i][j].getType(), i, j, newX, newY, false));
-							}
-						}
-					}
-					
+					hands.addAll(getNextHand(square[i][j], i, j));
 				}
 			}
 		}
@@ -54,7 +89,7 @@ final class Board {
 		int rand = (int) Math.floor(Math.random() * hands.size());
 		return hands.get(rand);
 	}
-	
+
 	@Override
 	public String toString() {
 		String res = "";
