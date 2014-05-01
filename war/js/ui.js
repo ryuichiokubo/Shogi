@@ -41,10 +41,17 @@
             elems.set.appendChild(img);
 	},
 
+	getPiece: function(x, y) {
+	    var pos = "." + rowNames[x] + "." + columnNames[y];
+            return document.querySelector(pos);
+	},
+
 	removePiece: function(x, y) {
 	    var pos = "." + rowNames[x] + "." + columnNames[y];
             var piece = document.querySelector(pos);
-	    elems.set.removeChild(piece);
+	    if (piece) {
+		elems.set.removeChild(piece);
+	    }
 	},
 
 	setSelected: function(event) {
@@ -81,26 +88,33 @@
 	    return (ui.selected.parentElement.className === 'inhand');
 	},
 
-	moveToHand: function(target) {
-            var myMochi, targetSrc, inserted;
+	moveToHand: function(piece, mine) {
+            var handAreaId, handArea, newClass, targetSrc, inserted;
 
-            myMochi = document.querySelector("#myMochi");
-            target.setAttribute('class', 'piece');
+	    if (mine) {
+		handAreaId = "#myMochi";
+		newClass = 'piece';
+	    } else {
+		handAreaId = "#oppoMochi";
+		newClass = 'piece oppoPiece';
+	    }
+            handArea = document.querySelector(handAreaId);
+            piece.setAttribute('class', newClass);
 
-            if (myMochi.children) {
+            if (handArea.children) {
                 // Put same kind of pieces on top of existing pieces
-                targetSrc = target.getAttribute('src');
+                targetSrc = piece.getAttribute('src');
 
-                for (var i = 0; i < myMochi.children.length; i++) {
-                    if (myMochi.children[i].getAttribute('src') === targetSrc) {
-                        inserted = myMochi.insertBefore(target, myMochi.children[i+1]);
-                        inserted.setAttribute('class', 'piece overwrap');
+                for (var i = 0; i < handArea.children.length; i++) {
+                    if (handArea.children[i].getAttribute('src') === targetSrc) {
+                        inserted = handArea.insertBefore(piece, handArea.children[i+1]);
+                        inserted.setAttribute('class', newClass + ' overwrap');
                     }
                 }
             }
             if (!inserted) {
                 // Put new kind of piece next to existing one or at the beginning
-                myMochi.appendChild(target);
+                handArea.appendChild(piece);
             }
         },
 
