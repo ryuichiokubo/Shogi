@@ -102,7 +102,7 @@
     };
 
     var moveAi = function(data) {
-	var posClass, fromPiece, fromType, toPiece;
+	var posClass, fromPiece, fromType, toType, toTypeDem, toPiece;
 
 	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
 	fromPiece = ui.getPiece(data.fromX, data.fromY);
@@ -116,6 +116,9 @@
 	if (board.getPiece(data.toX, data.toY)) {
 	    toPiece = ui.getPiece(data.toX, data.toY);
 	    ui.moveToHand(toPiece, false);
+	    toType = ui.util.getTypeFromElem(toPiece);
+	    toTypeDem = def.piece[toType].dem || toType; // XXX add proper method in ui
+	    board.addCaptive(toType, false);	    
 	    winCheck(toPiece, true);
 	}
 
@@ -184,8 +187,7 @@
     };
     
     var attackSelect = function(event) {
-	console.log("@@@@@@@@ attackSelect: ", event);
-        var posClass, posNum;
+        var posClass, posNum, type, typeDem;
         
         posClass = ui.util.getPosClassFromElement(event.target);
         posNum = ui.util.convertPosClassToNum(posClass);
@@ -193,7 +195,10 @@
 	if (board.getAvailable(posNum[0], posNum[1])) {
 	    winCheck(event.target, false);
 	    moveSelected(posClass);
+	    type = ui.util.getTypeFromElem(event.target);
+	    typeDem = def.piece[type].dem || type; // XXX add proper method in ui
 	    ui.moveToHand(event.target, true);
+	    board.addCaptive(typeDem, true);
 	}
     };
     

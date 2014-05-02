@@ -5,6 +5,10 @@
     // keep track of where and what kind of pieces are on board
  
     var square = [];
+    var captive = {
+	my: [],
+	ai: []
+    };
         
     var board = {
         
@@ -105,9 +109,18 @@
 	    return pos;
 	},
 
+	addCaptive: function(type, mine) {
+	    var id = mine ? 'my' : 'ai';
+	    captive[id].push(type);	    
+	},
+
 	// Send the whole board info at once (no need to save state in server)
 	upload: function(success) {
 	    var xhr = new XMLHttpRequest();
+	    var data = {
+		square: square,
+		captive: captive
+	    };
 
 	    xhr.onload = function() {
 		success(JSON.parse(this.responseText));
@@ -115,13 +128,15 @@
 
 	    xhr.open("POST", "ai");
 	    xhr.setRequestHeader("Content-Type", "application/json");
-	    xhr.send(JSON.stringify(square)); // XXX upload mochigoma too
+	    //xhr.send(JSON.stringify(square));
+	    xhr.send(JSON.stringify(data));
 
 	    board.debug();
 	},
 
         debug: function() {
-            console.log(JSON.stringify(square));
+            console.log("SQUARE: " + JSON.stringify(square));
+            console.log("CAPTIVE: " + JSON.stringify(captive));
         }
     };
     
