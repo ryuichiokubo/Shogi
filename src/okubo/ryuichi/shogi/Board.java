@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 final class Board {
 
 	private final Piece[][] square;
+	private List<Piece> captives;
 
 	public Board(int row, int column) {
 		square = new Piece[row][column];
