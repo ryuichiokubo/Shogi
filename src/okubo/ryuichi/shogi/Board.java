@@ -142,6 +142,22 @@ final class Board {
 
 	}
 
+	public boolean hasInColumn(String type, Integer column) {
+		boolean res = false;
+		
+		for (int i = 0; i < square[column].length; i++) {
+			if (square[column][i] != null)
+				Logger.global.info("nihu check: " + square[column][i].getType());
+
+			if (square[column][i] != null && square[column][i].getType() == type) {
+				res = true;
+				break;
+			}
+		}
+		
+		return res;
+	}
+
 	@Override
 	public String toString() {
 		String res = "";

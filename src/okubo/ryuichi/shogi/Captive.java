@@ -43,15 +43,16 @@ final class Captive {
 	
 	public List<Hand> getAvailableHands() {
 		List<Hand> hands = new ArrayList<Hand>();
+		Board board = Board.getInstance();
 		
 		Set<String> keys = pieces.keySet();
 		for (String k: keys) {
-			Logger.global.info("k: " + k);
-			//if (k == "hu") {
-				//TODO
-			//}
-			for (Map<String, Integer> square: Board.getInstance().getEmptySquare()) {
-				hands.add(new Hand(k, -1, -1, square.get("x"), square.get("y")));
+			for (Map<String, Integer> square: board.getEmptySquare()) {
+				if (k == "hu" && board.hasInColumn("hu", square.get("x"))) {
+					continue; // XXX skip this column
+				} else {
+					hands.add(new Hand(k, -1, -1, square.get("x"), square.get("y")));
+				}
 			}
 		}
 
