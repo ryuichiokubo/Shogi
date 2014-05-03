@@ -3,6 +3,8 @@
 
     // Main controller
     
+    var gameState; // 'over'
+
     var setAvailable = function() {
 	// XXX do not allow such a place where it will make the piece unmovable
 
@@ -80,12 +82,14 @@
     };
 
     var pieceSelect = function(event) {
-        if (ui.util.hasClass(event.target, 'oppoPiece')) {
-            attackSelect(event);
-        } else {
-	    ui.setSelected(event);
-	    resetAvailable();
-	    setAvailable();
+	if (gameState !== 'over') {
+	    if (ui.util.hasClass(event.target, 'oppoPiece')) {
+                attackSelect(event);
+            } else {
+	        ui.setSelected(event);
+	        resetAvailable();
+	        setAvailable();
+	    }
 	}
     };
 
@@ -98,6 +102,7 @@
     	   } else {
     	       ui.dialog.win();
     	   }
+	   gameState = 'over';
         }
     };
 
@@ -182,39 +187,45 @@
 	ui.moveSelected(newPosClass);
 	resetAvailable();
         
-	board.upload(moveAi);
+	if (gameState !== 'over') {
+	    board.upload(moveAi);
+	}
     };
 
     var squareSelect = function(event) {
         var posClass, isInhand = false;
         
-        if (!ui.selected) {
-	    console.error("Square cannot be selected if no piece is selected.");
-            return;
-        }
-        
-        if (ui.isSelectedInhand()) {
-	    isInhand = true;
-	    ui.prepareInhandMove(ui.selected);
-        }
+	if (gameState !== 'over') {
+	    if (!ui.selected) {
+	        console.error("Square cannot be selected if no piece is selected.");
+                return;
+            }
+            
+            if (ui.isSelectedInhand()) {
+	        isInhand = true;
+	        ui.prepareInhandMove(ui.selected);
+            }
 
-        posClass = ui.util.getPosClassFromElement(event.target);
-        moveSelected(posClass, isInhand);
+            posClass = ui.util.getPosClassFromElement(event.target);
+            moveSelected(posClass, isInhand);
+	}
     };
     
     var attackSelect = function(event) {
         var posClass, posNum, type, typeDem;
         
-        posClass = ui.util.getPosClassFromElement(event.target);
-        posNum = ui.util.convertPosClassToNum(posClass);
+	if (gameState !== 'over') {
+	    posClass = ui.util.getPosClassFromElement(event.target);
+            posNum = ui.util.convertPosClassToNum(posClass);
 
-	if (board.getAvailable(posNum[0], posNum[1])) {
-	    winCheck(event.target, false);
-	    type = ui.util.getTypeFromElem(event.target);
-	    typeDem = def.piece[type].dem || type; // XXX add proper method in ui
-	    ui.moveToHand(event.target, true);
-	    board.addCaptive(typeDem, true);
-	    moveSelected(posClass); // XXX structure better... it has to be called in the end to upload
+	    if (board.getAvailable(posNum[0], posNum[1])) {
+	        winCheck(event.target, false);
+	        type = ui.util.getTypeFromElem(event.target);
+	        typeDem = def.piece[type].dem || type; // XXX add proper method in ui
+	        ui.moveToHand(event.target, true);
+	        board.addCaptive(typeDem, true);
+	        moveSelected(posClass); // XXX structure better... it has to be called in the end to upload
+	    }
 	}
     };
     
