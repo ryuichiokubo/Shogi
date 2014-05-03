@@ -102,15 +102,24 @@
     };
 
     var moveAi = function(data) {
-	var posClass, fromPiece, fromType, toType, toTypeDem, toPiece;
+	console.log("@@@@@@@@ data: ", data);
+	var isCaptive, posClass, fromPiece, fromType, toType, toTypeDem, toPiece;
 
+	isCaptive = data.fromX < 0 ? true : false; // XXX convey this info in better way
+
+	// move piece in UI
 	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
-	fromPiece = ui.getPiece(data.fromX, data.fromY);
-	fromType = ui.util.getTypeFromElem(fromPiece);
-	if (data.type !== fromType) {
-	    ui.promote(fromPiece, fromType);
+	if (isCaptive) {
+	    ui.removeCaptive(data.type, false);
+	    ui.setPiece(data.type, posClass, false, pieceSelect);
+	} else {
+	    fromPiece = ui.getPiece(data.fromX, data.fromY);
+	    fromType = ui.util.getTypeFromElem(fromPiece);
+	    if (data.type !== fromType) {
+	        ui.promote(fromPiece, fromType);
+	    }
+	    fromPiece.setAttribute('class', 'piece oppoPiece ' + posClass); // XXX add proper method in ui
 	}
-	fromPiece.setAttribute('class', 'piece oppoPiece ' + posClass); // XXX add proper method in ui
 
 	// move to InHand area if there is an existing piece
 	if (board.getPiece(data.toX, data.toY)) {
@@ -122,10 +131,13 @@
 	    winCheck(toPiece, true);
 	}
 
+	// move piece in board object
         board.setPiece(data.toX, data.toY, data.type, false);
-        board.removePiece(data.fromX, data.fromY);
-	// XXX if captive
-	//board.removeCaptive(type, true);
+	if (isCaptive) {
+	    board.removeCaptive(data.type, false);
+	} else {
+	    board.removePiece(data.fromX, data.fromY);
+	}
 	board.resetAvailable();
 
 	board.debug();
@@ -183,7 +195,7 @@
         
         if (ui.isSelectedInhand()) {
 	    isInhand = true;
-	    ui.prepareInhandMove();
+	    ui.prepareInhandMove(ui.selected);
         }
 
         posClass = ui.util.getPosClassFromElement(event.target);

@@ -120,17 +120,44 @@
             }
         },
 
-	prepareInhandMove: function() {
+	prepareInhandMove: function(elem, isCaptive) {
+	    var thisHasWrap, nextHasWrap, newClass;
+
             // Keep left-most piece of same kind without 'overwrap'
-            if (ui.selected.nextElementSibling) {
-                var thisHasWrap = util.hasClass(ui.selected, 'overwrap') ? true : false;
-                var nextHasWrap = util.hasClass(ui.selected.nextElementSibling, 'overwrap') ? true : false;
+            if (elem.nextElementSibling) {
+                thisHasWrap = util.hasClass(elem, 'overwrap') ? true : false;
+                nextHasWrap = util.hasClass(elem.nextElementSibling, 'overwrap') ? true : false;
                 if (!thisHasWrap && nextHasWrap) {
-                    ui.selected.nextSibling.setAttribute('class', 'piece');
+		    newClass = 'piece';
+		    if (isCaptive) {
+			newClass += ' oppoPiece';
+		    }
+                    elem.nextSibling.setAttribute('class', newClass);
                 }
             }
-            // Move selected to Set area from Mochigoma
-            elems.set.appendChild(ui.selected);
+
+	    if (!isCaptive) { // XXX organize better
+		// Move selected to Set area from Mochigoma
+            	elems.set.appendChild(elem);
+	    }
+	},
+
+	removeCaptive: function(type, mine) {
+	    var captive, oppoMochi;
+
+	    if (mine){
+		console.warn("removeCaptive: removing player's captive is not considered, may not work.");
+	    }
+
+            captive = document.querySelector("#oppoMochi>.piece[data-piece=" + type + "]");
+	    ui.prepareInhandMove(captive, true);
+	    
+	    if (captive) {
+		oppoMochi = document.querySelector("#oppoMochi");
+		oppoMochi.removeChild(captive);
+	    } else {
+		console.error("removeCaptive: captive to remove not found. type=" . type);
+	    }
 	},
 
 	moveSelected: function(newPosClass) {
