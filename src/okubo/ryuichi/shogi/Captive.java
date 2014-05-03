@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 final class Captive {
@@ -27,11 +28,9 @@ final class Captive {
 		List<Piece> sameTypes;
 		
 		if (pieces.containsKey(piece.type)) {
-			Logger.global.info("containsKey: " + piece.type);
 
 			sameTypes = pieces.get(piece.type);
 		} else {
-			Logger.global.info("NOT containsKey: " + piece.type);
 			sameTypes = new ArrayList<Piece>();
 		}
 		sameTypes.add(piece);
@@ -42,6 +41,23 @@ final class Captive {
 		pieces.clear();
 	}
 	
+	public List<Hand> getAvailableHands() {
+		List<Hand> hands = new ArrayList<Hand>();
+		
+		Set<String> keys = pieces.keySet();
+		for (String k: keys) {
+			Logger.global.info("k: " + k);
+			//if (k == "hu") {
+				//TODO
+			//}
+			for (Map<String, Integer> square: Board.getInstance().getEmptySquare()) {
+				hands.add(new Hand(k, -1, -1, square.get("x"), square.get("y")));
+			}
+		}
+
+		return hands;
+	}
+		
 	@Override
 	public String toString() {
 		String res = "Captive: ";

@@ -42,9 +42,9 @@ public class AiServlet extends HttpServlet {
 		}
 		Logger.global.info("aiCaptive: " + aiCaptive.toString());
 		Logger.global.info("myCaptive: " + myCaptive.toString());
-
 		
-		Board board = new Board(9, 9);
+		Board board = Board.getInstance(9, 9);
+		board.clear();
 		
 		String type;
 		boolean mine;
@@ -73,7 +73,7 @@ public class AiServlet extends HttpServlet {
 
 		Logger.global.info("board: " + board.toString());
 		
-		Game game = new Game(board);
+		Game game = new Game(board, myCaptive, aiCaptive);
 		Hand hand = game.getNextHand();
 		String json = gson.toJson(hand);
 

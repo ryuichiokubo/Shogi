@@ -5,13 +5,18 @@ import java.util.List;
 final class Game {
 
 	private final Board board;
+	private final Captive myCaptive;
+	private final Captive aiCaptive;
 	
-	public Game(Board board) {
+	public Game(Board board, Captive my, Captive ai) {
 		this.board = board;
+		this.myCaptive = my;
+		this.aiCaptive = ai;
 	}
 
 	public Hand getNextHand() {
 		List<Hand> hands = board.getAvailableHands();
+		hands.addAll(aiCaptive.getAvailableHands());
 		
 		// XXX get highest score from hands
 		int rand = (int) Math.floor(Math.random() * hands.size());

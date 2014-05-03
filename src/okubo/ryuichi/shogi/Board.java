@@ -1,18 +1,45 @@
 package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 final class Board {
 
-	private final Piece[][] square;
+	private static Piece[][] square = null;
+	private static int row;
+	private static int column;
 	private List<Piece> captives;
+	
+	private static final Board instance = new Board();
 
-	public Board(int row, int column) {
-		square = new Piece[row][column];
+	private Board() {}
+	
+//	public Board(int row, int column) {
+//		square = new Piece[row][column];
+//	}
+	
+	public static Board getInstance(int row, int column) {
+		if (square == null) {
+			Board.row = row;
+			Board.column = column;
+			square = new Piece[row][column];
+		}
+		return instance;
 	}
 
+	public static Board getInstance() {
+		return instance;
+	}
+	
+	public void clear() {
+		square = new Piece[row][column];
+	}
+	
 	public void setPiece(String type, int x, int y, boolean mine) {
 		Piece piece = Game.getPiece(type, x, y, mine);
 		square[x][y] = piece;
@@ -83,7 +110,6 @@ final class Board {
 		return hands;	
 	}
 	
-	// Check all available hands and return the best one
 	public List<Hand> getAvailableHands() {
 		List<Hand> hands = new ArrayList<Hand>();
 		
@@ -97,6 +123,23 @@ final class Board {
 		//Logger.global.info("hands: " + hands.toString());
 
 		return hands;
+	}
+	
+	public List<Map<String, Integer>> getEmptySquare() {
+		List<Map<String, Integer>> squares = new ArrayList<Map<String, Integer>>();
+		for (int i = 0; i < square.length; i++) {			
+			for (int j = 0; j < square[i].length; j++) {
+				if (square[i][j] == null) {
+					Map<String, Integer> xy = new HashMap<String, Integer>();
+					xy.put("x", i);
+					xy.put("y", j);
+					squares.add(xy);
+				}
+			}
+		}
+		
+		return squares;
+
 	}
 
 	@Override
