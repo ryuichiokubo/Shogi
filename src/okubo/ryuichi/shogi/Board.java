@@ -41,7 +41,7 @@ final class Board {
 	private List<Hand> getAvailableHands(Piece piece, int x, int y) {
 		List<Hand> hands = new ArrayList<Hand>();
 		
-		Logger.global.info("piece: " + piece.toString());
+		//Logger.global.info("piece: " + piece.toString());
 		
 		int[][] move = piece.getMove();
 		for (int i = 0; i < move.length; i++) {		
@@ -51,15 +51,15 @@ final class Board {
 				int newX = x + move[i][0] * j;
 				int newY = y + move[i][1] * j;
 				
-				Logger.global.info("newXY: " + newX + ", " + newY);
+				//Logger.global.info("newXY: " + newX + ", " + newY);
 				
 				if (isInBoard(newX, newY)) {
 					newPlace = square[newX][newY];
 					
 					if (newPlace != null) {
-						Logger.global.info("newPlace: " + newPlace.toString());
+						//Logger.global.info("newPlace: " + newPlace.toString());
 					} else {
-						Logger.global.info("newPlace: " + "null");								
+						//Logger.global.info("newPlace: " + "null");								
 					}
 
 					if (newPlace == null || newPlace.isMine() == true) {
@@ -94,7 +94,7 @@ final class Board {
 				}
 			}
 		}
-		Logger.global.info("hands: " + hands.toString());
+		//Logger.global.info("hands: " + hands.toString());
 
 		return hands;
 	}
