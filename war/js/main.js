@@ -102,10 +102,12 @@
     };
 
     var moveAi = function(data) {
-	console.log("@@@@@@@@ data: ", data);
 	var isCaptive, posClass, fromPiece, fromType, toType, toTypeDem, toPiece;
 
 	isCaptive = data.fromX < 0 ? true : false; // XXX convey this info in better way
+
+	fromPiece = ui.getPiece(data.fromX, data.fromY);
+	toPiece = ui.getPiece(data.toX, data.toY);
 
 	// move piece in UI
 	posClass = ui.util.convertPosNumToClass(data.toX, data.toY);
@@ -113,7 +115,6 @@
 	    ui.removeCaptive(data.type, false);
 	    ui.setPiece(data.type, posClass, false, pieceSelect);
 	} else {
-	    fromPiece = ui.getPiece(data.fromX, data.fromY);
 	    fromType = ui.util.getTypeFromElem(fromPiece);
 	    if (data.type !== fromType) {
 	        ui.promote(fromPiece, fromType);
@@ -123,7 +124,6 @@
 
 	// move to InHand area if there is an existing piece
 	if (board.getPiece(data.toX, data.toY)) {
-	    toPiece = ui.getPiece(data.toX, data.toY);
 	    ui.moveToHand(toPiece, false);
 	    toType = ui.util.getTypeFromElem(toPiece);
 	    toTypeDem = def.piece[toType].dem || toType; // XXX add proper method in ui
