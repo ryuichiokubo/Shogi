@@ -124,6 +124,8 @@
 
         board.setPiece(data.toX, data.toY, data.type, false);
         board.removePiece(data.fromX, data.fromY);
+	// XXX if captive
+	//board.removeCaptive(type, true);
 	board.resetAvailable();
 
 	board.debug();
@@ -132,13 +134,11 @@
     var moveSelected = function(newPosClass, isInhand) {
         var type, newPosNum, oldPosClass, oldPosNum;
         
-	var checkPromotionAndType = function(newPosNum, oldPosNum, isInhand) {
+	var checkPromotionAndType = function(type, newPosNum, oldPosNum) {
 	    // XXX do not allow non-nari if that will make the piece unmovable
 
-	    var type = ui.getSelectedType();
-
 	    var canPromote = function() {
-		if (isInhand || !def.piece[type].prom) {
+		if (!def.piece[type].prom) {
 		    return false;
 		} else {
 		    return ((newPosNum[1] < def.board.promoteRow) || (oldPosNum[1] < def.board.promoteRow));
@@ -153,15 +153,19 @@
 	    return type;
 	};
 
+	type = ui.getSelectedType();
 
         newPosNum = ui.util.convertPosClassToNum(newPosClass);
-        oldPosClass = ui.util.getPosClassFromElement(ui.selected);
-        oldPosNum = ui.util.convertPosClassToNum(oldPosClass);
-
-	type = checkPromotionAndType(newPosNum, oldPosNum, isInhand);
+	if (isInhand) {
+	    board.removeCaptive(type, true);
+	} else {
+	    oldPosClass = ui.util.getPosClassFromElement(ui.selected);
+	    oldPosNum = ui.util.convertPosClassToNum(oldPosClass);
+	    type = checkPromotionAndType(type, newPosNum, oldPosNum);
+	    board.removePiece(oldPosNum[0], oldPosNum[1]);
+	}
 
         board.setPiece(newPosNum[0], newPosNum[1], type, true);
-        board.removePiece(oldPosNum[0], oldPosNum[1]);
 
 	ui.moveSelected(newPosClass);
 	resetAvailable();
@@ -194,11 +198,11 @@
 
 	if (board.getAvailable(posNum[0], posNum[1])) {
 	    winCheck(event.target, false);
-	    moveSelected(posClass);
 	    type = ui.util.getTypeFromElem(event.target);
 	    typeDem = def.piece[type].dem || type; // XXX add proper method in ui
 	    ui.moveToHand(event.target, true);
 	    board.addCaptive(typeDem, true);
+	    moveSelected(posClass); // XXX structure better... it has to be called in the end to upload
 	}
     };
     

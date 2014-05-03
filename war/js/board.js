@@ -114,6 +114,17 @@
 	    captive[id].push(type);	    
 	},
 
+	removeCaptive: function(type, mine) {
+	    var id = mine ? 'my' : 'ai';
+	    var arr = captive[id];
+	    var index = arr.indexOf(type);
+	    if (index < 0) {
+		console.error("removeCaptive: captive to remove not found. type=" + type);
+	    } else {
+		captive[id].splice(index, 1);
+	    }
+	},
+
 	// Send the whole board info at once (no need to save state in server)
 	upload: function(success) {
 	    var xhr = new XMLHttpRequest();
@@ -128,10 +139,9 @@
 
 	    xhr.open("POST", "ai");
 	    xhr.setRequestHeader("Content-Type", "application/json");
-	    //xhr.send(JSON.stringify(square));
 	    xhr.send(JSON.stringify(data));
 
-	    board.debug();
+	    //board.debug();
 	},
 
         debug: function() {
