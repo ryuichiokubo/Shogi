@@ -20,12 +20,24 @@
 	    elems.set = document.querySelector("#set");
 	},
 
+	getSrcPath: function(type) {
+	    var path;
+
+	    // cf. css width for #set
+	    //if (window.document.body.clientWidth * 0.95 < 540) { // resized below this width
+	    if (window.document.body.clientWidth * 0.95 < 400) {
+		type = 'small/' + type;
+	    }
+            path = 'svg/' + type + '.svg';
+	    return path;
+	},
+
 	setPiece: function(piece, pos, mine, handler) {
 	    var classAttr, srcPath, img;
 
 	    img = document.createElement('img');
 
-            srcPath = 'svg/' + piece + '.svg';
+	    srcPath = ui.getSrcPath(piece);
 
             classAttr = 'piece' + ' ' + pos;
             if (mine === false) {
@@ -170,7 +182,7 @@
 	changePieceType: function(piece, changeTo) {
 	    var srcPath;
 
-	    srcPath = 'svg/' +  changeTo + '.svg';
+	    srcPath = ui.getSrcPath(changeTo);
             piece.setAttribute('src', srcPath);
 	    piece.setAttribute('data-piece', changeTo);
 	},
