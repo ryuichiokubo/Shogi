@@ -6,8 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
-final class Board {
-	//final class Board implements Cloneable {
+final class Board implements Cloneable {
 
 	private Piece[][] square = null;
 	private final int row;
@@ -28,6 +27,12 @@ final class Board {
 		square[x][y] = piece;
 	}
 	
+	public void movePiece(Hand h) {
+		Piece piece = Game.getPiece(h.type, false);
+		square[h.toX][h.toY] = piece;
+		square[h.fromX][h.fromY] = null;
+	}
+
 	private boolean isInBoard(int x, int y) {
 		// XXX row and column number is same for now
 		if (x >= 0 && x < square.length && y >= 0 && y < square.length) {
@@ -83,30 +88,31 @@ final class Board {
 	private void addToHands(List<Hand> hands, Piece piece, int x, int y,
 			int nextX, int nextY, Piece captured) {
 
+		Game game = Game.getInstance();
+		
 		Hand h1 = new Hand(piece.getType(), x, y, nextX, nextY);
-		h1.setScore(Game.calcScore(h1, captured, false));
+		h1.setScore(game.calcScore(h1, captured, false));
 		hands.add(h1);
 		
 		if (canPromote(piece, y, nextY)) {
 			Hand h2 = new Hand(piece.getProm(), x, y, nextX, nextY);
-			h2.setScore(Game.calcScore(h2, captured, true));
+			h2.setScore(game.calcScore(h2, captured, true));
 			hands.add(h2);							
 		}
 	}
 
-	List<Hand> getAvailableHands() {
+	List<Hand> getAvailableHands(boolean isPlayer) {
 		List<Hand> hands = new ArrayList<Hand>();
 		
 		for (int i = 0; i < square.length; i++) {			
 			for (int j = 0; j < square[i].length; j++) {
 				Piece piece = square[i][j];
-				if (piece != null && piece.isPlayer() == false) {
+				if (piece != null && piece.isPlayer() == isPlayer) {
 					// AI's piece found. Get available hands on this piece.
 					hands.addAll(getAvailableHands(piece, i, j));
 				}
 			}
 		}
-		Logger.global.info("board: " + this.toString());
 		Logger.global.info("hands: " + hands.toString());
 
 		return hands;
@@ -143,12 +149,15 @@ final class Board {
 		return res;
 	}
 
-//	@Override
-//	public Board clone() throws CloneNotSupportedException {
-//		Board cloned = (Board) super.clone();
-//		cloned.square = cloned.square.clone();
-//		return cloned;
-//	}
+	@Override
+	public Board clone() throws CloneNotSupportedException {
+		Board cloned = (Board) super.clone();
+		cloned.square = square.clone();
+		for (int i = 0; i < cloned.square.length; i++) {
+			cloned.square[i] = square[i].clone();
+		}
+		return cloned;
+	}
 	
 	@Override
 	public String toString() {

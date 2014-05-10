@@ -5,19 +5,19 @@ import com.google.gson.Gson;
 final class Hand {
 	
 	@SuppressWarnings("unused")
-	private final String type;
+	final String type;
 	
 	@SuppressWarnings("unused")
-	private final int fromX;
+	final int fromX;
 	
 	@SuppressWarnings("unused")
-	private final int fromY;
+	final int fromY;
 	
 	@SuppressWarnings("unused")
-	private final int toX;
+	final int toX;
 	
 	@SuppressWarnings("unused")
-	private final int toY;
+	final int toY;
 	
 	private int score = 0;
 

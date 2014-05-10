@@ -56,7 +56,7 @@ final class Game {
 	}
 
 	Hand getNextHand() {
-		List<Hand> hands = board.getAvailableHands();
+		List<Hand> hands = board.getAvailableHands(true);
 		hands.addAll(ai_captive.getAvailableHands());
 		
 		return getBestHand(hands);
@@ -82,10 +82,7 @@ final class Game {
 		return high_scores.get(rand);
 	}
 
-	static int calcScore(Hand h, Piece captured, boolean isPromoted) {
-		// XXX calculate next player's hand, 
-		//		and if the player captures / promotes, deduct the same score
-		
+	int calcScore(Hand h, Piece captured, boolean isPromoted) {
 		int score = 0;
 				
 		if (captured != null) {
@@ -96,15 +93,27 @@ final class Game {
 			score += SCORE_PROMOTION;
 		}
 		
-		//score -= calcNextPlayerScore(h);
+		score -= calcNextPlayerScore(h);
 		
 		return score;
 	}
 
-//	private static int calcNextPlayerScore(Hand h) {
-//		Board board = Board.getInstance(h);
-//		return 0;
-//	}
+	private int calcNextPlayerScore(Hand h) {
+		Board next_board;
+		
+		try {
+			next_board = board.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			throw new NullPointerException("No clone, no next_board.");
+		}
+
+		next_board.movePiece(h);
+		//List<Hand> hands = next_board.getAvailableHands(true);
+		// XXX move has to be defined from player's side
+
+		return 0;
+	}
 
 	static Piece getPiece(String type, boolean mine) {
 		Piece instance = null;
