@@ -11,12 +11,20 @@ public class AiServlet extends HttpServlet {
 	public void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws IOException {
 
-		Board board = Board.getInstance(9, 9);
-		
+		Game game;
+		Board board;
 		Captive myCaptive = Captive.getInstance(true);
 		Captive aiCaptive = Captive.getInstance(false);
 		
-		// XXX why not cleared??
+		if (Game.hasInstance()) {
+			game = Game.getInstance();
+			board = game.getBoard();
+		} else {
+			board = new Board(Game.BOARD_ROW, Game.BOARD_COL);
+			game = Game.getInstance(board, myCaptive, aiCaptive);				
+		}
+		
+		// XXX reuse previous board
 		board.clear();
 		myCaptive.clear(); 
 		aiCaptive.clear();
@@ -25,7 +33,6 @@ public class AiServlet extends HttpServlet {
 
 		Logger.global.info("board: " + board.toString());
 		
-		Game game = new Game(board, myCaptive, aiCaptive);
 		Hand hand = game.getNextHand();
 		String json = hand.toString();
 

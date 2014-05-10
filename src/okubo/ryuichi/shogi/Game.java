@@ -8,13 +8,18 @@ import java.util.logging.Logger;
 
 final class Game {
 
+	private static Game instance = null;
+	
 	private static final int SCORE_PROMOTION = 5;
 	private static final Map<Piece.Type, Integer> SCORE_CAPTURE
 		= new EnumMap<Piece.Type, Integer>(Piece.Type.class);
 	
 	private final Board board;
-	private final Captive myCaptive;
-	private final Captive aiCaptive;
+	private final Captive my_captive;
+	private final Captive ai_captive;
+
+	final static int BOARD_ROW = 9;
+	final static int BOARD_COL = 9;
 	
 	static {
 		for (Piece.Type type : Piece.Type.values()) {
@@ -22,40 +27,65 @@ final class Game {
 		}
 	}
 	
-	Game(Board board, Captive my, Captive ai) {
+	private Game(Board board, Captive my, Captive ai) {
 		this.board = board;
-		this.myCaptive = my;
-		this.aiCaptive = ai;
+		this.my_captive = my;
+		this.ai_captive = ai;
+	}
+	
+	static Game getInstance(Board board, Captive my, Captive ai) {
+		if (instance == null) {
+			instance = new Game(board, my, ai);
+		}
+		return instance;
+	}
+	
+	static Game getInstance() {
+		if (instance == null) {
+			throw new NullPointerException("Game instance not created yet");
+		}
+		return instance;
+	}
+	
+	static boolean hasInstance() {
+		return (instance != null);
+	}
+	
+	Board getBoard() {
+		return board;
 	}
 
 	Hand getNextHand() {
 		List<Hand> hands = board.getAvailableHands();
-		hands.addAll(aiCaptive.getAvailableHands());
+		hands.addAll(ai_captive.getAvailableHands());
 		
 		return getBestHand(hands);
 	}
 	
 	private Hand getBestHand(List<Hand> hands) {
-		List<Hand> highScores = new ArrayList<Hand>();
+		List<Hand> high_scores = new ArrayList<Hand>();
 		
 		for (Hand h : hands) {
-			int currentBest = highScores.isEmpty() ? 
-					0 : highScores.get(0).getScore();
+			int currentBest = high_scores.isEmpty() ? 
+					0 : high_scores.get(0).getScore();
 			
 			if (currentBest == h.getScore()) {
-				highScores.add(h);
+				high_scores.add(h);
 			} else if (currentBest < h.getScore()) {
-				highScores.clear();
-				highScores.add(h);
+				high_scores.clear();
+				high_scores.add(h);
 			}
 		}
 
-		int rand = (int) Math.floor(Math.random() * highScores.size());
+		int rand = (int) Math.floor(Math.random() * high_scores.size());
 		
-		return highScores.get(rand);
+		return high_scores.get(rand);
 	}
 
 	static int calcScore(Hand h, Piece captured, boolean isPromoted) {
+		// XXX calculate next player's hand, 
+		//		and if the player captures / promotes, deduct the same score
+		
 		int score = 0;
 				
 		if (captured != null) {
@@ -66,8 +96,15 @@ final class Game {
 			score += SCORE_PROMOTION;
 		}
 		
+		//score -= calcNextPlayerScore(h);
+		
 		return score;
 	}
+
+//	private static int calcNextPlayerScore(Hand h) {
+//		Board board = Board.getInstance(h);
+//		return 0;
+//	}
 
 	static Piece getPiece(String type, boolean mine) {
 		Piece instance = null;

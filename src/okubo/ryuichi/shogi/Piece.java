@@ -46,27 +46,27 @@ class Piece {
 	
 	private boolean player; // true: human, false: AI
 
-	public Piece(Type type) {
+	Piece(Type type) {
 		this.type = type;
 	}
 
-	public void setPlayer(boolean player) {
+	void setPlayer(boolean player) {
 		this.player = player;
 	}
 	
-	public boolean isPlayer() {
+	boolean isPlayer() {
 		return player;
 	}
 	
-	public Type getType() {
+	Type getType() {
 		return type;
 	}
 
-	public int[][] getMove() {
+	int[][] getMove() {
 		return type.getMove();
 	}
 
-	public Type getProm() {
+	Type getProm() {
 		return type.getProm();
 	}
 	

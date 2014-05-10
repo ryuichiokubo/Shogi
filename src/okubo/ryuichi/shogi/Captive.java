@@ -8,6 +8,9 @@ import java.util.Set;
 
 final class Captive {
 
+	// XXX combine with board
+	// <-- board and mochigoma should be always taken into account together
+	
 	Map<Piece.Type, List<Piece>> pieces
 		= new EnumMap<Piece.Type, List<Piece>>(Piece.Type.class);
 	
@@ -16,7 +19,7 @@ final class Captive {
 	
 	private Captive() {}
 	
-	public static Captive getInstance(boolean mine) {
+	static Captive getInstance(boolean mine) {
 		if (mine) {
 			return MY;
 		} else {
@@ -24,25 +27,25 @@ final class Captive {
 		}
 	}
 	
-	public void setCaptive(Piece piece) {
-		List<Piece> sameTypes;
+	void setCaptive(Piece piece) {
+		List<Piece> same_types;
 		
 		if (pieces.containsKey(piece)) {
-			sameTypes = pieces.get(piece.getType());
+			same_types = pieces.get(piece.getType());
 		} else {
-			sameTypes = new ArrayList<Piece>();
+			same_types = new ArrayList<Piece>();
 		}
-		sameTypes.add(piece);
-		pieces.put(piece.getType(), sameTypes);
+		same_types.add(piece);
+		pieces.put(piece.getType(), same_types);
 	}
 
-	public void clear() {
+	void clear() {
 		pieces.clear();
 	}
 	
-	public List<Hand> getAvailableHands() {
+	List<Hand> getAvailableHands() {
 		List<Hand> hands = new ArrayList<Hand>();
-		Board board = Board.getInstance();
+		Board board = Game.getInstance().getBoard();
 		
 		Set<Piece.Type> keys = pieces.keySet();
 		for (Piece.Type k: keys) {

@@ -29,11 +29,11 @@ final class Hand {
 		this.toY = toY;
 	}
 	
-	public void setScore(int score) {
+	void setScore(int score) {
 		this.score = score;
 	}
 	
-	public int getScore() {
+	int getScore() {
 		return score;
 	}
 	

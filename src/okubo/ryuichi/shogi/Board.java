@@ -7,33 +7,23 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 final class Board {
+	//final class Board implements Cloneable {
 
-	private static Piece[][] square = null;
-	private static int row;
-	private static int column;
-	
-	private static final Board instance = new Board();
+	private Piece[][] square = null;
+	private final int row;
+	private final int column;
 
-	private Board() {}
-	
-	public static Board getInstance(int row, int column) {
-		if (square == null) {
-			Board.row = row;
-			Board.column = column;
-			square = new Piece[row][column];
-		}
-		return instance;
+	Board(int row, int column) {
+		this.row = row;
+		this.column = column;
+		square = new Piece[row][column];
 	}
 
-	public static Board getInstance() {
-		return instance;
-	}
-	
-	public void clear() {
+	void clear() {
 		square = new Piece[row][column];
 	}
 	
-	public void setPiece(String type, int x, int y, boolean mine) {
+	void setPiece(String type, int x, int y, boolean mine) {
 		Piece piece = Game.getPiece(type, mine);
 		square[x][y] = piece;
 	}
@@ -48,13 +38,13 @@ final class Board {
 	}
 
 	private boolean canPromote(Piece piece, int oldY, int nextY) {
-		boolean pieceOk = false;
-		boolean placeOk = false;
+		boolean piece_ok = false;
+		boolean place_ok = false;
 		
-		pieceOk = (piece.getProm() != null);
-		placeOk = (oldY >= 6 || nextY >= 6);
+		piece_ok = (piece.getProm() != null);
+		place_ok = (oldY >= 6 || nextY >= 6);
 		
-		return pieceOk && placeOk;
+		return piece_ok && place_ok;
 	}
 
 	// Get available hands for one piece
@@ -104,7 +94,7 @@ final class Board {
 		}
 	}
 
-	public List<Hand> getAvailableHands() {
+	List<Hand> getAvailableHands() {
 		List<Hand> hands = new ArrayList<Hand>();
 		
 		for (int i = 0; i < square.length; i++) {			
@@ -116,12 +106,13 @@ final class Board {
 				}
 			}
 		}
+		Logger.global.info("board: " + this.toString());
 		Logger.global.info("hands: " + hands.toString());
 
 		return hands;
 	}
 	
-	public List<Map<String, Integer>> getEmptySquare() {
+	List<Map<String, Integer>> getEmptySquare() {
 		List<Map<String, Integer>> squares = new ArrayList<Map<String, Integer>>();
 		for (int i = 0; i < square.length; i++) {			
 			for (int j = 0; j < square[i].length; j++) {
@@ -138,7 +129,7 @@ final class Board {
 
 	}
 
-	public boolean hasInColumn(Piece.Type type, Integer column) {
+	boolean hasInColumn(Piece.Type type, Integer column) {
 		boolean res = false;
 		
 		for (int i = 0; i < square[column].length; i++) {
@@ -152,6 +143,13 @@ final class Board {
 		return res;
 	}
 
+//	@Override
+//	public Board clone() throws CloneNotSupportedException {
+//		Board cloned = (Board) super.clone();
+//		cloned.square = cloned.square.clone();
+//		return cloned;
+//	}
+	
 	@Override
 	public String toString() {
 		String res = "";
