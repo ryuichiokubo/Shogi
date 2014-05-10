@@ -21,8 +21,7 @@ public class AiServlet extends HttpServlet {
 		myCaptive.clear(); 
 		aiCaptive.clear();
 		
-		ClientDataParser parser = ClientDataParser.getInstance();
-		parser.parse(req, board, myCaptive, aiCaptive);
+		ClientDataParser.parse(req, board, myCaptive, aiCaptive);
 
 		Logger.global.info("board: " + board.toString());
 		

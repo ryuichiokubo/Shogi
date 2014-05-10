@@ -4,11 +4,22 @@ import com.google.gson.Gson;
 
 final class Hand {
 	
-	final String type;
-	final int fromX;
-	final int fromY;
-	final int toX;
-	final int toY;
+	@SuppressWarnings("unused")
+	private final String type;
+	
+	@SuppressWarnings("unused")
+	private final int fromX;
+	
+	@SuppressWarnings("unused")
+	private final int fromY;
+	
+	@SuppressWarnings("unused")
+	private final int toX;
+	
+	@SuppressWarnings("unused")
+	private final int toY;
+	
+	private int score = 0;
 
 	Hand(Piece.Type type, int fromX, int fromY, int toX, int toY) {
 		this.type = type.toString().toLowerCase(); 
@@ -16,6 +27,14 @@ final class Hand {
 		this.fromY = fromY;
 		this.toX = toX;
 		this.toY = toY;
+	}
+	
+	public void setScore(int score) {
+		this.score = score;
+	}
+	
+	public int getScore() {
+		return score;
 	}
 	
 	@Override

@@ -12,16 +12,11 @@ import com.google.gson.Gson;
 
 final class ClientDataParser {
 
-	private static ClientDataParser instance = new ClientDataParser();
-	private Gson gson = new Gson();
+	private static Gson gson = new Gson();
 	
 	private ClientDataParser() {}
 	
-	public static ClientDataParser getInstance() {
-		return instance;
-	}
-
-	public void parse(HttpServletRequest req, Board board, Captive myCaptive, Captive aiCaptive)
+	static void parse(HttpServletRequest req, Board board, Captive myCaptive, Captive aiCaptive)
 			throws IOException {
 		
 		BufferedReader reader = req.getReader();
@@ -33,7 +28,7 @@ final class ClientDataParser {
 		parseSquare(data, board);
 	}
 	
-	private void parseCaptive(Map<String, Object> data, Captive myCaptive, Captive aiCaptive) {
+	private static void parseCaptive(Map<String, Object> data, Captive myCaptive, Captive aiCaptive) {
 		@SuppressWarnings("unchecked")
 		Map<String, List<String>> captive
 			= (Map<String, List<String>>) data.get("captive");
@@ -48,7 +43,7 @@ final class ClientDataParser {
 		}
 	}
 	
-	private void parseSquare(Map<String, Object> data, Board board) {
+	private static void parseSquare(Map<String, Object> data, Board board) {
 		@SuppressWarnings("unchecked")
 		List<List<Map<String, Object>>> squares 
 			= (List<List<Map<String, Object>>>) data.get("square");

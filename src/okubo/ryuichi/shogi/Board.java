@@ -38,21 +38,21 @@ final class Board {
 		square[x][y] = piece;
 	}
 	
-	private boolean isInBoard(int newX, int newY) {
+	private boolean isInBoard(int x, int y) {
 		// XXX row and column number is same for now
-		if (newX >= 0 && newX < square.length && newY >= 0 && newY < square.length) {
+		if (x >= 0 && x < square.length && y >= 0 && y < square.length) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
-	private boolean canPromote(Piece piece, int oldY, int newY) {
+	private boolean canPromote(Piece piece, int oldY, int nextY) {
 		boolean pieceOk = false;
 		boolean placeOk = false;
 		
 		pieceOk = (piece.getProm() != null);
-		placeOk = (oldY >= 6 || newY >= 6);
+		placeOk = (oldY >= 6 || nextY >= 6);
 		
 		return pieceOk && placeOk;
 	}
@@ -65,22 +65,19 @@ final class Board {
 		for (int i = 0; i < move.length; i++) {		
 			for (int j = 1; ; j++) {
 				boolean stop = false;
-				Piece newPlace = null;
-				int newX = x + move[i][0] * j;
-				int newY = y + move[i][1] * j;
+				Piece captured = null;
+				int nextX = x + move[i][0] * j;
+				int nextY = y + move[i][1] * j;
 								
-				if (isInBoard(newX, newY)) {
-					newPlace = square[newX][newY];
+				if (isInBoard(nextX, nextY)) {
+					captured = square[nextX][nextY];
 					
-					if (newPlace == null || newPlace.isPlayer() == true) {
-						hands.add(new Hand(piece.getType(), x, y, newX, newY));
-						if (canPromote(piece, y, newY)) {
-							hands.add(new Hand(piece.getProm(), x, y, newX, newY));							
-						}
+					if (captured == null || captured.isPlayer() == true) {
+						addToHands(hands, piece, x, y, nextX, nextY, captured);
 					}
 				}					
 				
-				if (newPlace != null || !isInBoard(newX, newY)) {
+				if (captured != null || !isInBoard(nextX, nextY)) {
 					stop = true;
 				}
 				
@@ -93,6 +90,20 @@ final class Board {
 		return hands;	
 	}
 	
+	private void addToHands(List<Hand> hands, Piece piece, int x, int y,
+			int nextX, int nextY, Piece captured) {
+
+		Hand h1 = new Hand(piece.getType(), x, y, nextX, nextY);
+		h1.setScore(Game.calcScore(h1, captured, false));
+		hands.add(h1);
+		
+		if (canPromote(piece, y, nextY)) {
+			Hand h2 = new Hand(piece.getProm(), x, y, nextX, nextY);
+			h2.setScore(Game.calcScore(h2, captured, true));
+			hands.add(h2);							
+		}
+	}
+
 	public List<Hand> getAvailableHands() {
 		List<Hand> hands = new ArrayList<Hand>();
 		
