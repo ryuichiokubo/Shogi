@@ -1,17 +1,26 @@
 package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 final class Game {
 
 	private static final int SCORE_PROMOTION = 5;
-	private static final int SCORE_CAPTURE = 5;
+	private static final Map<Piece.Type, Integer> SCORE_CAPTURE
+		= new EnumMap<Piece.Type, Integer>(Piece.Type.class);
 	
 	private final Board board;
 	private final Captive myCaptive;
 	private final Captive aiCaptive;
+	
+	static {
+		for (Piece.Type type : Piece.Type.values()) {
+			SCORE_CAPTURE.put(type, type.getScore());
+		}
+	}
 	
 	Game(Board board, Captive my, Captive ai) {
 		this.board = board;
@@ -50,7 +59,7 @@ final class Game {
 		int score = 0;
 				
 		if (captured != null) {
-			score += SCORE_CAPTURE;
+			score += SCORE_CAPTURE.get(captured.getType());
 		}
 		
 		if (isPromoted) {
