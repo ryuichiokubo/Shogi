@@ -23,26 +23,30 @@ final class Game {
 		return hands.get(rand);
 	}
 	
-	public static Piece getPiece(String type, int x, int y, boolean mine) {
+	public static Piece getPiece(String type, boolean mine) {
 		Piece instance = null;
 		switch (type) {
-			case "hu": 		instance = new Hu(x, y, mine); 			break;
-			case "kyosha": 	instance = new Kyosha(x, y, mine); 		break;
-			case "keima": 	instance = new Keima(x, y, mine); 		break;
-			case "gin": 	instance = new Gin(x, y, mine); 		break;
-			case "kin": 	instance = new Kin(x, y, mine); 		break;
-			case "o": 		instance = new O(x, y, mine); 			break;
-			case "hisha": 	instance = new Hisha(x, y, mine); 		break;
-			case "kaku": 	instance = new Kaku(x, y, mine); 		break;
-			case "tokin": 	instance = new Tokin(x, y, mine); 		break;
-			case "narikyo": instance = new Narikyo(x, y, mine); 	break;
-			case "narikei": instance = new Narikei(x, y, mine); 	break;
-			case "narigin": instance = new Narigin(x, y, mine); 	break;
-			case "ryu": 	instance = new Ryu(x, y, mine); 		break;
-			case "uma": 	instance = new Uma(x, y, mine); 		break;
+			case "hu": 		instance = new Piece(Piece.Type.HU); 		break;
+			case "kyosha": 	instance = new Piece(Piece.Type.KYOSHA); 	break;
+			case "keima": 	instance = new Piece(Piece.Type.KEIMA); 	break;
+			case "gin": 	instance = new Piece(Piece.Type.GIN); 		break;
+			case "kin": 	instance = new Piece(Piece.Type.KIN); 		break;
+			case "o": 		instance = new Piece(Piece.Type.O); 		break;
+			case "hisha": 	instance = new Piece(Piece.Type.HISHA); 	break;
+			case "kaku": 	instance = new Piece(Piece.Type.KAKU); 		break;
+			case "tokin": 	instance = new Piece(Piece.Type.TOKIN); 	break;
+			case "narikyo": instance = new Piece(Piece.Type.NARIKYO); 	break;
+			case "narikei": instance = new Piece(Piece.Type.NARIKEI); 	break;
+			case "narigin": instance = new Piece(Piece.Type.NARIGIN); 	break;
+			case "ryu": 	instance = new Piece(Piece.Type.RYU); 		break;
+			case "uma": 	instance = new Piece(Piece.Type.UMA); 		break;
 		}
 		
-		// XXX throw error if instance is null?
+		if (instance == null) {
+			throw new NullPointerException("Unknown piece type.");
+		}
+		
+		instance.setPlayer(mine);
 		
 		return instance;
 	}

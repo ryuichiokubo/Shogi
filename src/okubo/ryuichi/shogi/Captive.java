@@ -1,15 +1,15 @@
 package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 
 final class Captive {
 
-	Map<String, List<Piece>> pieces = new HashMap<String, List<Piece>>();
+	Map<Piece.Type, List<Piece>> pieces
+		= new EnumMap<Piece.Type, List<Piece>>(Piece.Type.class);
 	
 	private static final Captive MY = new Captive();
 	private static final Captive AI = new Captive();
@@ -27,14 +27,13 @@ final class Captive {
 	public void setCaptive(Piece piece) {
 		List<Piece> sameTypes;
 		
-		if (pieces.containsKey(piece.type)) {
-
-			sameTypes = pieces.get(piece.type);
+		if (pieces.containsKey(piece)) {
+			sameTypes = pieces.get(piece.getType());
 		} else {
 			sameTypes = new ArrayList<Piece>();
 		}
 		sameTypes.add(piece);
-		pieces.put(piece.type, sameTypes);
+		pieces.put(piece.getType(), sameTypes);
 	}
 
 	public void clear() {
@@ -45,10 +44,10 @@ final class Captive {
 		List<Hand> hands = new ArrayList<Hand>();
 		Board board = Board.getInstance();
 		
-		Set<String> keys = pieces.keySet();
-		for (String k: keys) {
+		Set<Piece.Type> keys = pieces.keySet();
+		for (Piece.Type k: keys) {
 			for (Map<String, Integer> square: board.getEmptySquare()) {
-				if (k == "hu" && board.hasInColumn("hu", square.get("x"))) {
+				if (k == Piece.Type.HU && board.hasInColumn(Piece.Type.HU, square.get("x"))) {
 					continue; // XXX skip this column
 				} else {
 					hands.add(new Hand(k, -1, -1, square.get("x"), square.get("y")));

@@ -1,41 +1,71 @@
 package okubo.ryuichi.shogi;
 
-abstract class Piece {
-
-	protected final String type;
-	protected final int x;
-	protected final int y;
-	protected final boolean mine; // true: human, false: AI
-	protected final String prom;
-	protected final int[][] move; // available position relative to current position [x, y, anywhere in this direction(1: true)]
+class Piece {
 	
-	Piece(String type, int x, int y, boolean mine, String prom, int[][] move) {
+	enum Type {
+		O(new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}, null),
+		RYU(new int[][] {{0, 1, 1}, {1, 0, 1}, {0, -1, 1}, {-1, 0, 1}, {-1, 1}, {1, 1}, {1, -1}, {-1, -1}}, null),
+		UMA(new int[][] {{-1, 1, 1}, {1, 1, 1}, {1, -1, 1}, {-1, -1, 1}, {0, -1}, {1, 0}, {0, 1}, {-1, 0}}, null),
+		NARIGIN(new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}, null),
+		NARIKEI(new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}, null),
+		NARIKYO(new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}, null),
+		TOKIN(new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}, null),
+
+		HISHA(new int[][] {{0, 1, 1}, {1, 0, 1}, {0, -1, 1}, {-1, 0, 1}}, Type.RYU),
+		KAKU(new int[][] {{-1, 1, 1}, {1, 1, 1}, {1, -1, 1}, {-1, -1, 1}}, Type.UMA),
+		KIN(new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}, null),
+		GIN(new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, -1}, {1, -1}}, Type.NARIGIN),
+		KEIMA(new int[][] {{-1, 2}, {1, 2}}, Type.NARIKEI),
+		KYOSHA(new int[][] {{0, 1, 1}}, Type.NARIKYO),
+		HU(new int[][] {{0, 1}}, Type.TOKIN);
+
+		private final int[][] move; // available position relative to current position [x, y, anywhere in this direction(1: true)]
+		private final Type prom;
+		
+		Type(int[][] move, Type prom) {
+			this.move = move;
+			this.prom = prom;
+		}
+		
+		int[][] getMove() {
+			return move;
+		}
+
+		Type getProm() {
+			return prom;
+		}
+	}
+	
+	private final Type type;
+	
+	private boolean player; // true: human, false: AI
+
+	public Piece(Type type) {
 		this.type = type;
-		this.x = x;
-		this.y = y;
-		this.mine = mine;
-		this.prom = prom;
-		this.move = move;
-	};
-	
-	public boolean isMine() {
-		return mine;
-	}
-	
-	public int[][] getMove() {
-		return move;
 	}
 
-	public String getType() {
+	public void setPlayer(boolean player) {
+		this.player = player;
+	}
+	
+	public boolean isPlayer() {
+		return player;
+	}
+	
+	public Type getType() {
 		return type;
 	}
 
-	public String getPromType() {
-		return prom;
+	public int[][] getMove() {
+		return type.getMove();
 	}
 
+	public Type getProm() {
+		return type.getProm();
+	}
+	
 	@Override
 	public String toString() {
-		return type + "(" + mine + ")";
+		return type.toString() + "(" + player + ")";
 	}
 }

@@ -2,10 +2,8 @@ package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Logger;
 
 final class Board {
@@ -13,15 +11,10 @@ final class Board {
 	private static Piece[][] square = null;
 	private static int row;
 	private static int column;
-	private List<Piece> captives;
 	
 	private static final Board instance = new Board();
 
 	private Board() {}
-	
-//	public Board(int row, int column) {
-//		square = new Piece[row][column];
-//	}
 	
 	public static Board getInstance(int row, int column) {
 		if (square == null) {
@@ -41,7 +34,7 @@ final class Board {
 	}
 	
 	public void setPiece(String type, int x, int y, boolean mine) {
-		Piece piece = Game.getPiece(type, x, y, mine);
+		Piece piece = Game.getPiece(type, mine);
 		square[x][y] = piece;
 	}
 	
@@ -58,7 +51,7 @@ final class Board {
 		boolean pieceOk = false;
 		boolean placeOk = false;
 		
-		pieceOk = (piece.prom != null && piece.prom.length() > 0);
+		pieceOk = (piece.getProm() != null);
 		placeOk = (oldY >= 6 || newY >= 6);
 		
 		return pieceOk && placeOk;
@@ -68,8 +61,6 @@ final class Board {
 	private List<Hand> getAvailableHands(Piece piece, int x, int y) {
 		List<Hand> hands = new ArrayList<Hand>();
 		
-		//Logger.global.info("piece: " + piece.toString());
-		
 		int[][] move = piece.getMove();
 		for (int i = 0; i < move.length; i++) {		
 			for (int j = 1; ; j++) {
@@ -77,22 +68,14 @@ final class Board {
 				Piece newPlace = null;
 				int newX = x + move[i][0] * j;
 				int newY = y + move[i][1] * j;
-				
-				//Logger.global.info("newXY: " + newX + ", " + newY);
-				
+								
 				if (isInBoard(newX, newY)) {
 					newPlace = square[newX][newY];
 					
-					if (newPlace != null) {
-						//Logger.global.info("newPlace: " + newPlace.toString());
-					} else {
-						//Logger.global.info("newPlace: " + "null");								
-					}
-
-					if (newPlace == null || newPlace.isMine() == true) {
+					if (newPlace == null || newPlace.isPlayer() == true) {
 						hands.add(new Hand(piece.getType(), x, y, newX, newY));
 						if (canPromote(piece, y, newY)) {
-							hands.add(new Hand(piece.getPromType(), x, y, newX, newY));							
+							hands.add(new Hand(piece.getProm(), x, y, newX, newY));							
 						}
 					}
 				}					
@@ -106,7 +89,7 @@ final class Board {
 				}
 			}
 		}
-		
+
 		return hands;	
 	}
 	
@@ -115,12 +98,14 @@ final class Board {
 		
 		for (int i = 0; i < square.length; i++) {			
 			for (int j = 0; j < square[i].length; j++) {
-				if (square[i][j] != null && square[i][j].isMine() == false) {
-					hands.addAll(getAvailableHands(square[i][j], i, j));
+				Piece piece = square[i][j];
+				if (piece != null && piece.isPlayer() == false) {
+					// AI's piece found. Get available hands on this piece.
+					hands.addAll(getAvailableHands(piece, i, j));
 				}
 			}
 		}
-		//Logger.global.info("hands: " + hands.toString());
+		Logger.global.info("hands: " + hands.toString());
 
 		return hands;
 	}
@@ -142,14 +127,12 @@ final class Board {
 
 	}
 
-	public boolean hasInColumn(String type, Integer column) {
+	public boolean hasInColumn(Piece.Type type, Integer column) {
 		boolean res = false;
 		
 		for (int i = 0; i < square[column].length; i++) {
-			if (square[column][i] != null)
-				Logger.global.info("nihu check: " + square[column][i].getType());
-
-			if (square[column][i] != null && square[column][i].getType() == type) {
+			Piece onCol = square[column][i];
+			if (onCol != null && onCol.getType() == type) {
 				res = true;
 				break;
 			}

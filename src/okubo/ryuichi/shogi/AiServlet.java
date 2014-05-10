@@ -19,49 +19,50 @@ public class AiServlet extends HttpServlet {
 
 		Gson gson = new Gson();
 		BufferedReader reader = req.getReader();
-		Map data = gson.fromJson(reader, HashMap.class);
+		Map<String, Object> data = gson.fromJson(reader, HashMap.class);
 		
-		List<List<Map>> square = (List<List<Map>>) data.get("square");
-		Logger.global.info("square: " + square.toString());
+		List<List<Map<String, Object>>> squares 
+			= (List<List<Map<String, Object>>>) data.get("square");
+		//Logger.global.info("square: " + squares.toString());
 		
 		Map<String, List<String>> captive = (Map<String, List<String>>) data.get("captive");
-		Logger.global.info("captive: " + captive.toString());
+		//Logger.global.info("captive: " + captive.toString());
 
 		Captive myCaptive = Captive.getInstance(true);
 		Captive aiCaptive = Captive.getInstance(false);
 		
 		myCaptive.clear(); // XXX why not cleared??
 		aiCaptive.clear(); // XXX why not cleared??
+		
 		for (String type: captive.get("my")) {
-			Piece p = Game.getPiece(type, -1, -1, true);
+			Piece p = Game.getPiece(type, true);
 			myCaptive.setCaptive(p);
 		}
 		for (String type: captive.get("ai")) {
-			Piece p = Game.getPiece(type, -1, -1, false);
+			Piece p = Game.getPiece(type, false);
 			aiCaptive.setCaptive(p);
 		}
-		Logger.global.info("aiCaptive: " + aiCaptive.toString());
-		Logger.global.info("myCaptive: " + myCaptive.toString());
+		//Logger.global.info("aiCaptive: " + aiCaptive.toString());
+		//Logger.global.info("myCaptive: " + myCaptive.toString());
 		
 		Board board = Board.getInstance(9, 9);
 		board.clear();
 		
-		String type;
-		boolean mine;
 		int x = 0;
 		int y = 0;
 	
-		for (List<Map> column: square) {
+		for (List<Map<String, Object>> column: squares) {
 			//Logger.global.info("column: " + column.toString());
-			for (Map place: column) {
-				if (place != null && place.get("type") != null) {
-					//Logger.global.info("place: " + place.toString() + x + ", " + y);
+			for (Map<String, Object> square: column) {
+				if (square != null && square.get("type") != null) {
+					//Logger.global.info("square: " + square.toString() + x + ", " + y);
 					// XXX assert type, mine etc?
-					type = (String) place.get("type");
-					if (place.get("mine") == null) {
+					String type = (String) square.get("type");
+					boolean mine;
+					if (square.get("mine") == null) {
 						mine = false;
 					} else {
-						mine = (boolean) place.get("mine");
+						mine = (boolean) square.get("mine");
 					}
 					board.setPiece(type, x, y, mine);
 				}
