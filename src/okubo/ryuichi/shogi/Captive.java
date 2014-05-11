@@ -17,12 +17,16 @@ final class Captive {
 	private static final Captive MY = new Captive();
 	private static final Captive AI = new Captive();
 	
+	private boolean isPlayer;
+	
 	private Captive() {}
 	
 	static Captive getInstance(boolean mine) {
 		if (mine) {
+			MY.isPlayer = true;
 			return MY;
 		} else {
+			AI.isPlayer = false;
 			return AI;
 		}
 	}
@@ -50,17 +54,25 @@ final class Captive {
 		Set<Piece.Type> keys = pieces.keySet();
 		for (Piece.Type k: keys) {
 			for (Map<String, Integer> square: board.getEmptySquare()) {
-				if (k == Piece.Type.HU && board.hasInColumn(Piece.Type.HU, square.get("x"))) {
+				if (k == Piece.Type.HU && board.hasInColumn(Piece.Type.HU, square.get("x"), this.isPlayer)) {
 					continue; // XXX skip this column
 				} else {
-					hands.add(new Hand(k, -1, -1, square.get("x"), square.get("y")));
+					addToHands(hands, k, -1, -1, square.get("x"), square.get("y"));
 				}
 			}
 		}
 
 		return hands;
 	}
-		
+	
+	private void addToHands(List<Hand> hands, Piece.Type type, int fromX, int fromY, int toX, int toY) {
+		Game game = Game.getInstance();
+
+		Hand h = new Hand(type, fromX, fromY, toX, toY);
+		h.setScore(game.calcScore(h, null, false, this.isPlayer));
+		hands.add(h);
+	}
+	
 	@Override
 	public String toString() {
 		String res = "Captive: ";

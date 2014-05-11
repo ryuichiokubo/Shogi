@@ -110,7 +110,8 @@ final class Game {
 
 		next_board.movePiece(hand);
 		List<Hand> hands = next_board.getAvailableHands(true);
-		
+		hands.addAll(my_captive.getAvailableHands());
+
 		//Logger.global.info(" hands: " + hands.toString());
 
 		int sum = 0;

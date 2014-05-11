@@ -30,11 +30,13 @@ final class Board implements Cloneable {
 	public void movePiece(Hand h) {
 		Piece piece = Game.getPiece(h.type, false);
 		square[h.toX][h.toY] = piece;
-		square[h.fromX][h.fromY] = null;
+		if (isInBoard(h.fromX, h.fromY)) {
+			square[h.fromX][h.fromY] = null;
+		}
 	}
 
 	private boolean isInBoard(int x, int y) {
-		// XXX row and column number is same for now
+		// XXX row and column number are same for now
 		if (x >= 0 && x < square.length && y >= 0 && y < square.length) {
 			return true;
 		} else {
@@ -139,12 +141,12 @@ final class Board implements Cloneable {
 
 	}
 
-	boolean hasInColumn(Piece.Type type, Integer column) {
+	boolean hasInColumn(Piece.Type type, Integer column, boolean isPlayer) {
 		boolean res = false;
 		
 		for (int i = 0; i < square[column].length; i++) {
 			Piece onCol = square[column][i];
-			if (onCol != null && onCol.getType() == type) {
+			if (onCol != null && onCol.getType() == type && onCol.isPlayer() == isPlayer) {
 				res = true;
 				break;
 			}
