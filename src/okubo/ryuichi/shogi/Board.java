@@ -42,21 +42,26 @@ final class Board implements Cloneable {
 		}
 	}
 
-	private boolean canPromote(Piece piece, int oldY, int nextY) {
+	private boolean canPromote(Piece piece, int oldY, int nextY, boolean isPlayer) {
 		boolean piece_ok = false;
 		boolean place_ok = false;
 		
 		piece_ok = (piece.getProm() != null);
-		place_ok = (oldY >= 6 || nextY >= 6);
 		
+		if (isPlayer) {
+			place_ok = (oldY <= 2 || nextY <= 2);			
+		} else {
+			place_ok = (oldY >= 6 || nextY >= 6);
+		}
 		return piece_ok && place_ok;
 	}
 
 	// Get available hands for one piece
-	private List<Hand> getAvailableHands(Piece piece, int x, int y) {
+	private List<Hand> getAvailableHands(Piece piece, int x, int y, boolean isPlayer) {
 		List<Hand> hands = new ArrayList<Hand>();
 		
-		int[][] move = piece.getMove();
+		int[][] move = piece.getMove(isPlayer);
+		
 		for (int i = 0; i < move.length; i++) {		
 			for (int j = 1; ; j++) {
 				boolean stop = false;
@@ -67,10 +72,10 @@ final class Board implements Cloneable {
 				if (isInBoard(nextX, nextY)) {
 					captured = square[nextX][nextY];
 					
-					if (captured == null || captured.isPlayer() == true) {
-						addToHands(hands, piece, x, y, nextX, nextY, captured);
+					if (captured == null || captured.isPlayer() != isPlayer) {
+						addToHands(hands, piece, x, y, nextX, nextY, captured, isPlayer);
 					}
-				}					
+				}		
 				
 				if (captured != null || !isInBoard(nextX, nextY)) {
 					stop = true;
@@ -85,18 +90,17 @@ final class Board implements Cloneable {
 		return hands;	
 	}
 	
-	private void addToHands(List<Hand> hands, Piece piece, int x, int y,
-			int nextX, int nextY, Piece captured) {
+	private void addToHands(List<Hand> hands, Piece piece, int x, int y, int nextX, int nextY, Piece captured, boolean isPlayer) {
 
 		Game game = Game.getInstance();
 		
 		Hand h1 = new Hand(piece.getType(), x, y, nextX, nextY);
-		h1.setScore(game.calcScore(h1, captured, false));
+		h1.setScore(game.calcScore(h1, captured, false, isPlayer));
 		hands.add(h1);
 		
-		if (canPromote(piece, y, nextY)) {
+		if (canPromote(piece, y, nextY, isPlayer)) {
 			Hand h2 = new Hand(piece.getProm(), x, y, nextX, nextY);
-			h2.setScore(game.calcScore(h2, captured, true));
+			h2.setScore(game.calcScore(h2, captured, true, isPlayer));
 			hands.add(h2);							
 		}
 	}
@@ -109,11 +113,11 @@ final class Board implements Cloneable {
 				Piece piece = square[i][j];
 				if (piece != null && piece.isPlayer() == isPlayer) {
 					// AI's piece found. Get available hands on this piece.
-					hands.addAll(getAvailableHands(piece, i, j));
+					hands.addAll(getAvailableHands(piece, i, j, isPlayer));
 				}
 			}
 		}
-		Logger.global.info("hands: " + hands.toString());
+		Logger.global.info("player:" + isPlayer + " hands: " + hands.toString());
 
 		return hands;
 	}

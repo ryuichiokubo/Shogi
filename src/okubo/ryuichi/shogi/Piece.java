@@ -3,21 +3,21 @@ package okubo.ryuichi.shogi;
 class Piece {
 	
 	enum Type {
-		O(100, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}),
-		RYU(80, null, new int[][] {{0, 1, 1}, {1, 0, 1}, {0, -1, 1}, {-1, 0, 1}, {-1, 1}, {1, 1}, {1, -1}, {-1, -1}}),
-		UMA(80, null, new int[][] {{-1, 1, 1}, {1, 1, 1}, {1, -1, 1}, {-1, -1, 1}, {0, -1}, {1, 0}, {0, 1}, {-1, 0}}),
-		NARIGIN(50, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
-		NARIKEI(25, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
-		NARIKYO(25, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
-		TOKIN(10, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
+		O(1000, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {-1, -1}, {0, -1}, {1, -1}}),
+		RYU(800, null, new int[][] {{0, 1, 1}, {1, 0, 1}, {0, -1, 1}, {-1, 0, 1}, {-1, 1}, {1, 1}, {1, -1}, {-1, -1}}),
+		UMA(800, null, new int[][] {{-1, 1, 1}, {1, 1, 1}, {1, -1, 1}, {-1, -1, 1}, {0, -1}, {1, 0}, {0, 1}, {-1, 0}}),
+		NARIGIN(500, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
+		NARIKEI(250, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
+		NARIKYO(250, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
+		TOKIN(100, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
 
-		HISHA(70, Type.RYU, new int[][] {{0, 1, 1}, {1, 0, 1}, {0, -1, 1}, {-1, 0, 1}}),
-		KAKU(70, Type.UMA, new int[][] {{-1, 1, 1}, {1, 1, 1}, {1, -1, 1}, {-1, -1, 1}}),
-		KIN(40, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
-		GIN(30, Type.NARIGIN, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, -1}, {1, -1}}),
-		KEIMA(15, Type.NARIKEI, new int[][] {{-1, 2}, {1, 2}}),
-		KYOSHA(15, Type.NARIKYO, new int[][] {{0, 1, 1}}),
-		HU(5, Type.TOKIN, new int[][] {{0, 1}});
+		HISHA(700, Type.RYU, new int[][] {{0, 1, 1}, {1, 0, 1}, {0, -1, 1}, {-1, 0, 1}}),
+		KAKU(700, Type.UMA, new int[][] {{-1, 1, 1}, {1, 1, 1}, {1, -1, 1}, {-1, -1, 1}}),
+		KIN(400, null, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, 0}, {1, 0}, {0, -1}}),
+		GIN(300, Type.NARIGIN, new int[][] {{-1, 1}, {0, 1}, {1, 1}, {-1, -1}, {1, -1}}),
+		KEIMA(150, Type.NARIKEI, new int[][] {{-1, 2}, {1, 2}}),
+		KYOSHA(150, Type.NARIKYO, new int[][] {{0, 1, 1}}),
+		HU(50, Type.TOKIN, new int[][] {{0, 1}});
 
 		private final int score;
 		private final Type prom;
@@ -37,8 +37,17 @@ class Piece {
 			return prom;
 		}
 
-		int[][] getMove() {
-			return move;
+		int[][] getMove(boolean isPlayer) {
+			if (isPlayer) {
+				int[][] player_move = move.clone();
+				for (int i = 0; i < move.length; i++) {
+					player_move[i] = move[i].clone();
+					player_move[i][1] = -move[i][1];
+				}
+				return player_move;
+			} else {
+				return move;
+			}
 		}
 	}
 	
@@ -62,8 +71,8 @@ class Piece {
 		return type;
 	}
 
-	int[][] getMove() {
-		return type.getMove();
+	int[][] getMove(boolean isPlayer) {
+		return type.getMove(isPlayer);
 	}
 
 	Type getProm() {

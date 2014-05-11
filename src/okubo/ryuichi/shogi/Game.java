@@ -10,7 +10,7 @@ final class Game {
 
 	private static Game instance = null;
 	
-	private static final int SCORE_PROMOTION = 5;
+	private static final int SCORE_PROMOTION = 50;
 	private static final Map<Piece.Type, Integer> SCORE_CAPTURE
 		= new EnumMap<Piece.Type, Integer>(Piece.Type.class);
 	
@@ -56,7 +56,7 @@ final class Game {
 	}
 
 	Hand getNextHand() {
-		List<Hand> hands = board.getAvailableHands(true);
+		List<Hand> hands = board.getAvailableHands(false);
 		hands.addAll(ai_captive.getAvailableHands());
 		
 		return getBestHand(hands);
@@ -66,8 +66,7 @@ final class Game {
 		List<Hand> high_scores = new ArrayList<Hand>();
 		
 		for (Hand h : hands) {
-			int currentBest = high_scores.isEmpty() ? 
-					0 : high_scores.get(0).getScore();
+			int currentBest = high_scores.isEmpty() ? -1000 : high_scores.get(0).getScore();
 			
 			if (currentBest == h.getScore()) {
 				high_scores.add(h);
@@ -82,7 +81,7 @@ final class Game {
 		return high_scores.get(rand);
 	}
 
-	int calcScore(Hand h, Piece captured, boolean isPromoted) {
+	int calcScore(Hand h, Piece captured, boolean isPromoted, boolean isPlayer) {
 		int score = 0;
 				
 		if (captured != null) {
@@ -93,12 +92,13 @@ final class Game {
 			score += SCORE_PROMOTION;
 		}
 		
-		score -= calcNextPlayerScore(h);
+		if (!isPlayer) // only reading AI's next hand for now
+			score -= calcNextPlayerScore(h);
 		
 		return score;
 	}
 
-	private int calcNextPlayerScore(Hand h) {
+	private int calcNextPlayerScore(Hand hand) {
 		Board next_board;
 		
 		try {
@@ -108,11 +108,18 @@ final class Game {
 			throw new NullPointerException("No clone, no next_board.");
 		}
 
-		next_board.movePiece(h);
-		//List<Hand> hands = next_board.getAvailableHands(true);
-		// XXX move has to be defined from player's side
+		next_board.movePiece(hand);
+		List<Hand> hands = next_board.getAvailableHands(true);
+		
+		//Logger.global.info(" hands: " + hands.toString());
 
-		return 0;
+		int sum = 0;
+		for (Hand h : hands) {
+			sum += h.getScore();
+		}
+		int score = sum / hands.size();
+		
+		return score;
 	}
 
 	static Piece getPiece(String type, boolean mine) {
