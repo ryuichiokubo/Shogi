@@ -39,6 +39,14 @@
             move: [[-1, -1, true], [1, -1, true], [-1, 1, true], [1, 1, true]],
             prom: 'uma'
         },
+	kirin: {
+	    move: [[0, -2], [1, -1], [2, 0], [1, 1], [0, 2], [-1, 1], [-2, 0], [-1, -1]],
+	    prom: 'honou'
+	},
+	houou: {
+	    move: [[-2, -2], [2, -2], [2, 2], [-2, 2], [0, -1], [1, 0], [0, 1], [-1, 0]],
+	    prom: 'honou'
+	},
         tokin: {
             move: [[-1, -1], [0, -1], [1, -1], [-1, 0], [1, 0], [0, 1]],
             dem: 'hu'
@@ -63,6 +71,10 @@
             move: [[-1, -1, true], [1, -1, true], [-1, 1, true], [1, 1, true], [0, -1], [1, 0], [0, 1], [-1, 0]],
             dem: 'kaku'
         },
+	honou: {
+	    move: [[-1, -1, true], [0, -1, true], [1, -1, true], [1, 0, true], [1, 1, true], [0, 1, true], [-1, 1, true], [-1, 0, true]],
+	    dem: 'houou'
+	}
     };
 
 
@@ -275,7 +287,27 @@
             piece: 'kaku',
             pos: 'eight ni',
             mine: false
-        }    
+        },
+	{
+	    piece: 'houou',
+	    pos: 'four ni',
+	    mine: false
+	},
+	{
+	    piece: 'kirin',
+	    pos: 'six ni',
+	    mine: false
+	},
+	{
+	    piece: 'kirin',
+	    pos: 'four hachi',
+	    mine: true
+	},
+	{
+	    piece: 'houou',
+	    pos: 'six hachi',
+	    mine: true
+	}
     ];
 
     this.def = {

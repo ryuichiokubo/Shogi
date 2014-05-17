@@ -140,6 +140,9 @@ final class Game {
 			case "narigin": instance = new Piece(Piece.Type.NARIGIN); 	break;
 			case "ryu": 	instance = new Piece(Piece.Type.RYU); 		break;
 			case "uma": 	instance = new Piece(Piece.Type.UMA); 		break;
+			case "kirin": 	instance = new Piece(Piece.Type.KIRIN); 	break;
+			case "houou": 	instance = new Piece(Piece.Type.HOUOU); 	break;
+			case "honou": 	instance = new Piece(Piece.Type.HONOU); 	break;
 		}
 		
 		if (instance == null) {
