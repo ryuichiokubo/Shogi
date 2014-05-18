@@ -241,12 +241,19 @@
             }
         };
 
-	// XXX separate
+	// XXX cleaning...
 	var extraPieces = document.querySelectorAll("#extra .piece");
-	var extraPieceHandler = function() {
+	var extraPieceHandler = function(pieceClicked) {
 	    ui.resetAvailable();
 	    var initAvailPos = board.getInitAvailPos();
-	    var squareSelect = function(selected) {console.log("@@@@@@@@ selected: ", selected);};
+	    var squareSelect = function(posClicked) {
+		var selectedPiece = pieceClicked.target.id;
+		var posClass = ui.util.getPosClassFromElement(posClicked.target);
+		ui.setPiece(selectedPiece, posClass, true, pieceSelect);
+		ui.resetAvailable();
+                var posNum = ui.util.convertPosClassToNum(posClass, true);
+                board.setPiece(posNum[0], posNum[1], selectedPiece, true);
+	    };
 	    for (var i = 0; i < initAvailPos.length; i++) {
 		var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
 		ui.setAvailable(initAvailClass, squareSelect);
