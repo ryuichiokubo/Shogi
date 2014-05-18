@@ -250,9 +250,16 @@
 		var selectedPiece = pieceClicked.target.id;
 		var posClass = ui.util.getPosClassFromElement(posClicked.target);
 		ui.setPiece(selectedPiece, posClass, true, pieceSelect);
-		ui.resetAvailable();
                 var posNum = ui.util.convertPosClassToNum(posClass, true);
                 board.setPiece(posNum[0], posNum[1], selectedPiece, true);
+
+		// add the same piece to opponent as well
+		var oppoPosNum = [8-posNum[0], 8-posNum[1]];
+		var oppoPosClass = ui.util.convertPosNumToClass(oppoPosNum[0], oppoPosNum[1]);
+                board.setPiece(oppoPosNum[0], oppoPosNum[1], selectedPiece, false);
+		ui.setPiece(selectedPiece, oppoPosClass, false, pieceSelect);
+
+		ui.resetAvailable();
 	    };
 	    for (var i = 0; i < initAvailPos.length; i++) {
 		var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
@@ -264,9 +271,11 @@
 	}
 
 	document.querySelector("#start").addEventListener('click', function() {
+	    ui.resetAvailable();
 	    document.querySelector("aside").style.display = 'none';
 	    gameOn = true;
 	});
+
 	ui.init();
         setInitialPieces();
     };
