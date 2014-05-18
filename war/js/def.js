@@ -287,27 +287,7 @@
             piece: 'kaku',
             pos: 'eight ni',
             mine: false
-        },
-	{
-	    piece: 'houou',
-	    pos: 'four ni',
-	    mine: false
-	},
-	{
-	    piece: 'kirin',
-	    pos: 'six ni',
-	    mine: false
-	},
-	{
-	    piece: 'kirin',
-	    pos: 'four hachi',
-	    mine: true
-	},
-	{
-	    piece: 'houou',
-	    pos: 'six hachi',
-	    mine: true
-	}
+        }
     ];
 
     this.def = {
