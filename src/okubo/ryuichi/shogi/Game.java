@@ -126,24 +126,28 @@ final class Game {
 	static Piece getPiece(String type, boolean mine) {
 		Piece instance = null;
 		switch (type) {
-			case "hu": 		instance = new Piece(Piece.Type.HU); 		break;
-			case "kyosha": 	instance = new Piece(Piece.Type.KYOSHA); 	break;
-			case "keima": 	instance = new Piece(Piece.Type.KEIMA); 	break;
-			case "gin": 	instance = new Piece(Piece.Type.GIN); 		break;
-			case "kin": 	instance = new Piece(Piece.Type.KIN); 		break;
-			case "o": 		instance = new Piece(Piece.Type.O); 		break;
-			case "hisha": 	instance = new Piece(Piece.Type.HISHA); 	break;
-			case "kaku": 	instance = new Piece(Piece.Type.KAKU); 		break;
-			case "tokin": 	instance = new Piece(Piece.Type.TOKIN); 	break;
-			case "narikyo": instance = new Piece(Piece.Type.NARIKYO); 	break;
-			case "narikei": instance = new Piece(Piece.Type.NARIKEI); 	break;
-			case "narigin": instance = new Piece(Piece.Type.NARIGIN); 	break;
-			case "ryu": 	instance = new Piece(Piece.Type.RYU); 		break;
-			case "uma": 	instance = new Piece(Piece.Type.UMA); 		break;
-			case "kirin": 	instance = new Piece(Piece.Type.KIRIN); 	break;
-			case "houou": 	instance = new Piece(Piece.Type.HOUOU); 	break;
-			case "shishi": 	instance = new Piece(Piece.Type.SHISHI); 	break;
-			case "honou": 	instance = new Piece(Piece.Type.HONOU); 	break;
+			case "hu": 			instance = new Piece(Piece.Type.HU); 			break;
+			case "kyosha": 		instance = new Piece(Piece.Type.KYOSHA); 		break;
+			case "keima": 		instance = new Piece(Piece.Type.KEIMA); 		break;
+			case "tetsu": 		instance = new Piece(Piece.Type.TETSU); 		break;
+			case "dou": 		instance = new Piece(Piece.Type.DOU); 			break;
+			case "gin": 		instance = new Piece(Piece.Type.GIN); 			break;
+			case "kin": 		instance = new Piece(Piece.Type.KIN); 			break;
+			case "o": 			instance = new Piece(Piece.Type.O); 			break;
+			case "hisha": 		instance = new Piece(Piece.Type.HISHA); 		break;
+			case "kaku": 		instance = new Piece(Piece.Type.KAKU); 			break;
+			case "tokin": 		instance = new Piece(Piece.Type.TOKIN); 		break;
+			case "narikyo": 	instance = new Piece(Piece.Type.NARIKYO); 		break;
+			case "narikei": 	instance = new Piece(Piece.Type.NARIKEI); 		break;
+			case "naritetsu": 	instance = new Piece(Piece.Type.NARITETSU); 	break;
+			case "naridou": 	instance = new Piece(Piece.Type.NARIDOU); 		break;
+			case "narigin": 	instance = new Piece(Piece.Type.NARIGIN); 		break;
+			case "ryu": 		instance = new Piece(Piece.Type.RYU); 			break;
+			case "uma": 		instance = new Piece(Piece.Type.UMA); 			break;
+			case "kirin": 		instance = new Piece(Piece.Type.KIRIN); 		break;
+			case "houou": 		instance = new Piece(Piece.Type.HOUOU); 		break;
+			case "shishi": 		instance = new Piece(Piece.Type.SHISHI); 		break;
+			case "honou": 		instance = new Piece(Piece.Type.HONOU); 		break;
 		}
 		
 		if (instance == null) {
