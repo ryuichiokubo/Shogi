@@ -142,6 +142,7 @@ final class Game {
 			case "uma": 	instance = new Piece(Piece.Type.UMA); 		break;
 			case "kirin": 	instance = new Piece(Piece.Type.KIRIN); 	break;
 			case "houou": 	instance = new Piece(Piece.Type.HOUOU); 	break;
+			case "shishi": 	instance = new Piece(Piece.Type.SHISHI); 	break;
 			case "honou": 	instance = new Piece(Piece.Type.HONOU); 	break;
 		}
 		
