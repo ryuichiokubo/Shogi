@@ -241,6 +241,21 @@
             }
         };
 
+	// XXX separate
+	var extraPieces = document.querySelectorAll("#extra .piece");
+	var extraPieceHandler = function() {
+	    ui.resetAvailable();
+	    var initAvailPos = board.getInitAvailPos();
+	    var squareSelect = function(selected) {console.log("@@@@@@@@ selected: ", selected);};
+	    for (var i = 0; i < initAvailPos.length; i++) {
+		var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
+		ui.setAvailable(initAvailClass, squareSelect);
+	    }
+	};
+	for (var i = 0; i < extraPieces.length; i++) {
+	    extraPieces[i].addEventListener('click', extraPieceHandler);
+	}
+
 	document.querySelector("#start").addEventListener('click', function() {
 	    document.querySelector("aside").style.display = 'none';
 	    gameOn = true;

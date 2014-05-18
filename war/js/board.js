@@ -10,6 +10,10 @@
 	ai: []
     };
         
+    var squareAvailable = function(piece) {
+        return (!piece || !piece.type);
+    };
+
     var board = {
         
         setPiece: function(x, y, type, mine) {
@@ -62,7 +66,7 @@
 	},
 
 	resetAvailable: function() {
-	    for (var i = 0; i < square.length; i++) {
+	    for (var i = 0; i < square.length; i++) { // XXX separate these two loop as function
 		for (var j = 0; j < square[i].length; j++) {
 		    if (square[i] && square[i][j]) {
 			if (square[i][j].type) {
@@ -82,10 +86,6 @@
 	getInhandAvailPos: function(type) {
 	    var i, j, k, pos = [];
 
-	    var squareAvailable = function(piece) {
-		return (!piece || !piece.type);
-	    };
-
 	    var isNihu = function(x) {
 		if (type !== 'hu') {
 		    return false;
@@ -101,6 +101,24 @@
 	    for (i = 0; i < square.length; i++) {
 		for (j = 0; j < square[i].length; j++) {
 		    if (squareAvailable(square[i][j]) && !isNihu(i)) {
+			pos.push([i, j]);
+		    }
+		}
+	    }
+	    
+	    return pos;
+	},
+
+	getInitAvailPos: function() {
+	    var i, j, pos = [];
+
+	    var inOwnArea = function(x, y) {
+		return (y >= 5);
+	    };
+
+	    for (i = 0; i < square.length; i++) {
+		for (j = 0; j < square[i].length; j++) {
+		    if (squareAvailable(square[i][j]) && inOwnArea(i, j)) {
 			pos.push([i, j]);
 		    }
 		}
