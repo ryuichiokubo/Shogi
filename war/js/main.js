@@ -3,7 +3,7 @@
 
     // Main controller
     
-    var gameState; // 'over'
+    var gameOn = false;
 
     var setAvailable = function() {
 	// XXX do not allow such a place where it will make the piece unmovable
@@ -82,7 +82,7 @@
     };
 
     var pieceSelect = function(event) {
-	if (gameState !== 'over') {
+	if (gameOn) {
 	    if (ui.util.hasClass(event.target, 'oppoPiece')) {
                 attackSelect(event);
             } else {
@@ -102,7 +102,7 @@
     	   } else {
     	       ui.dialog.win();
     	   }
-	   gameState = 'over';
+	   gameOn = false;
         }
     };
 
@@ -187,7 +187,7 @@
 	ui.moveSelected(newPosClass);
 	resetAvailable();
         
-	if (gameState !== 'over') {
+	if (gameOn) {
 	    board.upload(moveAi);
 	}
     };
@@ -195,7 +195,7 @@
     var squareSelect = function(event) {
         var posClass, isInhand = false;
         
-	if (gameState !== 'over') {
+	if (gameOn) {
 	    if (!ui.selected) {
 	        console.error("Square cannot be selected if no piece is selected.");
                 return;
@@ -214,7 +214,7 @@
     var attackSelect = function(event) {
         var posClass, posNum, type, typeDem;
         
-	if (gameState !== 'over') {
+	if (gameOn) {
 	    posClass = ui.util.getPosClassFromElement(event.target);
             posNum = ui.util.convertPosClassToNum(posClass);
 
@@ -241,6 +241,10 @@
             }
         };
 
+	document.querySelector("#start").addEventListener('click', function() {
+	    document.querySelector("aside").style.display = 'none';
+	    gameOn = true;
+	});
 	ui.init();
         setInitialPieces();
     };
