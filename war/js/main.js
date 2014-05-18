@@ -243,10 +243,36 @@
 
 	// XXX cleaning...
 	var extraPieces = document.querySelectorAll("#extra .piece");
+	var shake = function(elem) {
+	    if (elem.getAttribute('class').indexOf('shake-right') > 0) {
+	        elem.setAttribute('class', 'piece shake-left');
+	    } else {
+	        elem.setAttribute('class', 'piece shake-right');
+	    }
+	};
+	var shakeReset = function() {
+	    for (var i = 0; i < extraPieces.length; i++) {
+		extraPieces[i].setAttribute('class', 'piece');
+	    }
+	};
+	var timer;
 	var extraPieceHandler = function(pieceClicked) {
+	    clearInterval(timer);
+	    shakeReset();
+
+	    timer = setInterval(function() {
+		shake(pieceClicked.target);
+	    }, 200);
+	    pieceClicked.target.setAttribute('class', 'piece shake-right');
+
 	    ui.resetAvailable();
+
 	    var initAvailPos = board.getInitAvailPos();
+
 	    var squareSelect = function(posClicked) {
+		clearInterval(timer);
+		shakeReset();
+
 		var selectedPiece = pieceClicked.target.id;
 		var posClass = ui.util.getPosClassFromElement(posClicked.target);
 		ui.setPiece(selectedPiece, posClass, true, pieceSelect);
