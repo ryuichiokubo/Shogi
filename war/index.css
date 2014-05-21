@@ -7,8 +7,8 @@ aside {
     height: 130px;
     border: 2px solid;
     border-radius: 12px;
-    background-color: #FFECB1;
     z-index: 1000;
+    background-color: white;
 }
 
 aside p {
@@ -50,6 +50,7 @@ aside button {
     width: 100%;
     height: 100%;
     z-index: 0;
+    background-image:url("img/mokume.jpg");
 }
 
 #myMochi {

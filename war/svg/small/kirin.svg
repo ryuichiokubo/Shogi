@@ -5,7 +5,7 @@
   <polygon points="33,30 66,21 99,30 114,138 18,138"
       stroke="#000000"
       stroke-width="3"
-      fill="white" />
+      fill="#FFECB1" />
 
   <text x="66" y="105"
       font-family="serif"
