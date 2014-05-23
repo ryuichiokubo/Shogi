@@ -8,6 +8,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import okubo.ryuichi.shogi.Game.Player;
+
 import com.google.gson.Gson;
 
 final class ClientDataParser {
@@ -16,8 +18,7 @@ final class ClientDataParser {
 	
 	private ClientDataParser() {}
 	
-	static void parse(HttpServletRequest req, Board board, Captive myCaptive, Captive aiCaptive)
-			throws IOException {
+	static void parse(HttpServletRequest req, Board board, Captive myCaptive, Captive aiCaptive) throws IOException {
 		
 		BufferedReader reader = req.getReader();
 		
@@ -30,23 +31,21 @@ final class ClientDataParser {
 	
 	private static void parseCaptive(Map<String, Object> data, Captive myCaptive, Captive aiCaptive) {
 		@SuppressWarnings("unchecked")
-		Map<String, List<String>> captive
-			= (Map<String, List<String>>) data.get("captive");
+		Map<String, List<String>> captive = (Map<String, List<String>>) data.get("captive");
 
 		for (String type: captive.get("my")) {
-			Piece p = Game.getPiece(type, true);
+			Piece p = Game.getPiece(type, Player.HUMAN);
 			myCaptive.setCaptive(p);
 		}
 		for (String type: captive.get("ai")) {
-			Piece p = Game.getPiece(type, false);
+			Piece p = Game.getPiece(type, Player.AI);
 			aiCaptive.setCaptive(p);
 		}
 	}
 	
 	private static void parseSquare(Map<String, Object> data, Board board) {
 		@SuppressWarnings("unchecked")
-		List<List<Map<String, Object>>> squares 
-			= (List<List<Map<String, Object>>>) data.get("square");
+		List<List<Map<String, Object>>> squares = (List<List<Map<String, Object>>>) data.get("square");
 		
 		int x = 0;
 		int y = 0;
@@ -64,7 +63,8 @@ final class ClientDataParser {
 					} else {
 						mine = (boolean) square.get("mine");
 					}
-					board.setPiece(type, x, y, mine);
+					Player p = mine ? Player.HUMAN : Player.AI;
+					board.setPiece(type, x, y, p);
 				}
 				y++;
 			}

@@ -5,16 +5,17 @@ import java.util.logging.Logger;
 
 import javax.servlet.http.*;
 
+import okubo.ryuichi.shogi.Game.Player;
+
 @SuppressWarnings("serial")
 public class AiServlet extends HttpServlet {
 	
-	public void doPost(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
 		Game game;
 		Board board;
-		Captive myCaptive = Captive.getInstance(true);
-		Captive aiCaptive = Captive.getInstance(false);
+		Captive myCaptive = Captive.getInstance(Player.HUMAN);
+		Captive aiCaptive = Captive.getInstance(Player.AI);
 		
 		if (Game.hasInstance()) {
 			game = Game.getInstance();

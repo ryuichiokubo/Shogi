@@ -8,15 +8,17 @@ import java.util.logging.Logger;
 
 final class Game {
 
+	enum Player {
+		HUMAN, AI;
+	}
+	
 	private static Game instance = null;
 	
-	private static final int SCORE_PROMOTION = 50;
-	private static final Map<Piece.Type, Integer> SCORE_CAPTURE
-		= new EnumMap<Piece.Type, Integer>(Piece.Type.class);
+	private static final Map<Piece.Type, Integer> SCORE_CAPTURE = new EnumMap<Piece.Type, Integer>(Piece.Type.class);
 	
 	private final Board board;
-	private final Captive my_captive;
-	private final Captive ai_captive;
+	private final Captive myCaptive;
+	private final Captive aiCaptive;
 
 	final static int BOARD_ROW = 9;
 	final static int BOARD_COL = 9;
@@ -27,10 +29,10 @@ final class Game {
 		}
 	}
 	
-	private Game(Board board, Captive my, Captive ai) {
-		this.board = board;
-		this.my_captive = my;
-		this.ai_captive = ai;
+	private Game(Board b, Captive my, Captive ai) {
+		board = b;
+		myCaptive = my;
+		aiCaptive = ai;
 	}
 	
 	static Game getInstance(Board board, Captive my, Captive ai) {
@@ -56,32 +58,36 @@ final class Game {
 	}
 
 	Hand getNextHand() {
-		List<Hand> hands = board.getAvailableHands(false);
-		hands.addAll(ai_captive.getAvailableHands());
+		List<Hand> hands = board.getAvailableHands(Player.AI);
+		hands.addAll(aiCaptive.getAvailableHands());
 		
 		return getBestHand(hands);
 	}
 	
 	private Hand getBestHand(List<Hand> hands) {
-		List<Hand> high_scores = new ArrayList<Hand>();
+		List<Hand> highScores = new ArrayList<Hand>();
 		
 		for (Hand h : hands) {
-			int currentBest = high_scores.isEmpty() ? -1000 : high_scores.get(0).getScore();
+			if (h.type.equals("hu")) {
+				Logger.global.info("hand: " + h.toString());
+			}
+			
+			int currentBest = highScores.isEmpty() ? -1000 : highScores.get(0).getScore();
 			
 			if (currentBest == h.getScore()) {
-				high_scores.add(h);
+				highScores.add(h);
 			} else if (currentBest < h.getScore()) {
-				high_scores.clear();
-				high_scores.add(h);
+				highScores.clear();
+				highScores.add(h);
 			}
 		}
 
-		int rand = (int) Math.floor(Math.random() * high_scores.size());
+		int rand = (int) Math.floor(Math.random() * highScores.size());
 		
-		return high_scores.get(rand);
+		return highScores.get(rand);
 	}
 
-	int calcScore(Hand h, Piece captured, boolean isPromoted, boolean isPlayer) {
+	int calcScore(Hand h, Piece captured, boolean isPromoted, Player p) {
 		int score = 0;
 				
 		if (captured != null) {
@@ -92,25 +98,26 @@ final class Game {
 			score += SCORE_PROMOTION;
 		}
 		
-		if (!isPlayer) // only reading AI's next hand for now
+		if (p == Player.AI) { // only reading AI's next hand for now
 			score -= calcNextPlayerScore(h);
+		}
 		
 		return score;
 	}
 
 	private int calcNextPlayerScore(Hand hand) {
-		Board next_board;
+		Board nextBoard;
 		
 		try {
-			next_board = board.clone();
+			nextBoard = board.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
-			throw new NullPointerException("No clone, no next_board.");
+			throw new NullPointerException("No clone, no nextBoard.");
 		}
 
-		next_board.movePiece(hand);
-		List<Hand> hands = next_board.getAvailableHands(true);
-		hands.addAll(my_captive.getAvailableHands());
+		nextBoard.movePiece(hand);
+		List<Hand> hands = nextBoard.getAvailableHands(Player.HUMAN);
+		hands.addAll(myCaptive.getAvailableHands());
 
 		//Logger.global.info(" hands: " + hands.toString());
 
@@ -123,7 +130,7 @@ final class Game {
 		return score;
 	}
 
-	static Piece getPiece(String type, boolean mine) {
+	static Piece getPiece(String type, Player p) {
 		Piece instance = null;
 		switch (type) {
 			case "hu": 			instance = new Piece(Piece.Type.HU); 			break;
@@ -154,7 +161,7 @@ final class Game {
 			throw new NullPointerException("Unknown piece type.");
 		}
 		
-		instance.setPlayer(mine);
+		instance.setPlayer(p);
 		
 		return instance;
 	}

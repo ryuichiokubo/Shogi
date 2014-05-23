@@ -5,28 +5,30 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
+
+import okubo.ryuichi.shogi.Game.Player;
 
 final class Captive {
 
 	// XXX combine with board
 	// <-- board and mochigoma should be always taken into account together
 	
-	Map<Piece.Type, List<Piece>> pieces
-		= new EnumMap<Piece.Type, List<Piece>>(Piece.Type.class);
+	Map<Piece.Type, List<Piece>> pieces = new EnumMap<Piece.Type, List<Piece>>(Piece.Type.class);
 	
-	private static final Captive MY = new Captive();
-	private static final Captive AI = new Captive();
+	private static final Captive MY = new Captive(Player.HUMAN);
+	private static final Captive AI = new Captive(Player.AI);
 	
-	private boolean isPlayer;
+	private Player player;
 	
-	private Captive() {}
+	private Captive(Player p) {
+		player = p;
+	}
 	
-	static Captive getInstance(boolean mine) {
-		if (mine) {
-			MY.isPlayer = true;
+	static Captive getInstance(Player p) {
+		if (p == Player.HUMAN) {
 			return MY;
 		} else {
-			AI.isPlayer = false;
 			return AI;
 		}
 	}
@@ -54,7 +56,7 @@ final class Captive {
 		Set<Piece.Type> keys = pieces.keySet();
 		for (Piece.Type k: keys) {
 			for (Map<String, Integer> square: board.getEmptySquare()) {
-				if (k == Piece.Type.HU && board.hasInColumn(Piece.Type.HU, square.get("x"), this.isPlayer)) {
+				if (k == Piece.Type.HU && board.hasInColumn(Piece.Type.HU, square.get("x"), player)) {
 					continue; // XXX skip this column
 				} else {
 					addToHands(hands, k, -1, -1, square.get("x"), square.get("y"));
@@ -69,7 +71,7 @@ final class Captive {
 		Game game = Game.getInstance();
 
 		Hand h = new Hand(type, fromX, fromY, toX, toY);
-		h.setScore(game.calcScore(h, null, false, this.isPlayer));
+		h.setScore(game.calcScore(h, null, false, this.player));
 		hands.add(h);
 	}
 	

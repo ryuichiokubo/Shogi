@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import okubo.ryuichi.shogi.Game.Player;
+
 final class Board implements Cloneable {
 
 	private Piece[][] square = null;
@@ -22,13 +24,13 @@ final class Board implements Cloneable {
 		square = new Piece[row][column];
 	}
 	
-	void setPiece(String type, int x, int y, boolean mine) {
-		Piece piece = Game.getPiece(type, mine);
+	void setPiece(String type, int x, int y, Player p) {
+		Piece piece = Game.getPiece(type, p);
 		square[x][y] = piece;
 	}
 	
 	public void movePiece(Hand h) {
-		Piece piece = Game.getPiece(h.type, false);
+		Piece piece = Game.getPiece(h.type, Player.AI);
 		square[h.toX][h.toY] = piece;
 		if (isInBoard(h.fromX, h.fromY)) {
 			square[h.fromX][h.fromY] = null;
@@ -44,13 +46,13 @@ final class Board implements Cloneable {
 		}
 	}
 
-	private boolean canPromote(Piece piece, int oldY, int nextY, boolean isPlayer) {
+	private boolean canPromote(Piece piece, int oldY, int nextY, Player p ) {
 		boolean piece_ok = false;
 		boolean place_ok = false;
 		
 		piece_ok = (piece.getProm() != null);
 		
-		if (isPlayer) {
+		if (p == Player.HUMAN) {
 			place_ok = (oldY <= 2 || nextY <= 2);			
 		} else {
 			place_ok = (oldY >= 6 || nextY >= 6);
@@ -59,27 +61,27 @@ final class Board implements Cloneable {
 	}
 
 	// Get available hands for one piece
-	private List<Hand> getAvailableHands(Piece piece, int x, int y, boolean isPlayer) {
+	private List<Hand> getAvailableHands(Piece piece, int x, int y, Player p) {
 		List<Hand> hands = new ArrayList<Hand>();
 		
-		int[][] move = piece.getMove(isPlayer);
+		int[][] move = piece.getMove(p);
 		
 		for (int i = 0; i < move.length; i++) {		
 			for (int j = 1; ; j++) {
 				boolean stop = false;
-				Piece captured = null;
+				Piece existing = null;
 				int nextX = x + move[i][0] * j;
 				int nextY = y + move[i][1] * j;
 								
 				if (isInBoard(nextX, nextY)) {
-					captured = square[nextX][nextY];
+					existing = square[nextX][nextY];
 					
-					if (captured == null || captured.isPlayer() != isPlayer) {
-						addToHands(hands, piece, x, y, nextX, nextY, captured, isPlayer);
+					if (existing == null || existing.getPlayer() != p) {
+						addToHands(hands, piece, x, y, nextX, nextY, existing, p);
 					}
 				}		
 				
-				if (captured != null || !isInBoard(nextX, nextY)) {
+				if (existing != null || !isInBoard(nextX, nextY)) {
 					stop = true;
 				}
 				
@@ -92,34 +94,34 @@ final class Board implements Cloneable {
 		return hands;	
 	}
 	
-	private void addToHands(List<Hand> hands, Piece piece, int x, int y, int nextX, int nextY, Piece captured, boolean isPlayer) {
+	private void addToHands(List<Hand> hands, Piece piece, int x, int y, int nextX, int nextY, Piece existing, Player p) {
 
 		Game game = Game.getInstance();
 		
 		Hand h1 = new Hand(piece.getType(), x, y, nextX, nextY);
-		h1.setScore(game.calcScore(h1, captured, false, isPlayer));
+		h1.setScore(game.calcScore(h1, existing, false, p));
 		hands.add(h1);
 		
-		if (canPromote(piece, y, nextY, isPlayer)) {
+		if (canPromote(piece, y, nextY, p)) {
 			Hand h2 = new Hand(piece.getProm(), x, y, nextX, nextY);
-			h2.setScore(game.calcScore(h2, captured, true, isPlayer));
+			h2.setScore(game.calcScore(h2, existing, true, p));
 			hands.add(h2);							
 		}
 	}
 
-	List<Hand> getAvailableHands(boolean isPlayer) {
+	List<Hand> getAvailableHands(Player p) {
 		List<Hand> hands = new ArrayList<Hand>();
 		
 		for (int i = 0; i < square.length; i++) {			
 			for (int j = 0; j < square[i].length; j++) {
 				Piece piece = square[i][j];
-				if (piece != null && piece.isPlayer() == isPlayer) {
+				if (piece != null && piece.getPlayer() == p) {
 					// AI's piece found. Get available hands on this piece.
-					hands.addAll(getAvailableHands(piece, i, j, isPlayer));
+					hands.addAll(getAvailableHands(piece, i, j, p));
 				}
 			}
 		}
-		Logger.global.info("player:" + isPlayer + " hands: " + hands.toString());
+		//Logger.global.info("player:" + isPlayer + " hands: " + hands.toString());
 
 		return hands;
 	}
@@ -141,12 +143,12 @@ final class Board implements Cloneable {
 
 	}
 
-	boolean hasInColumn(Piece.Type type, Integer column, boolean isPlayer) {
+	boolean hasInColumn(Piece.Type type, Integer column, Player p) {
 		boolean res = false;
 		
 		for (int i = 0; i < square[column].length; i++) {
 			Piece onCol = square[column][i];
-			if (onCol != null && onCol.getType() == type && onCol.isPlayer() == isPlayer) {
+			if (onCol != null && onCol.getType() == type && onCol.getPlayer() == p) {
 				res = true;
 				break;
 			}

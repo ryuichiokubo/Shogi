@@ -1,5 +1,7 @@
 package okubo.ryuichi.shogi;
 
+import okubo.ryuichi.shogi.Game.Player;
+
 class Piece {
 	
 	enum Type {
@@ -45,8 +47,8 @@ class Piece {
 			return prom;
 		}
 
-		int[][] getMove(boolean isPlayer) {
-			if (isPlayer) {
+		int[][] getMove(Player p ) {
+			if (p == Player.HUMAN) {
 				int[][] player_move = move.clone();
 				for (int i = 0; i < move.length; i++) {
 					player_move[i] = move[i].clone();
@@ -61,17 +63,17 @@ class Piece {
 	
 	private final Type type;
 	
-	private boolean player; // true: human, false: AI
+	private Player player;
 
 	Piece(Type type) {
 		this.type = type;
 	}
 
-	void setPlayer(boolean player) {
-		this.player = player;
+	void setPlayer(Player p) {
+		this.player = p;
 	}
 	
-	boolean isPlayer() {
+	Player getPlayer() {
 		return player;
 	}
 	
@@ -79,8 +81,8 @@ class Piece {
 		return type;
 	}
 
-	int[][] getMove(boolean isPlayer) {
-		return type.getMove(isPlayer);
+	int[][] getMove(Player p) {
+		return type.getMove(p);
 	}
 
 	Type getProm() {
