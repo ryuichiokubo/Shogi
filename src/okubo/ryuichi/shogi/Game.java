@@ -14,6 +14,7 @@ final class Game {
 	
 	private static Game instance = null;
 	
+	private static final int SCORE_PROMOTION = 300;
 	private static final Map<Piece.Type, Integer> SCORE_CAPTURE = new EnumMap<Piece.Type, Integer>(Piece.Type.class);
 	
 	private final Board board;
@@ -68,7 +69,7 @@ final class Game {
 		List<Hand> highScores = new ArrayList<Hand>();
 		
 		for (Hand h : hands) {
-			if (h.type.equals("hu")) {
+			if (Math.abs(h.getScore()) > 100) {
 				Logger.global.info("hand: " + h.toString());
 			}
 			
@@ -98,14 +99,18 @@ final class Game {
 			score += SCORE_PROMOTION;
 		}
 		
-		if (p == Player.AI) { // only reading AI's next hand for now
-			score -= calcNextPlayerScore(h);
+		if (p == Player.AI) { // XXX only reading AI's next hand for now
+			boolean debug = false;
+			if (Math.abs(score) > 100) {
+				debug = true;
+			}
+			score -= calcNextPlayerScore(h, debug);
 		}
 		
 		return score;
 	}
 
-	private int calcNextPlayerScore(Hand hand) {
+	private int calcNextPlayerScore(Hand hand, boolean debug) {
 		Board nextBoard;
 		
 		try {
@@ -119,7 +124,9 @@ final class Game {
 		List<Hand> hands = nextBoard.getAvailableHands(Player.HUMAN);
 		hands.addAll(myCaptive.getAvailableHands());
 
-		//Logger.global.info(" hands: " + hands.toString());
+		if (debug) {
+			Logger.global.info("next hands: " + hands.toString());
+		}
 
 		int sum = 0;
 		for (Hand h : hands) {

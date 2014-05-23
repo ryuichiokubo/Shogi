@@ -71,7 +71,7 @@ final class Captive {
 		Game game = Game.getInstance();
 
 		Hand h = new Hand(type, fromX, fromY, toX, toY);
-		h.setScore(game.calcScore(h, null, false, this.player));
+		h.setScore(game.calcScore(h, null, false, player));
 		hands.add(h);
 	}
 	

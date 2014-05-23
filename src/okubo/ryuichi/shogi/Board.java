@@ -116,7 +116,7 @@ final class Board implements Cloneable {
 			for (int j = 0; j < square[i].length; j++) {
 				Piece piece = square[i][j];
 				if (piece != null && piece.getPlayer() == p) {
-					// AI's piece found. Get available hands on this piece.
+					// The player's piece found. Get available hands on this piece.
 					hands.addAll(getAvailableHands(piece, i, j, p));
 				}
 			}
