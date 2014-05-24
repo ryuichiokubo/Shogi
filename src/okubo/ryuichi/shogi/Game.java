@@ -78,21 +78,16 @@ final class Game {
 			phSeq.put(Player.AI, h);
 		
 			for (Hand h2: getNextHandSeq(phSeq, Player.HUMAN)) {
-				List<Hand> handSeq = new ArrayList<Hand>();
-				handSeq.add(h);
-				handSeq.add(h2);
-				handSeqList.add(handSeq);
-
-//				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
-//				phSeq2.put(Player.AI, h);
-//				phSeq2.put(Player.HUMAN, h2);
+				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
+				phSeq2.put(Player.AI, h);
+				phSeq2.put(Player.HUMAN, h2);
 			
-//				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
-//					List<Hand> handSeq = new ArrayList<Hand>();
-//					handSeq.add(h);
-//					handSeq.add(h2);
-//					handSeq.add(h3);
-//					handSeqList.add(handSeq);
+				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
+					List<Hand> handSeq = new ArrayList<Hand>();
+					handSeq.add(h);
+					handSeq.add(h2);
+					handSeq.add(h3);
+					handSeqList.add(handSeq);
 
 //					Map<Player, Hand> phSeq3 = new TreeMap<Player, Hand>();
 //					phSeq2.put(Player.AI, h);
@@ -107,50 +102,22 @@ final class Game {
 //						handSeq.add(h4);
 //						handSeqList.add(handSeq);
 //					}
-				//}
-			}
-		}
-		
-		//Logger.global.info("handSeqList: " + handSeqList);
-		
-		List<Hand> finalAiHands = new ArrayList<Hand>();
-		
-		Hand prevAiHand = null;
-		int bestHumanScore = 0;
-		int currentScore = 0;
-		
-		// leave only one aiHand (from {ai1, hu1}, {ai1, hu2}, ... ) based on assumption that human will pick the best hand
-		for (List<Hand> handSeq: handSeqList) {
-			Hand aiHand = handSeq.get(0);
-			Hand huHand = handSeq.get(1);
-			if (prevAiHand == null) {
-				prevAiHand = aiHand;
-			}
-			if (aiHand.equals(prevAiHand)) {
-				// checking for same first ai hand
-				Logger.global.info("###########");
-				Logger.global.info("aiHand: " + aiHand);
-				Logger.global.info("huHand: " + huHand);
-
-				if (huHand.getScore() > bestHumanScore) {
-					Logger.global.info("# human's better hand #");
-					bestHumanScore = huHand.getScore();
-					currentScore = aiHand.getScore() - huHand.getScore();
 				}
-			} else {
-				// move to check next ai hand
-				prevAiHand.setScore(currentScore);
-				finalAiHands.add(prevAiHand);
-				currentScore = 0;
-
-				prevAiHand = aiHand;
-				bestHumanScore = huHand.getScore();
 			}
 		}
-		prevAiHand.setScore(currentScore);
-		finalAiHands.add(prevAiHand);
-			
-		Logger.global.info("finalAiHands: " + finalAiHands);
+		
+//		Logger.global.info("handSeqList: " + handSeqList);
+		Logger.global.info("####################");
+		Logger.global.info("handSeqList num: " + handSeqList.size());
+		
+		List<List<Hand>> filtered = filterByExpectingBest(handSeqList, 3);
+		//Logger.global.info("filtered1: " + filtered);
+		filtered = filterByExpectingBest(filtered, 2);
+		//Logger.global.info("filtered2: " + filtered);
+		List<Hand> finalAiHands = new ArrayList<Hand>();
+		for (List<Hand> handList: filtered) {
+			finalAiHands.add(handList.get(0));
+		}
 		
 		int highScore = Integer.MIN_VALUE;
 		Hand bestHand = null;
@@ -170,6 +137,58 @@ final class Game {
 		//int rand = (int) Math.floor(Math.random() * highScores.size());
 		//return highScores.get(rand);
 		return bestHand;
+	}
+
+	private List<List<Hand>> filterByExpectingBest(List<List<Hand>> handSeqList, int depth) {
+		List<List<Hand>> filtered = new ArrayList<List<Hand>>();
+
+		Hand tmpHand = null;
+		List<Hand> tmpHandSeq = null;
+		int bestNextScore = 0;
+		int tmpScore = 0;
+		
+		// leave only one aiHand (from {ai1, hu1}, {ai1, hu2}, ... ) based on assumption that human will pick the best hand
+		for (List<Hand> handSeq: handSeqList) {
+			Hand currentHand = handSeq.get(depth - 2);
+			Hand nextHand = handSeq.get(depth - 1);
+			if (tmpHand == null) {
+				tmpHand = currentHand;
+				tmpHandSeq = handSeq;
+			}
+			if (currentHand.equals(tmpHand)) {
+				// checking for same current hand
+//				if (handSeq.get(0).getScore() > 1000 || handSeq.get(1).getScore() > 1000 || handSeq.get(2).getScore() > 1000) {
+//					Logger.global.info("########");
+//					Logger.global.info("currentHand: " + currentHand);
+//					Logger.global.info("nextHand: " + nextHand);
+//				}
+
+				if (currentHand.toX == nextHand.fromX && currentHand.toY == nextHand.toY) {
+					// nextHand is eaten and impossible
+				} else {
+					if (nextHand.getScore() > bestNextScore) {
+						bestNextScore = nextHand.getScore();
+						tmpScore = currentHand.getScore() - nextHand.getScore();
+						tmpHandSeq = handSeq;
+					}
+				}
+			} else {
+				// move to check different hand
+				tmpHand.setScore(tmpScore);
+				filtered.add(tmpHandSeq);
+				tmpScore = 0;
+
+				tmpHand = currentHand;
+				tmpHandSeq = handSeq;
+				bestNextScore = nextHand.getScore();
+			}
+		}
+		tmpHand.setScore(tmpScore);
+		filtered.add(tmpHandSeq);
+			
+		//Logger.global.info("finalAiHands: " + filtered);
+		
+		return filtered;
 	}
 
 	private List<Hand> getNextHandSeq(Map<Player, Hand> phSeq, Player p) {

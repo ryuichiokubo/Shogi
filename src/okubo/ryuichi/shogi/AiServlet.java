@@ -32,7 +32,7 @@ public class AiServlet extends HttpServlet {
 		
 		ClientDataParser.parse(req, board, myCaptive, aiCaptive);
 
-		Logger.global.info("board: " + board.toString());
+		//Logger.global.info("board: " + board.toString());
 		
 		Hand hand = game.getNextHand();
 		String json = hand.toString();
