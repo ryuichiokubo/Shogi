@@ -78,16 +78,21 @@ final class Game {
 			phSeq.put(Player.AI, h);
 		
 			for (Hand h2: getNextHandSeq(phSeq, Player.HUMAN)) {
-				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
-				phSeq2.put(Player.AI, h);
-				phSeq2.put(Player.HUMAN, h2);
+				List<Hand> handSeq = new ArrayList<Hand>();
+				handSeq.add(h);
+				handSeq.add(h2);
+				handSeqList.add(handSeq);
+
+//				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
+//				phSeq2.put(Player.AI, h);
+//				phSeq2.put(Player.HUMAN, h2);
 			
-				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
-					List<Hand> handSeq = new ArrayList<Hand>();
-					handSeq.add(h);
-					handSeq.add(h2);
-					handSeq.add(h3);
-					handSeqList.add(handSeq);
+//				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
+//					List<Hand> handSeq = new ArrayList<Hand>();
+//					handSeq.add(h);
+//					handSeq.add(h2);
+//					handSeq.add(h3);
+//					handSeqList.add(handSeq);
 
 //					Map<Player, Hand> phSeq3 = new TreeMap<Player, Hand>();
 //					phSeq2.put(Player.AI, h);
@@ -102,36 +107,69 @@ final class Game {
 //						handSeq.add(h4);
 //						handSeqList.add(handSeq);
 //					}
-				}
+				//}
 			}
 		}
 		
 		//Logger.global.info("handSeqList: " + handSeqList);
-
-		List<Hand> highScores = new ArrayList<Hand>();		
+		
+		List<Hand> finalAiHands = new ArrayList<Hand>();
+		
+		Hand prevAiHand = null;
+		int bestHumanScore = 0;
+		int currentScore = 0;
+		
+		// leave only one aiHand (from {ai1, hu1}, {ai1, hu2}, ... ) based on assumption that human will pick the best hand
 		for (List<Hand> handSeq: handSeqList) {
-			Hand h = handSeq.get(0);
-			int currentBest = highScores.isEmpty() ? -1000 : highScores.get(0).getScore();
-			int score = (int) (h.getScore() - handSeq.get(1).getScore() * 0.9 + handSeq.get(2).getScore() * 0.8); // - handSeq.get(3).getScore() * 0.7);
-			
-//			if (Math.abs(score) > 100) {
-//				Logger.global.info("###########");
-//				Logger.global.info("handSeq: " + handSeq);
-//				Logger.global.info("score: " + score);
-//			}
-			
-			if (currentBest == score) {
-				highScores.add(h);
-			} else if (currentBest < h.getScore()) {
-				highScores.clear();
-				highScores.add(h);
+			Hand aiHand = handSeq.get(0);
+			Hand huHand = handSeq.get(1);
+			if (prevAiHand == null) {
+				prevAiHand = aiHand;
+			}
+			if (aiHand.equals(prevAiHand)) {
+				// checking for same first ai hand
+				Logger.global.info("###########");
+				Logger.global.info("aiHand: " + aiHand);
+				Logger.global.info("huHand: " + huHand);
+
+				if (huHand.getScore() > bestHumanScore) {
+					Logger.global.info("# human's better hand #");
+					bestHumanScore = huHand.getScore();
+					currentScore = aiHand.getScore() - huHand.getScore();
+				}
+			} else {
+				// move to check next ai hand
+				prevAiHand.setScore(currentScore);
+				finalAiHands.add(prevAiHand);
+				currentScore = 0;
+
+				prevAiHand = aiHand;
+				bestHumanScore = huHand.getScore();
 			}
 		}
-		//Logger.global.info("highScores: " + highScores);
-
-		int rand = (int) Math.floor(Math.random() * highScores.size());
+		prevAiHand.setScore(currentScore);
+		finalAiHands.add(prevAiHand);
+			
+		Logger.global.info("finalAiHands: " + finalAiHands);
 		
-		return highScores.get(rand);
+		int highScore = Integer.MIN_VALUE;
+		Hand bestHand = null;
+		
+		for (Hand aiHand: finalAiHands) {
+			int score = aiHand.getScore();
+			
+			if (bestHand == null || highScore < score) {
+				highScore = score;
+				bestHand = aiHand;
+			}
+		}
+		Logger.global.info("highScore: " + highScore);
+		Logger.global.info("bestHand: " + bestHand);
+
+		// XXX randomize
+		//int rand = (int) Math.floor(Math.random() * highScores.size());
+		//return highScores.get(rand);
+		return bestHand;
 	}
 
 	private List<Hand> getNextHandSeq(Map<Player, Hand> phSeq, Player p) {

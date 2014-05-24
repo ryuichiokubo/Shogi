@@ -43,4 +43,16 @@ final class Hand {
 		return gson.toJson(this);
 	}
 
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof Hand)) {
+			return false;
+		}
+		Hand h = (Hand) o;
+		if (h.type == type && h.fromX == fromX && h.fromY == fromY && h.toX == toX && h.toY == toY) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
