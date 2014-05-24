@@ -2,8 +2,11 @@ package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 
 final class Game {
@@ -66,26 +69,91 @@ final class Game {
 	}
 	
 	private Hand getBestHand(List<Hand> hands) {
-		List<Hand> highScores = new ArrayList<Hand>();
+		// hands: AI's next hand
 		
-		for (Hand h : hands) {
-			if (Math.abs(h.getScore()) > 100) {
-				Logger.global.info("hand: " + h.toString());
+		List<List<Hand>> handSeqList = new ArrayList<List<Hand>>(); // (AI, HU, AI ... ), (AI, HU, AI ... ), ...
+		
+		for (Hand h: hands) {
+			Map<Player, Hand> phSeq = new TreeMap<Player, Hand>();
+			phSeq.put(Player.AI, h);
+		
+			for (Hand h2: getNextHandSeq(phSeq, Player.HUMAN)) {
+				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
+				phSeq2.put(Player.AI, h);
+				phSeq2.put(Player.HUMAN, h2);
+			
+				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
+					List<Hand> handSeq = new ArrayList<Hand>();
+					handSeq.add(h);
+					handSeq.add(h2);
+					handSeq.add(h3);
+					handSeqList.add(handSeq);
+
+//					Map<Player, Hand> phSeq3 = new TreeMap<Player, Hand>();
+//					phSeq2.put(Player.AI, h);
+//					phSeq2.put(Player.HUMAN, h2);
+//					phSeq2.put(Player.AI, h3);
+					
+//					for (Hand h4: getNextHandSeq(phSeq2, Player.AI)) {
+//						List<Hand> handSeq = new ArrayList<Hand>();
+//						handSeq.add(h);
+//						handSeq.add(h2);
+//						handSeq.add(h3);
+//						handSeq.add(h4);
+//						handSeqList.add(handSeq);
+//					}
+				}
 			}
-			
+		}
+		
+		//Logger.global.info("handSeqList: " + handSeqList);
+
+		List<Hand> highScores = new ArrayList<Hand>();		
+		for (List<Hand> handSeq: handSeqList) {
+			Hand h = handSeq.get(0);
 			int currentBest = highScores.isEmpty() ? -1000 : highScores.get(0).getScore();
+			int score = (int) (h.getScore() - handSeq.get(1).getScore() * 0.9 + handSeq.get(2).getScore() * 0.8); // - handSeq.get(3).getScore() * 0.7);
 			
-			if (currentBest == h.getScore()) {
+//			if (Math.abs(score) > 100) {
+//				Logger.global.info("###########");
+//				Logger.global.info("handSeq: " + handSeq);
+//				Logger.global.info("score: " + score);
+//			}
+			
+			if (currentBest == score) {
 				highScores.add(h);
 			} else if (currentBest < h.getScore()) {
 				highScores.clear();
 				highScores.add(h);
 			}
 		}
+		//Logger.global.info("highScores: " + highScores);
 
 		int rand = (int) Math.floor(Math.random() * highScores.size());
 		
 		return highScores.get(rand);
+	}
+
+	private List<Hand> getNextHandSeq(Map<Player, Hand> phSeq, Player p) {
+		Board nextBoard;
+		
+		try {
+			nextBoard = board.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+			throw new NullPointerException("No clone, no nextBoard.");
+		}
+
+		for (Entry<Player, Hand> e: phSeq.entrySet()) {
+			nextBoard.movePiece(e.getValue(), e.getKey());
+		}
+		Captive c = p == Player.AI ? myCaptive : aiCaptive;
+		List<Hand> hands = nextBoard.getAvailableHands(p);
+		hands.addAll(c.getAvailableHands());
+
+		//Logger.global.info("hands: " + hands);
+
+		return hands;
 	}
 
 	int calcScore(Hand h, Piece captured, boolean isPromoted, Player p) {
@@ -98,41 +166,6 @@ final class Game {
 		if (isPromoted) {
 			score += SCORE_PROMOTION;
 		}
-		
-		if (p == Player.AI) { // XXX only reading AI's next hand for now
-			boolean debug = false;
-			if (Math.abs(score) > 100) {
-				debug = true;
-			}
-			score -= calcNextPlayerScore(h, debug);
-		}
-		
-		return score;
-	}
-
-	private int calcNextPlayerScore(Hand hand, boolean debug) {
-		Board nextBoard;
-		
-		try {
-			nextBoard = board.clone();
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-			throw new NullPointerException("No clone, no nextBoard.");
-		}
-
-		nextBoard.movePiece(hand);
-		List<Hand> hands = nextBoard.getAvailableHands(Player.HUMAN);
-		hands.addAll(myCaptive.getAvailableHands());
-
-		if (debug) {
-			Logger.global.info("next hands: " + hands.toString());
-		}
-
-		int sum = 0;
-		for (Hand h : hands) {
-			sum += h.getScore();
-		}
-		int score = sum / hands.size();
 		
 		return score;
 	}

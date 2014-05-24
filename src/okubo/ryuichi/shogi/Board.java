@@ -13,7 +13,7 @@ final class Board implements Cloneable {
 	private Piece[][] square = null;
 	private final int row;
 	private final int column;
-
+	
 	Board(int row, int column) {
 		this.row = row;
 		this.column = column;
@@ -29,8 +29,8 @@ final class Board implements Cloneable {
 		square[x][y] = piece;
 	}
 	
-	public void movePiece(Hand h) {
-		Piece piece = Game.getPiece(h.type, Player.AI);
+	public void movePiece(Hand h, Player p) {
+		Piece piece = Game.getPiece(h.type, p);
 		square[h.toX][h.toY] = piece;
 		if (isInBoard(h.fromX, h.fromY)) {
 			square[h.fromX][h.fromY] = null;
