@@ -3,7 +3,13 @@
 
     // Main controller
     
-    var gameOn = false;
+    var GAME_STATE = {
+	OFF: 0,
+	TURN_HUMAN: 1,
+	TURN_AI: 2
+    };
+	
+    var gameState = GAME_STATE.OFF;
 
     var setAvailable = function() {
 	// XXX do not allow such a place where it will make the piece unmovable
@@ -82,7 +88,7 @@
     };
 
     var pieceSelect = function(event) {
-	if (gameOn) {
+	if (gameState === GAME_STATE.TURN_HUMAN) {
 	    if (ui.util.hasClass(event.target, 'oppoPiece')) {
                 attackSelect(event);
             } else {
@@ -102,7 +108,7 @@
     	   } else {
     	       ui.dialog.win();
     	   }
-	   gameOn = false;
+	   gameState = GAME_STATE.OFF;
         }
     };
 
@@ -187,15 +193,19 @@
 	ui.moveSelected(newPosClass);
 	resetAvailable();
         
-	if (gameOn) {
-	    board.upload(moveAi);
+	if (gameState === GAME_STATE.TURN_HUMAN) {
+	    gameState = GAME_STATE.TURN_AI;
+	    board.upload(function(res) {
+		gameState = GAME_STATE.TURN_HUMAN;
+		moveAi(res);
+	    });
 	}
     };
 
     var squareSelect = function(event) {
         var posClass, isInhand = false;
         
-	if (gameOn) {
+	if (gameState === GAME_STATE.TURN_HUMAN) {
 	    if (!ui.selected) {
 	        console.error("Square cannot be selected if no piece is selected.");
                 return;
@@ -214,7 +224,7 @@
     var attackSelect = function(event) {
         var posClass, posNum, type, typeDem;
         
-	if (gameOn) {
+	if (gameState === GAME_STATE.TURN_HUMAN) {
 	    posClass = ui.util.getPosClassFromElement(event.target);
             posNum = ui.util.convertPosClassToNum(posClass);
 
@@ -299,7 +309,7 @@
 	document.querySelector("#start").addEventListener('click', function() {
 	    ui.resetAvailable();
 	    document.querySelector("aside").style.display = 'none';
-	    gameOn = true;
+	    gameState = GAME_STATE.TURN_HUMAN;
 	});
 
 	ui.init();
