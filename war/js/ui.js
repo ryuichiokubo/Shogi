@@ -3,10 +3,8 @@
 
     // DOM handling view
 
-    var rowNames = ['one', 'two', 'three', 'four',
-                    'five', 'six', 'seven', 'eight', 'nine'];
-    var columnNames = ['ichi', 'ni', 'san', 'yon', 
-                       'go', 'roku', 'nana', 'hachi', 'kyu'];
+    var rowNames = ['one', 'two', 'three', 'four', 'five'];
+    var columnNames = ['ichi', 'ni', 'san', 'yon', 'go'];
 
     var elems = {
 	set: null // board area element, not including inhand area
@@ -25,9 +23,9 @@
 
 	    // cf. css width for #set
 	    //if (window.document.body.clientWidth * 0.95 < 540) { // resized below this width
-	    if (window.document.body.clientWidth * 0.95 < 400) {
-		type = 'small/' + type;
-	    }
+	    //if (window.document.body.clientWidth * 0.95 < 400) {
+	    //    type = 'small/' + type; // XXX no longer needed with 5 x 5 board
+	    //}
             path = 'svg/' + type + '.svg';
 	    return path;
 	},

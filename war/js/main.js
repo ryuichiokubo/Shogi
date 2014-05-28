@@ -311,6 +311,9 @@
 	    document.querySelector("aside").style.display = 'none';
 	    gameState = GAME_STATE.TURN_HUMAN;
 	});
+	// XXX disable extra pieces for now
+	document.querySelector("aside").style.display = 'none';
+	gameState = GAME_STATE.TURN_HUMAN;
 
 	ui.init();
         setInitialPieces();

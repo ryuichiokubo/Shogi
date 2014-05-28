@@ -53,9 +53,9 @@ final class Board implements Cloneable {
 		piece_ok = (piece.getProm() != null);
 		
 		if (p == Player.HUMAN) {
-			place_ok = (oldY <= 2 || nextY <= 2);			
+			place_ok = (oldY <= 1 || nextY <= 1);			
 		} else {
-			place_ok = (oldY >= 6 || nextY >= 6);
+			place_ok = (oldY >= 3 || nextY >= 3);
 		}
 		return piece_ok && place_ok;
 	}

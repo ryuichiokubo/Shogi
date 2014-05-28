@@ -24,8 +24,8 @@ final class Game {
 	private final Captive myCaptive;
 	private final Captive aiCaptive;
 
-	final static int BOARD_ROW = 9;
-	final static int BOARD_COL = 9;
+	final static int BOARD_ROW = 5;
+	final static int BOARD_COL = 5;
 	
 	static {
 		for (Piece.Type type : Piece.Type.values()) {
