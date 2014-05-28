@@ -78,16 +78,21 @@ final class Game {
 			phSeq.put(Player.AI, h);
 		
 			for (Hand h2: getNextHandSeq(phSeq, Player.HUMAN)) {
-				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
-				phSeq2.put(Player.AI, h);
-				phSeq2.put(Player.HUMAN, h2);
-			
-				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
-					List<Hand> handSeq = new ArrayList<Hand>();
-					handSeq.add(h);
-					handSeq.add(h2);
-					handSeq.add(h3);
-					handSeqList.add(handSeq);
+				List<Hand> handSeq = new ArrayList<Hand>();
+				handSeq.add(h);
+				handSeq.add(h2);
+				handSeqList.add(handSeq);
+
+//				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
+//				phSeq2.put(Player.AI, h);
+//				phSeq2.put(Player.HUMAN, h2);
+//			
+//				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
+//					List<Hand> handSeq = new ArrayList<Hand>();
+//					handSeq.add(h);
+//					handSeq.add(h2);
+//					handSeq.add(h3);
+//					handSeqList.add(handSeq);
 
 //					Map<Player, Hand> phSeq3 = new TreeMap<Player, Hand>();
 //					phSeq2.put(Player.AI, h);
@@ -102,7 +107,7 @@ final class Game {
 //						handSeq.add(h4);
 //						handSeqList.add(handSeq);
 //					}
-				}
+//				}
 			}
 		}
 		
@@ -110,9 +115,9 @@ final class Game {
 		Logger.global.info("####################");
 		Logger.global.info("handSeqList num: " + handSeqList.size());
 		
-		List<List<Hand>> filtered = filterByExpectingBest(handSeqList, 3);
+		List<List<Hand>> filtered = filterByExpectingBest(handSeqList, 2);
 		//Logger.global.info("filtered1: " + filtered);
-		filtered = filterByExpectingBest(filtered, 2);
+		//filtered = filterByExpectingBest(filtered, 2);
 		//Logger.global.info("filtered2: " + filtered);
 		List<Hand> finalAiHands = new ArrayList<Hand>();
 		for (List<Hand> handList: filtered) {
