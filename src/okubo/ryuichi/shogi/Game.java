@@ -78,28 +78,23 @@ final class Game {
 			phSeq.put(Player.AI, h);
 		
 			for (Hand h2: getNextHandSeq(phSeq, Player.HUMAN)) {
-				List<Hand> handSeq = new ArrayList<Hand>();
-				handSeq.add(h);
-				handSeq.add(h2);
-				handSeqList.add(handSeq);
-
-//				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
-//				phSeq2.put(Player.AI, h);
-//				phSeq2.put(Player.HUMAN, h2);
-//			
-//				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
-//					List<Hand> handSeq = new ArrayList<Hand>();
-//					handSeq.add(h);
-//					handSeq.add(h2);
-//					handSeq.add(h3);
-//					handSeqList.add(handSeq);
+				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
+				phSeq2.put(Player.AI, h);
+				phSeq2.put(Player.HUMAN, h2);
+			
+				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
+					List<Hand> handSeq = new ArrayList<Hand>();
+					handSeq.add(h);
+					handSeq.add(h2);
+					handSeq.add(h3);
+					handSeqList.add(handSeq);
 
 //					Map<Player, Hand> phSeq3 = new TreeMap<Player, Hand>();
-//					phSeq2.put(Player.AI, h);
-//					phSeq2.put(Player.HUMAN, h2);
-//					phSeq2.put(Player.AI, h3);
-					
-//					for (Hand h4: getNextHandSeq(phSeq2, Player.AI)) {
+//					phSeq3.put(Player.AI, h);
+//					phSeq3.put(Player.HUMAN, h2);
+//					phSeq3.put(Player.AI, h3);
+//					
+//					for (Hand h4: getNextHandSeq(phSeq3, Player.HUMAN)) {
 //						List<Hand> handSeq = new ArrayList<Hand>();
 //						handSeq.add(h);
 //						handSeq.add(h2);
@@ -107,18 +102,20 @@ final class Game {
 //						handSeq.add(h4);
 //						handSeqList.add(handSeq);
 //					}
-//				}
+				}
 			}
 		}
 		
-//		Logger.global.info("handSeqList: " + handSeqList);
 		Logger.global.info("####################");
+		//Logger.global.info("handSeqList: " + handSeqList);
 		Logger.global.info("handSeqList num: " + handSeqList.size());
 		
-		List<List<Hand>> filtered = filterByExpectingBest(handSeqList, 2);
+		List<List<Hand>> filtered = filterByExpectingBest(handSeqList, 3);
 		//Logger.global.info("filtered1: " + filtered);
-		//filtered = filterByExpectingBest(filtered, 2);
+		filtered = filterByExpectingBest(filtered, 2);
 		//Logger.global.info("filtered2: " + filtered);
+		//filtered = filterByExpectingBest(filtered, 2);
+		//Logger.global.info("filtered3: " + filtered);
 		List<Hand> finalAiHands = new ArrayList<Hand>();
 		for (List<Hand> handList: filtered) {
 			finalAiHands.add(handList.get(0));
@@ -162,14 +159,14 @@ final class Game {
 			}
 			if (currentHand.equals(tmpHand)) {
 				// checking for same current hand
-//				if (handSeq.get(0).getScore() > 1000 || handSeq.get(1).getScore() > 1000 || handSeq.get(2).getScore() > 1000) {
+//				if (handSeq.get(0).getScore() > 100 || handSeq.get(1).getScore() > 100) { // || handSeq.get(2).getScore() > 1000) {
 //					Logger.global.info("########");
 //					Logger.global.info("currentHand: " + currentHand);
 //					Logger.global.info("nextHand: " + nextHand);
 //				}
 
-				if (currentHand.toX == nextHand.fromX && currentHand.toY == nextHand.toY) {
-					// nextHand is eaten and impossible
+				if (currentHand.toX == nextHand.fromX && currentHand.toY == nextHand.fromY) {
+					// nextHand is eaten and impossible // XXX why here?
 				} else {
 					if (nextHand.getScore() > bestNextScore) {
 						bestNextScore = nextHand.getScore();
@@ -181,11 +178,11 @@ final class Game {
 				// move to check different hand
 				tmpHand.setScore(tmpScore);
 				filtered.add(tmpHandSeq);
-				tmpScore = 0;
-
+				
 				tmpHand = currentHand;
 				tmpHandSeq = handSeq;
 				bestNextScore = nextHand.getScore();
+				tmpScore = currentHand.getScore() - nextHand.getScore();
 			}
 		}
 		tmpHand.setScore(tmpScore);
@@ -209,7 +206,7 @@ final class Game {
 		for (Entry<Player, Hand> e: phSeq.entrySet()) {
 			nextBoard.movePiece(e.getValue(), e.getKey());
 		}
-		Captive c = p == Player.AI ? myCaptive : aiCaptive;
+		Captive c = p == Player.AI ? aiCaptive : myCaptive;
 		List<Hand> hands = nextBoard.getAvailableHands(p);
 		hands.addAll(c.getAvailableHands());
 
@@ -228,6 +225,9 @@ final class Game {
 		if (isPromoted) {
 			score += SCORE_PROMOTION;
 		}
+		
+		// TODO plus if type is kin or gin etc and player's o is near
+		// TODO plus if type is hisha or kaku etc and opponent's o is near
 		
 		return score;
 	}
