@@ -239,84 +239,13 @@
 	}
     };
     
-    var main = function () {
-        var setInitialPieces = function() {
-            var posNum;
-
-            for (var i = 0; i < def.init.length; i++) {
-		ui.setPiece(def.init[i].piece, def.init[i].pos, def.init[i].mine, pieceSelect);
-
-                posNum = ui.util.convertPosClassToNum(def.init[i].pos, def.init[i].mine);
-                board.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
-            }
-        };
-
-	// XXX cleaning...
-	var extraPieces = document.querySelectorAll("#extra .piece");
-	var shake = function(elem) {
-	    if (elem.getAttribute('class').indexOf('shake-right') > 0) {
-	        elem.setAttribute('class', 'piece shake-left');
-	    } else {
-	        elem.setAttribute('class', 'piece shake-right');
-	    }
-	};
-	var shakeReset = function() {
-	    for (var i = 0; i < extraPieces.length; i++) {
-		extraPieces[i].setAttribute('class', 'piece');
-	    }
-	};
-	var timer;
-	var extraPieceHandler = function(pieceClicked) {
-	    clearInterval(timer);
-	    shakeReset();
-
-	    timer = setInterval(function() {
-		shake(pieceClicked.target);
-	    }, 200);
-	    pieceClicked.target.setAttribute('class', 'piece shake-right');
-
-	    ui.resetAvailable();
-
-	    var initAvailPos = board.getInitAvailPos();
-
-	    var squareSelect = function(posClicked) {
-		clearInterval(timer);
-		shakeReset();
-
-		var selectedPiece = pieceClicked.target.id;
-		var posClass = ui.util.getPosClassFromElement(posClicked.target);
-		ui.setPiece(selectedPiece, posClass, true, pieceSelect);
-                var posNum = ui.util.convertPosClassToNum(posClass, true);
-                board.setPiece(posNum[0], posNum[1], selectedPiece, true);
-
-		// add the same piece to opponent as well
-		var oppoPosNum = [8-posNum[0], 8-posNum[1]];
-		var oppoPosClass = ui.util.convertPosNumToClass(oppoPosNum[0], oppoPosNum[1]);
-                board.setPiece(oppoPosNum[0], oppoPosNum[1], selectedPiece, false);
-		ui.setPiece(selectedPiece, oppoPosClass, false, pieceSelect);
-
-		ui.resetAvailable();
-	    };
-	    for (var i = 0; i < initAvailPos.length; i++) {
-		var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
-		ui.setAvailable(initAvailClass, squareSelect);
-	    }
-	};
-	for (var i = 0; i < extraPieces.length; i++) {
-	    extraPieces[i].addEventListener('click', extraPieceHandler);
-	}
-
-	document.querySelector("#start").addEventListener('click', function() {
-	    ui.resetAvailable();
-	    document.querySelector("aside").style.display = 'none';
-	    gameState = GAME_STATE.TURN_HUMAN;
-	});
-	// XXX disable extra pieces for now
-	document.querySelector("aside").style.display = 'none';
+    var init = function() {
 	gameState = GAME_STATE.TURN_HUMAN;
+    };
 
-	ui.init();
-        setInitialPieces();
+    var main = {
+	init: init,
+	pieceSelect: pieceSelect
     };
     
     this.main = main;

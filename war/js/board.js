@@ -15,6 +15,15 @@
     };
 
     var board = {
+
+	init: function() {
+	    for (var i = 0; i < def.board.column; i++) {
+		square[i] = [];
+		for (var j = 0; j < def.board.row; j++) {
+		    square[i][j] = null;
+		}
+	    }
+	},
         
         setPiece: function(x, y, type, mine) {
             if (!square[x]) {
@@ -113,7 +122,7 @@
 	    var i, j, pos = [];
 
 	    var inOwnArea = function(x, y) {
-		return (y >= 5);
+		return (y >= (def.board.row - def.board.ownRow));
 	    };
 
 	    for (i = 0; i < square.length; i++) {

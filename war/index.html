@@ -7,12 +7,13 @@
     <script src="js/def.js"></script>
     <script src="js/ui.js"></script>
     <script src="js/board.js"></script>
+    <script src="js/menu.js"></script>
     <script src="js/main.js"></script>
     <script src="js/index.js"></script>
 </head>
 <body>
 
-    <aside>
+    <aside id="customize" class="dialog">
 	<p>Choose an extra piece to add.</p>
 	<div id="extra">
 	    <img id="tetsu" class="piece" src="svg/tetsu.svg" />
@@ -22,6 +23,12 @@
 	</div>
 	<button id="start">Start</button>
     </aside>
+
+    <nav id="menu" class="dialog">
+	<i>Mini Shogi X</i>
+	<button id="start-button">Standard Mode</button>
+	<button id="custo-button">Customized Mode</button>
+    </nav>
 
     <main>
 	<div id="oppoMochi" class="inhand"></div>
