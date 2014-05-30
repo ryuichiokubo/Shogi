@@ -1,6 +1,7 @@
 package okubo.ryuichi.shogi;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -112,29 +113,24 @@ final class Game {
 		//Logger.global.info("filtered2: " + filtered);
 		filtered = filterByExpectingBest(filtered, 2);
 		//Logger.global.info("filtered3: " + filtered);
-		List<Hand> finalAiHands = new ArrayList<Hand>();
+		ArrayList<Hand> finalAiHands = new ArrayList<Hand>();
 		for (List<Hand> handList: filtered) {
 			finalAiHands.add(handList.get(0));
 		}
 		
-		int highScore = Integer.MIN_VALUE;
-		Hand bestHand = null;
-		
-		for (Hand aiHand: finalAiHands) {
-			int score = aiHand.getScore();
-			
-			if (bestHand == null || highScore < score) {
-				highScore = score;
-				bestHand = aiHand;
+		Collections.sort(finalAiHands, Collections.reverseOrder());
+		ArrayList<Hand> bestHands = new ArrayList<Hand>();
+		for (Hand h: finalAiHands) {
+			if (bestHands.size() == 0 || bestHands.get(0).getScore() == h.getScore()) {
+				bestHands.add(h);
 			}
 		}
-		Logger.global.info("highScore: " + highScore);
-		Logger.global.info("bestHand: " + bestHand);
-
-		// XXX randomize
-		//int rand = (int) Math.floor(Math.random() * highScores.size());
-		//return highScores.get(rand);
-		return bestHand;
+		Logger.global.info("bestHands: " + bestHands);
+		
+		int rand = (int) Math.floor(Math.random() * bestHands.size());
+		Hand res = bestHands.get(rand);
+		
+		return res;
 	}
 
 	private List<List<Hand>> filterByExpectingBest(List<List<Hand>> handSeqList, int depth) {

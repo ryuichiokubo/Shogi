@@ -2,21 +2,12 @@ package okubo.ryuichi.shogi;
 
 import com.google.gson.Gson;
 
-final class Hand {
+final class Hand implements Comparable<Hand> {
 	
-	@SuppressWarnings("unused")
 	final String type;
-	
-	@SuppressWarnings("unused")
 	final int fromX;
-	
-	@SuppressWarnings("unused")
 	final int fromY;
-	
-	@SuppressWarnings("unused")
 	final int toX;
-	
-	@SuppressWarnings("unused")
 	final int toY;
 	
 	private int score = 0;
@@ -54,5 +45,11 @@ final class Hand {
 		} else {
 			return false;
 		}
+	}
+
+	// inconsistent with equals (compareTo checks only score while equals check other fields)
+	@Override
+	public int compareTo(Hand h) {
+		return score - h.score; // score can't be too big number (calculation result can't exceed Integer.MAX_VALUE)
 	}
 }
