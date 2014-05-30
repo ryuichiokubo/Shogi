@@ -74,33 +74,28 @@ final class Game {
 		List<List<Hand>> handSeqList = new ArrayList<List<Hand>>(); // (AI, HU, AI ... ), (AI, HU, AI ... ), ...
 		
 		for (Hand h: hands) {
-			Map<Player, Hand> phSeq = new TreeMap<Player, Hand>();
-			phSeq.put(Player.AI, h);
+			List<Hand> handSeq = new ArrayList<Hand>();
+			handSeq.add(h);
 		
-			for (Hand h2: getNextHandSeq(phSeq, Player.HUMAN)) {
-				Map<Player, Hand> phSeq2 = new TreeMap<Player, Hand>();
-				phSeq2.put(Player.AI, h);
-				phSeq2.put(Player.HUMAN, h2);
+			for (Hand h2: getNextHandSeq(handSeq)) {
+				List<Hand> handSeq2 = new ArrayList<Hand>();
+				handSeq2.add(h);
+				handSeq2.add(h2);
 			
-				for (Hand h3: getNextHandSeq(phSeq2, Player.AI)) {
-					List<Hand> handSeq = new ArrayList<Hand>();
-					handSeq.add(h);
-					handSeq.add(h2);
-					handSeq.add(h3);
-					handSeqList.add(handSeq);
+				for (Hand h3: getNextHandSeq(handSeq2)) {
+					List<Hand> handSeq3 = new ArrayList<Hand>();
+					handSeq3.add(h);
+					handSeq3.add(h2);
+					handSeq3.add(h3);
+					handSeqList.add(handSeq3);
 
-//					Map<Player, Hand> phSeq3 = new TreeMap<Player, Hand>();
-//					phSeq3.put(Player.AI, h);
-//					phSeq3.put(Player.HUMAN, h2);
-//					phSeq3.put(Player.AI, h3);
-//					
-//					for (Hand h4: getNextHandSeq(phSeq3, Player.HUMAN)) {
-//						List<Hand> handSeq = new ArrayList<Hand>();
-//						handSeq.add(h);
-//						handSeq.add(h2);
-//						handSeq.add(h3);
-//						handSeq.add(h4);
-//						handSeqList.add(handSeq);
+//					for (Hand h4: getNextHandSeq(handSeq3)) {
+//						List<Hand> handSeq4 = new ArrayList<Hand>();
+//						handSeq4.add(h);
+//						handSeq4.add(h2);
+//						handSeq4.add(h3);
+//						handSeq4.add(h4);
+//						handSeqList.add(handSeq4);
 //					}
 				}
 			}
@@ -112,9 +107,9 @@ final class Game {
 		
 		List<List<Hand>> filtered = filterByExpectingBest(handSeqList, 3);
 		//Logger.global.info("filtered1: " + filtered);
-		filtered = filterByExpectingBest(filtered, 2);
+		//filtered = filterByExpectingBest(filtered, 3);
 		//Logger.global.info("filtered2: " + filtered);
-		//filtered = filterByExpectingBest(filtered, 2);
+		filtered = filterByExpectingBest(filtered, 2);
 		//Logger.global.info("filtered3: " + filtered);
 		List<Hand> finalAiHands = new ArrayList<Hand>();
 		for (List<Hand> handList: filtered) {
@@ -165,14 +160,10 @@ final class Game {
 //					Logger.global.info("nextHand: " + nextHand);
 //				}
 
-				if (currentHand.toX == nextHand.fromX && currentHand.toY == nextHand.fromY) {
-					// nextHand is eaten and impossible // XXX why here?
-				} else {
-					if (nextHand.getScore() > bestNextScore) {
-						bestNextScore = nextHand.getScore();
-						tmpScore = currentHand.getScore() - nextHand.getScore();
-						tmpHandSeq = handSeq;
-					}
+				if (nextHand.getScore() > bestNextScore) {
+					bestNextScore = nextHand.getScore();
+					tmpScore = currentHand.getScore() - nextHand.getScore();
+					tmpHandSeq = handSeq;
 				}
 			} else {
 				// move to check different hand
@@ -193,7 +184,8 @@ final class Game {
 		return filtered;
 	}
 
-	private List<Hand> getNextHandSeq(Map<Player, Hand> phSeq, Player p) {
+	private List<Hand> getNextHandSeq(List<Hand> hSeq) {
+//		private List<Hand> getNextHandSeq(List<Hand> phSeq, Player p) {
 		Board nextBoard;
 		
 		try {
@@ -203,10 +195,18 @@ final class Game {
 			throw new NullPointerException("No clone, no nextBoard.");
 		}
 
-		for (Entry<Player, Hand> e: phSeq.entrySet()) {
-			nextBoard.movePiece(e.getValue(), e.getKey());
+		Player p = null;
+		int cntr = 0;
+		for (Hand h: hSeq) {
+			p = (cntr % 2 == 0) ? Player.AI : Player.HUMAN;
+			nextBoard.movePiece(h, p);
+
+//				Logger.global.info("phSeq: " + phSeq);
+//				Logger.global.info("board: " + nextBoard);
+			cntr++;
 		}
-		Captive c = p == Player.AI ? aiCaptive : myCaptive;
+		p = (cntr % 2 == 0) ? Player.AI : Player.HUMAN;
+		Captive c = (p == Player.AI) ? aiCaptive : myCaptive;
 		List<Hand> hands = nextBoard.getAvailableHands(p);
 		hands.addAll(c.getAvailableHands());
 
