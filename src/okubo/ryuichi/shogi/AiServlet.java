@@ -21,7 +21,7 @@ public class AiServlet extends HttpServlet {
 			game = Game.getInstance();
 			board = game.getBoard();
 		} else {
-			board = new Board(Game.BOARD_ROW, Game.BOARD_COL);
+			board = new Board(Game.BOARD_ROW, Game.BOARD_COL, Game.BOARD_PROM_ROW);
 			game = Game.getInstance(board, myCaptive, aiCaptive);				
 		}
 		

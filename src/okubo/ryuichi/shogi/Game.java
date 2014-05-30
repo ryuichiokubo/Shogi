@@ -26,6 +26,7 @@ final class Game {
 
 	final static int BOARD_ROW = 5;
 	final static int BOARD_COL = 5;
+	final static int BOARD_PROM_ROW = 1;
 	
 	static {
 		for (Piece.Type type : Piece.Type.values()) {

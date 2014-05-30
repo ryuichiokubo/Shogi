@@ -13,10 +13,12 @@ final class Board implements Cloneable {
 	private Piece[][] square = null;
 	private final int row;
 	private final int column;
+	private final int promRow;
 	
-	Board(int row, int column) {
+	Board(int row, int column, int promRow) {
 		this.row = row;
 		this.column = column;
+		this.promRow = promRow;
 		square = new Piece[row][column];
 	}
 
@@ -53,9 +55,9 @@ final class Board implements Cloneable {
 		piece_ok = (piece.getProm() != null);
 		
 		if (p == Player.HUMAN) {
-			place_ok = (oldY <= 1 || nextY <= 1);			
+			place_ok = ((0 <= oldY && oldY < promRow) || (0 <= nextY && nextY < promRow));			
 		} else {
-			place_ok = (oldY >= 3 || nextY >= 3);
+			place_ok = (oldY >= (row - promRow) || nextY >= (row - promRow));
 		}
 		return piece_ok && place_ok;
 	}
