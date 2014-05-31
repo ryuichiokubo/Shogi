@@ -138,10 +138,10 @@
 
     var menu = function () {
 	var menuDialog = document.getElementById('menu');
-	var startBtn = document.getElementById('stand-button');
+	var standBtn = document.getElementById('stand-button');
 	var custoBtn = document.getElementById('custo-button');
 
-	startBtn.addEventListener('click', function() {
+	standBtn.addEventListener('click', function() {
 	    menuDialog.style.display = "none";
 	    standard();
 	});

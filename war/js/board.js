@@ -26,6 +26,16 @@
         }
     };
 
+    var hasPieceOnBoard	= function(type) {
+        for (var i = 0; i < square.length; i++) {
+	   for (var j = 0; j < square[i].length; j++) {
+		if (square[i][j] && square[i][j].type === type && square[i][j].mine === true) {
+		    return true;
+		}
+            }
+        }
+    };
+
     var board = {
 
 	init: function() {
@@ -124,6 +134,10 @@
 	    var inOwnArea = function(x, y) {
 		return (y >= (def.board.row - def.board.ownRow));
 	    };
+
+	    if (type === 'o' && hasPieceOnBoard(type)) {
+		return [];
+	    }
 
 	    for (i = 0; i < square.length; i++) {
 		for (j = 0; j < square[i].length; j++) {
