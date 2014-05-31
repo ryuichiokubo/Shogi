@@ -2,5 +2,10 @@
 
     "use strict";
 
-    document.addEventListener("DOMContentLoaded", menu, false);
+    document.addEventListener("DOMContentLoaded", function() {
+	ui.init();
+	board.init();
+
+	menu();
+    }, false);
 })();

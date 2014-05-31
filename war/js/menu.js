@@ -75,7 +75,32 @@
 	    extraPieces[i].addEventListener('click', extraPieceHandler);
 	}
 
-	document.querySelector("#start").addEventListener('click', function() {
+	var carousel = document.getElementById('extra');
+	carousel.scrollLeft = 0;
+	var scroll = function(amount, toRight) {
+	    var frame = 30;
+	    var cntr = frame;
+	    var timer = setInterval(function() {
+		if (cntr > 0) {
+		    if (toRight) {
+			carousel.scrollLeft = carousel.scrollLeft + amount / frame;
+		    } else {
+			carousel.scrollLeft = carousel.scrollLeft - amount / frame;
+		    }
+		    cntr--;
+		} else {
+		    clearTimeout(timer);
+		}
+	    }, 15);
+	};
+	document.getElementById("carousel-left").addEventListener('click', function() {
+	    scroll(60, false);
+	});
+	document.getElementById("carousel-right").addEventListener('click', function() {
+	    scroll(60, true);
+	});
+
+	document.getElementById("start").addEventListener('click', function() {
 	    ui.resetAvailable();
 	    document.querySelector("aside").style.display = 'none';
 	    main.init();
@@ -83,10 +108,6 @@
     };
 
     var menu = function () {
-	ui.init();
-	board.init();
-	board.debug();
-
 	var menuDialog = document.getElementById('menu');
 	var startBtn = document.getElementById('start-button');
 	var custoBtn = document.getElementById('custo-button');

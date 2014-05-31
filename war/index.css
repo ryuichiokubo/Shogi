@@ -20,8 +20,21 @@ aside p {
     text-align: center;
 }
 
+#carousel-left {
+    position: absolute;
+    top: 40%;
+}
+
+#carousel-right {
+    position: absolute;
+    top: 40%;
+    right: 0%;
+}
+
 #extra {
     margin: 0 30px;
+    width: 255px;
+    overflow: hidden;
 }
 
 aside .piece {
@@ -29,7 +42,18 @@ aside .piece {
     height: 60px;
 }
 
-aside button {
+aside ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+    width: 720px;
+}
+
+aside li {
+    float: left;
+}
+
+#start {
     position: relative;
     left: 35%;
     width: 30%;
