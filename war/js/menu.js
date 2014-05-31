@@ -19,11 +19,24 @@
     var customize = function() {
 	// XXX cleaning...
 	var custoElems = document.querySelectorAll('.customize');
-	for (var i = 0; i < custoElems.length; i++) {
-	    custoElems[i].style.display = "block";
-	}
-
 	var extraPieces = document.querySelectorAll("#extra .piece");
+	var carousel = document.getElementById('extra');
+	var startBtn = {
+	    elem: document.getElementById('start'),
+	    enable: function() {
+		this.elem.disabled = false;
+	    },
+	    disable: function() {
+		this.elem.disabled = true;
+	    }
+	};
+
+	var show = function() {
+	    for (var i = 0; i < custoElems.length; i++) {
+		custoElems[i].style.display = "block";
+	    }
+	};
+
 	var shake = function(elem) {
 	    if (elem.getAttribute('class').indexOf('shake-right') > 0) {
 	        elem.setAttribute('class', 'piece shake-left');
@@ -31,13 +44,16 @@
 	        elem.setAttribute('class', 'piece shake-right');
 	    }
 	};
+
 	var shakeReset = function() {
 	    for (var i = 0; i < extraPieces.length; i++) {
 		extraPieces[i].setAttribute('class', 'piece');
 	    }
 	};
-	var timer;
+
 	var extraPieceHandler = function(pieceClicked) {
+	    var timer;
+
 	    clearInterval(timer);
 	    shakeReset();
 
@@ -67,6 +83,10 @@
 		ui.setPiece(selectedPiece, oppoPosClass, false, main.pieceSelect);
 
 		ui.resetAvailable();
+
+		if (selectedPiece === 'o') {
+		    startBtn.enable();
+		}
 	    };
 	    for (var i = 0; i < initAvailPos.length; i++) {
 		var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
@@ -74,12 +94,6 @@
 	    }
 	};
 
-	for (var i = 0; i < extraPieces.length; i++) {
-	    extraPieces[i].addEventListener('click', extraPieceHandler);
-	}
-
-	var carousel = document.getElementById('extra');
-	carousel.scrollLeft = 0;
 	var scroll = function(amount, toRight) {
 	    var frame = 30;
 	    var cntr = frame;
@@ -96,15 +110,26 @@
 		}
 	    }, 15);
 	};
+
+	show();
+
+	for (var i = 0; i < extraPieces.length; i++) {
+	    extraPieces[i].addEventListener('click', extraPieceHandler);
+	}
+
+	carousel.scrollLeft = 0;
+
 	document.getElementById("carousel-left").addEventListener('click', function() {
 	    scroll(60, false);
 	});
+
 	document.getElementById("carousel-right").addEventListener('click', function() {
 	    scroll(60, true);
 	});
 
-	document.getElementById("start").addEventListener('click', function() {
+	startBtn.elem.addEventListener('click', function() {
 	    ui.resetAvailable();
+	    startBtn.disable();
 	    for (var i = 0; i < custoElems.length; i++) {
 		custoElems[i].style.display = "none";
 	    }
@@ -114,7 +139,7 @@
 
     var menu = function () {
 	var menuDialog = document.getElementById('menu');
-	var startBtn = document.getElementById('start-button');
+	var startBtn = document.getElementById('stand-button');
 	var custoBtn = document.getElementById('custo-button');
 
 	startBtn.addEventListener('click', function() {
