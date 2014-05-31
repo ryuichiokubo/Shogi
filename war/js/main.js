@@ -240,7 +240,15 @@
     };
     
     var init = function() {
-	gameState = GAME_STATE.TURN_HUMAN;
+	if (document.getElementById('myonoffswitch').checked) {
+	    gameState = GAME_STATE.TURN_HUMAN;
+	} else {
+	    gameState = GAME_STATE.TURN_AI;
+	    board.upload(function(res) {
+		gameState = GAME_STATE.TURN_HUMAN;
+		moveAi(res);
+	    });
+	}
     };
 
     var main = {
