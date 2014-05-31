@@ -1,8 +1,15 @@
 aside {
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 5px;
     z-index: 1000;
+    display: block;
+}
+
+aside ul {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
 }
 
 aside img {
@@ -14,8 +21,8 @@ aside img {
     position: absolute;
     top: 20%;
     left: 50%;
-    margin: 0 0 0 -150px;
-    width: 295px;
+    margin: 0 0 0 -125px;
+    width: 250px;
     height: 250px;
     border: 2px solid;
     border-radius: 12px;
@@ -48,8 +55,11 @@ aside img {
 }
 
 #menu button {
-    height: 40px;
     width: 175px;
+}
+
+button {
+    height: 40px;
     font-size: 15px;
 }
 
@@ -73,13 +83,13 @@ aside img {
 
 #carousel-left {
     position: absolute;
-    top: 40%;
+    top: 10%;
     width: 30px;
 }
 
 #carousel-right {
     position: absolute;
-    top: 40%;
+    top: 10%;
     right: 0%;
     width: 30px;
 }
@@ -111,7 +121,7 @@ aside img {
     position: relative;
     left: 35%;
     width: 30%;
-    height: 25px;
+    height: 30px;
 }
 
 #oppoMochi {
