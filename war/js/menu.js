@@ -18,7 +18,10 @@
 
     var customize = function() {
 	// XXX cleaning...
-	document.getElementById('customize').style.display = "block";
+	var custoElems = document.querySelectorAll('.customize');
+	for (var i = 0; i < custoElems.length; i++) {
+	    custoElems[i].style.display = "block";
+	}
 
 	var extraPieces = document.querySelectorAll("#extra .piece");
 	var shake = function(elem) {
@@ -102,7 +105,9 @@
 
 	document.getElementById("start").addEventListener('click', function() {
 	    ui.resetAvailable();
-	    document.querySelector("aside").style.display = 'none';
+	    for (var i = 0; i < custoElems.length; i++) {
+		custoElems[i].style.display = "none";
+	    }
 	    main.init();
 	});
     };

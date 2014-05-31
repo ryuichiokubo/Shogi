@@ -33,13 +33,22 @@
     font-size: 15px;
 }
 
-aside {
+.customize {
     display: none;
+    position: relative;
 }
 
-aside p {
-    margin: 7px 0;
+.customize p {
     text-align: center;
+    font-size: 20px;
+}
+
+.above {
+    margin-bottom: -55px;
+}
+
+.below {
+    margin-top: -50px;
 }
 
 #carousel-left {
@@ -57,23 +66,24 @@ aside p {
 
 #extra {
     margin: 0 30px;
-    width: 255px;
     overflow: hidden;
+    max-width: 540px;
+    width: 80%;
 }
 
-aside .piece {
+.customize .piece {
     width: 60px;
     height: 60px;
 }
 
-aside ul {
+.customize ul {
     list-style-type: none;
     padding: 0px;
     margin: 0px;
     width: 720px;
 }
 
-aside li {
+.customize li {
     float: left;
 }
 
