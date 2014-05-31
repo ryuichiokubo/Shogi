@@ -102,7 +102,7 @@
     var board = {
 	row: 5,
 	column: 5,
-	promoteRow: 1, // piece can promote if in opponent's side within this row
+	promoteRow: 2, // piece can promote if in opponent's side within this row
 	ownRow: 2 // users can put his initial pieces within this area
     };
 
