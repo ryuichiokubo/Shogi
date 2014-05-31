@@ -1,3 +1,15 @@
+aside {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 1000;
+}
+
+aside img {
+    width: 30px;
+    height: 30px;
+}
+
 #menu {
     position: absolute;
     top: 20%;

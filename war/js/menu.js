@@ -140,6 +140,7 @@
 	var menuDialog = document.getElementById('menu');
 	var standBtn = document.getElementById('stand-button');
 	var custoBtn = document.getElementById('custo-button');
+	var refreshBtn = document.getElementById('refresh');
 
 	standBtn.addEventListener('click', function() {
 	    menuDialog.style.display = "none";
@@ -148,6 +149,10 @@
 	custoBtn.addEventListener('click', function() {
 	    menuDialog.style.display = "none";
 	    customize();
+	});
+	refreshBtn.addEventListener('click', function() {
+	    console.log("@@@@@@@@ ");
+	    document.location.reload(true);
 	});
     };
 
