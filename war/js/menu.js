@@ -17,7 +17,6 @@
     };
 
     var customize = function() {
-	// XXX cleaning...
 	var custoElems = document.querySelectorAll('.customize');
 	var extraPieces = document.querySelectorAll("#extra .piece");
 	var carousel = document.getElementById('extra');
@@ -64,13 +63,13 @@
 
 	    ui.resetAvailable();
 
-	    var initAvailPos = board.getInitAvailPos();
+	    var selectedPiece = pieceClicked.target.id;
+	    var initAvailPos = board.getInitAvailPos(selectedPiece);
 
 	    var squareSelect = function(posClicked) {
 		clearInterval(timer);
 		shakeReset();
 
-		var selectedPiece = pieceClicked.target.id;
 		var posClass = ui.util.getPosClassFromElement(posClicked.target);
 		ui.setPiece(selectedPiece, posClass, true, main.pieceSelect);
                 var posNum = ui.util.convertPosClassToNum(posClass, true);

@@ -14,6 +14,18 @@
         return (!piece || !piece.type);
     };
 
+    var isNihu = function(type, x) {
+        if (type !== 'hu') {
+            return false;
+        }
+        
+        for (var i = 0; i < square[x].length; i++) {
+            if (square[x][i] && square[x][i].type === 'hu' && square[x][i].mine === true) {
+        	return true;
+            }
+        }
+    };
+
     var board = {
 
 	init: function() {
@@ -93,23 +105,11 @@
 	},
 
 	getInhandAvailPos: function(type) {
-	    var i, j, k, pos = [];
-
-	    var isNihu = function(x) {
-		if (type !== 'hu') {
-		    return false;
-		}
-		
-		for (k = 0; k < square[x].length; k++) {
-		    if (square[x][k] && square[x][k].type === 'hu' && square[x][k].mine === true) {
-			return true;
-		    }
-		}
-	    };
+	    var i, j, pos = [];
 
 	    for (i = 0; i < square.length; i++) {
 		for (j = 0; j < square[i].length; j++) {
-		    if (squareAvailable(square[i][j]) && !isNihu(i)) {
+		    if (squareAvailable(square[i][j]) && !isNihu(type, i)) {
 			pos.push([i, j]);
 		    }
 		}
@@ -118,7 +118,7 @@
 	    return pos;
 	},
 
-	getInitAvailPos: function() {
+	getInitAvailPos: function(type) {
 	    var i, j, pos = [];
 
 	    var inOwnArea = function(x, y) {
@@ -127,7 +127,7 @@
 
 	    for (i = 0; i < square.length; i++) {
 		for (j = 0; j < square[i].length; j++) {
-		    if (squareAvailable(square[i][j]) && inOwnArea(i, j)) {
+		    if (squareAvailable(square[i][j]) && inOwnArea(i, j) && !isNihu(type, i)) {
 			pos.push([i, j]);
 		    }
 		}
