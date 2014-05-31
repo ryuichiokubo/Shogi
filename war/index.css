@@ -1,14 +1,36 @@
-.dialog {
+#menu {
     position: absolute;
-    top: 2%;
+    top: 20%;
     left: 50%;
-    margin: 0 0 0 -160px;
-    width: 315px;
-    height: 130px;
+    margin: 0 0 0 -150px;
+    width: 295px;
+    height: 200px;
     border: 2px solid;
     border-radius: 12px;
     z-index: 1000;
     background-color: white;
+}
+
+#menu > article {
+    position: absolute;
+    left: 50%;
+    margin-left: -87px; /* button width / 2 */
+}
+
+#menu > header {
+    margin: 25px 0;
+    text-align: center;
+    font-size: 30px;
+}
+
+#menu > article:nth-child(3) {
+    margin-top: 50px;
+}
+
+#menu button {
+    height: 40px;
+    width: 175px;
+    font-size: 15px;
 }
 
 aside {
@@ -23,12 +45,14 @@ aside p {
 #carousel-left {
     position: absolute;
     top: 40%;
+    width: 30px;
 }
 
 #carousel-right {
     position: absolute;
     top: 40%;
     right: 0%;
+    width: 30px;
 }
 
 #extra {
