@@ -27,6 +27,51 @@ aside img {
     margin: -8px -8px;
 }
 
+.piece-help {
+    position: relative;
+    top: 10px;
+    left: 60px;
+}
+
+.piece-help div {
+    margin: 0 10px 0 0;
+    float: left;
+}
+
+.piece-help img {
+    width: 80px;
+    height: 80px;
+}
+
+.piece-help label {
+    display: block;
+    width: 80px;
+    text-align: center;
+    font-size: 18px;
+}
+
+table {
+    border-collapse: collapse;
+    float: left;
+}
+
+tr {
+    text-align: center;
+}
+
+td {
+    width: 20px;
+    border: 1px black solid;
+}
+
+table .move {
+    background-color: rgba(0, 0, 255, 0.25);
+}
+
+table .target {
+    background-color: #FFECB1;
+}
+
 #menu {
     position: absolute;
     top: 20%;
