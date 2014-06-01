@@ -49,15 +49,15 @@
 	<header>Help</header>
 	<article>
 	    <ul>
-		<li>If you capture opponent's pieces, you can use them as your pieces.</li>
-		<li>Some pieces can promote when they are in the opponent's area.</li>
-		<li>You can't put more than one "歩兵" piece on the same column.</li>
-		<li>The first one to capture the opponent's king "王将" is the winner.</li>
+		<li>The first one to capture the opponent's <span style="font-weight:bold">King (王将)</span> is the winner.</li>
+		<li>If you capture opponent's pieces, you can <span style="text-decoration:underline">put them back to board</span> as your pieces.</li>
+		<li>You can't put <span style="text-decoration:underline">more than one Pawn (歩兵)</span> on the same column.</li>
+		<li>Some pieces can <span style="color:red">promote</span> when they are in the opponent's area (2 rows).</li>
 	    </ul>
 	</article>
 	<article class="piece-help">
 	    <div>
-		<img id="o" class="piece" src="svg/o.svg" />
+		<img src="svg/o.svg" />
 		<label>King</label>
 	    </div>
 	    <table>
@@ -88,6 +88,52 @@
 			<td class="move">◯</td>
 			<td class="move">◯</td>
 			<td class="move">◯</td>
+			<td>&nbsp;</td>
+		    </tr>
+		    <tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		    </tr>
+		</tbody>
+	    </table>
+	</article>
+	<article class="piece-help">
+	    <div>
+		<img src="svg/hu.svg" />
+		<label>Pawn</label>
+		<label style="color:red">--&gt;Tokin</label>
+	    </div>
+	    <table>
+		<tbody>
+		    <tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		    </tr>
+		    <tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td class="move">◯</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		    </tr>
+		    <tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td class="target">歩</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+		    </tr>
+		    <tr>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
+			<td>&nbsp;</td>
 			<td>&nbsp;</td>
 		    </tr>
 		    <tr>
