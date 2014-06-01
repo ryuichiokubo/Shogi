@@ -1,5 +1,5 @@
 aside {
-    position: absolute;
+    position: fixed;
     right: 10px;
     top: 5px;
     z-index: 5000;
@@ -44,7 +44,7 @@ aside img {
 }
 
 .piece-help div {
-    margin: 12px 10px 0 0;
+    margin: 15px 10px 0 0;
     float: left;
 }
 
