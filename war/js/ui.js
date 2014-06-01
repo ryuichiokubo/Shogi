@@ -15,6 +15,24 @@
 	selected: null, // currently selected piece as DOM Element // XXX as object with method?
 
 	init: function() {
+	    var refreshBtn = document.getElementById('refresh');
+	    var questionBtn = document.getElementById('question');
+	    var helpEl = document.getElementById('help');
+
+	    refreshBtn.addEventListener('click', function() {
+		document.location.reload(true);
+	    });
+
+	    questionBtn.addEventListener('click', function() {
+		if (helpEl.style.display === 'block') {
+		    helpEl.style.display = "none";
+		    refreshBtn.style.display = "block";
+		} else {
+		    helpEl.style.display = "block";
+		    refreshBtn.style.display = "none";
+		}
+	    });
+
 	    elems.set = document.querySelector("#set");
 	},
 
