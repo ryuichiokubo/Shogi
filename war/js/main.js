@@ -240,7 +240,9 @@
     };
     
     var init = function() {
-	if (document.getElementById('myonoffswitch').checked) {
+	var turnSelect = document.getElementById('turn-select').selectedOptions.item(0).value;
+	// XXX save in local storage to keep selection after reloading
+	if (turnSelect === 'human') {
 	    gameState = GAME_STATE.TURN_HUMAN;
 	} else {
 	    gameState = GAME_STATE.TURN_AI;
