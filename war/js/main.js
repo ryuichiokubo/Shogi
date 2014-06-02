@@ -168,7 +168,7 @@
 		}
 	    };
 
-	    if (canPromote() && ui.dialog.askPromote()) {
+	    if (gameState !== GAME_STATE.OFF && canPromote() && ui.dialog.askPromote()) {
 		ui.promote(ui.selected, type);
 		type = def.piece[type].prom;
 	    }
