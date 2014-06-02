@@ -1,7 +1,7 @@
 aside {
     position: fixed;
     right: 10px;
-    top: 5px;
+    top: 8px;
     z-index: 5000;
     display: block;
 }
@@ -19,12 +19,14 @@ aside img {
 
 #help {
     display: none;
-    background-color: white;
-    height: 100%;
-    width: 100%;
+    background-color: #f5f5f5;
+    width: 97%;
     position: absolute;
     z-index: 2000;
-    margin: -8px -8px;
+    border-style: ridge;
+    overflow-x: hidden;
+    top: 2px;
+    left: 2px;
 }
 
 #help > header {
