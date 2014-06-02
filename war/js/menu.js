@@ -62,8 +62,6 @@
 	    clearInterval(timer);
 	    shakeReset();
 
-	    setTipText("Put it on board.");
-
 	    timer = setInterval(function() {
 		shake(pieceClicked.target);
 	    }, 200);
@@ -73,6 +71,10 @@
 
 	    var selectedPiece = pieceClicked.target.id;
 	    var initAvailPos = board.getInitAvailPos(selectedPiece);
+
+	    if (initAvailPos.length > 0) {
+		setTipText("Put it on board.");
+	    }
 
 	    var squareSelect = function(posClicked) {
 		clearInterval(timer);

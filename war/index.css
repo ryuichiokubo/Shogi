@@ -20,13 +20,13 @@ aside img {
 #help {
     display: none;
     background-color: #f5f5f5;
-    width: 97%;
+    width: 96%;
     position: absolute;
     z-index: 2000;
     border-style: ridge;
     overflow-x: hidden;
-    top: 2px;
-    left: 2px;
+    top: 3px;
+    left: 4px;
 }
 
 #help > header {
