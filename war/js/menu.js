@@ -138,15 +138,23 @@
 
     var menu = function () {
 	var menuDialog = document.getElementById('menu');
+	var board = document.getElementById('board');
+	var mokume = document.getElementById('mokume');
 	var standBtn = document.getElementById('stand-button');
 	var custoBtn = document.getElementById('custo-button');
 
-	standBtn.addEventListener('click', function() {
+	var dismissMenu = function() {
 	    menuDialog.style.display = "none";
+	    board.style.display = "block";
+	    mokume.style.display = "none";
+	};
+
+	standBtn.addEventListener('click', function() {
+	    dismissMenu();
 	    standard();
 	});
 	custoBtn.addEventListener('click', function() {
-	    menuDialog.style.display = "none";
+	    dismissMenu();
 	    customize();
 	});
     };
