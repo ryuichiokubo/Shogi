@@ -20,6 +20,9 @@
 	var custoElems = document.querySelectorAll('.customize');
 	var extraPieces = document.querySelectorAll("#extra .piece");
 	var carousel = document.getElementById('extra');
+	var setTipText = function(text) {
+	    document.getElementById('customize-tip').textContent = text;
+	}
 	var startBtn = {
 	    elem: document.getElementById('start'),
 	    enable: function() {
@@ -27,6 +30,9 @@
 	    },
 	    disable: function() {
 		this.elem.disabled = true;
+	    },
+	    isEnabled: function() {
+		return (this.elem.disabled === false);
 	    }
 	};
 
@@ -55,6 +61,8 @@
 
 	    clearInterval(timer);
 	    shakeReset();
+
+	    setTipText("Put it on board.");
 
 	    timer = setInterval(function() {
 		shake(pieceClicked.target);
@@ -85,6 +93,12 @@
 
 		if (selectedPiece === 'o') {
 		    startBtn.enable();
+		}
+
+		if (startBtn.isEnabled()) {
+		    setTipText("Add more or press Start.");
+		} else {
+		    setTipText("Add one King (王将).");
 		}
 	    };
 	    for (var i = 0; i < initAvailPos.length; i++) {
