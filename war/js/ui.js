@@ -84,10 +84,10 @@
 
 	setSelected: function(event) {
 	    if (ui.selected) {
-                ui.selected.style["background-color"] = '';
+                ui.selected.style.transform = ''; // XXX add and remove class
             }
             ui.selected = event.target;
-            ui.selected.style['background-color'] = 'rgba(255, 255, 0, 0.75)';
+            ui.selected.style.transform = 'scale(1.2)';
 	},
 
 	setAvailable: function(availClass, handler) {
@@ -191,7 +191,7 @@
 	moveSelected: function(newPosClass) {
 	    // move selected and remove color
 	    ui.selected.setAttribute('class', 'piece ' + newPosClass);
-	    ui.selected.style["background-color"] = '';
+	    ui.selected.style["transform"] = '';
 	    ui.selected = null;
 	},
 

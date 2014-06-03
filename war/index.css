@@ -259,28 +259,6 @@ button {
     z-index: 100;
 }
 
-.shake-right {
-    -moz-transform:    rotate( 5deg );  /* Firefox */
-    -webkit-transform: rotate( 5deg );  /* Chrome,Safari */
-    -o-transform:      rotate( 5deg );  /* Opera */
-    -ms-transform:     rotate( 5deg );  /* IE */
-    transform:         rotate( 5deg );  /* CSS3 */
-
-    -webkit-transition: 0.2s; /* For Safari 3.1 to 6.0 */
-    transition: 0.2s;
-}
-
-.shake-left {
-    -moz-transform:    rotate( -5deg );  /* Firefox */
-    -webkit-transform: rotate( -5deg );  /* Chrome,Safari */
-    -o-transform:      rotate( -5deg );  /* Opera */
-    -ms-transform:     rotate( -5deg );  /* IE */
-    transform:         rotate( -5deg );  /* CSS3 */
-
-    -webkit-transition: 0.2s; /* For Safari 3.1 to 6.0 */
-    transition: 0.2s;
-}
-
 .oppoPiece {
     -moz-transform:    rotate( 180deg );  /* Firefox */
     -webkit-transform: rotate( 180deg );  /* Chrome,Safari */

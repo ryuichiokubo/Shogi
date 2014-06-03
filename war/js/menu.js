@@ -22,7 +22,7 @@
 	var carousel = document.getElementById('extra');
 	var setTipText = function(text) {
 	    document.getElementById('customize-tip').textContent = text;
-	}
+	};
 	var startBtn = {
 	    elem: document.getElementById('start'),
 	    enable: function() {
@@ -42,30 +42,11 @@
 	    }
 	};
 
-	var shake = function(elem) {
-	    if (elem.getAttribute('class').indexOf('shake-right') > 0) {
-	        elem.setAttribute('class', 'piece shake-left');
-	    } else {
-	        elem.setAttribute('class', 'piece shake-right');
-	    }
-	};
-
-	var shakeReset = function() {
-	    for (var i = 0; i < extraPieces.length; i++) {
-		extraPieces[i].setAttribute('class', 'piece');
-	    }
-	};
-
 	var extraPieceHandler = function(pieceClicked) {
-	    var timer;
-
-	    clearInterval(timer);
-	    shakeReset();
-
-	    timer = setInterval(function() {
-		shake(pieceClicked.target);
-	    }, 200);
-	    pieceClicked.target.setAttribute('class', 'piece shake-right');
+	    for (var i = 0; i < extraPieces.length; i++) {
+		extraPieces[i].style.transform = '';
+	    }
+	    pieceClicked.target.style.transform = 'scale(1.2)';
 
 	    ui.resetAvailable();
 
@@ -77,8 +58,7 @@
 	    }
 
 	    var squareSelect = function(posClicked) {
-		clearInterval(timer);
-		shakeReset();
+		pieceClicked.target.style.transform = '';
 
 		var posClass = ui.util.getPosClassFromElement(posClicked.target);
 		ui.setPiece(selectedPiece, posClass, true, main.pieceSelect);
