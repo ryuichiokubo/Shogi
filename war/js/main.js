@@ -125,12 +125,14 @@
 	if (isCaptive) {
 	    ui.removeCaptive(data.type, false);
 	    ui.setPiece(data.type, posClass, false, pieceSelect);
+	    ui.setLastMove(posClass);
 	} else {
 	    fromType = ui.util.getTypeFromElem(fromPiece);
 	    if (data.type !== fromType) {
 	        ui.promote(fromPiece, fromType);
 	    }
 	    fromPiece.setAttribute('class', 'piece oppoPiece ' + posClass); // XXX add proper method in ui
+	    ui.setLastMove(posClass);
 	}
 
 	// move to InHand area if there is an existing piece

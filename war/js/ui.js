@@ -90,6 +90,24 @@
             ui.selected.style.transform = 'scale(1.2)';
 	},
 
+	setLastMove: function(posClass) {
+	    var div;
+
+	    ui.resetLastMove();
+	    div = document.createElement('div');
+	    div.setAttribute('class', 'last-move ' + posClass);
+	    elems.set.appendChild(div);
+	},
+
+	resetLastMove: function() {
+	    var lastElems;
+
+            lastElems = elems.set.querySelectorAll(".last-move");
+            for (var i = 0; i < lastElems.length; i++) {
+                elems.set.removeChild(lastElems[i]);
+            }
+	},
+
 	setAvailable: function(availClass, handler) {
 	    var div;
 
@@ -193,6 +211,7 @@
 	    ui.selected.setAttribute('class', 'piece ' + newPosClass);
 	    ui.selected.style["transform"] = '';
 	    ui.selected = null;
+	    ui.setLastMove(newPosClass);
 	},
 
 	changePieceType: function(piece, changeTo) {

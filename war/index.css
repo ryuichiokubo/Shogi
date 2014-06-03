@@ -243,7 +243,7 @@ button {
     margin-left: -14%;
 }
 
-.piece, .available {
+.piece, .available, .last-move {
     width: 20%;
     max-width: 90px;
     max-height: 90px;
@@ -256,6 +256,11 @@ button {
 
 .available {
     background-color: rgba(0, 0, 255, 0.25);
+    z-index: 100;
+}
+
+.last-move {
+    background-color: rgba(0, 0, 100, 0.25);
     z-index: 100;
 }
 
