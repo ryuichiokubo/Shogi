@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "name": "Mini Shogi EX",
+  "description": "Shogi (Japanese chess) with 5 x 5 board.",
+  "launch_path": "/index.html",
+  "icons": {
+    "128": "/img/icon.png"
+  },
+  "developer": {
+    "name": "Ryuichi Okubo"
+  },
+  "default_locale": "en",
+  "fullscreen": "true",
+  "orientation": ["portrait"],
+  "type": "web"
+}
