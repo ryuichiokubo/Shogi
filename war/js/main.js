@@ -241,6 +241,22 @@
 	}
     };
     
+    var activate = function() {
+        var setInitialPieces = function() {
+            var posNum;
+
+            for (var i = 0; i < def.init.length; i++) {
+		ui.setPiece(def.init[i].piece, def.init[i].pos, def.init[i].mine, main.pieceSelect);
+
+                posNum = ui.util.convertPosClassToNum(def.init[i].pos, def.init[i].mine);
+                board.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
+            }
+        };
+
+        setInitialPieces();
+	init();
+    };
+
     var init = function() {
 	var turnSelect = document.getElementById('turn-select').selectedOptions.item(0).value;
 	// XXX save in local storage to keep selection after reloading
@@ -257,6 +273,7 @@
 
     var main = {
 	init: init,
+	activate: activate,
 	pieceSelect: pieceSelect
     };
     
