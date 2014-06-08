@@ -4,8 +4,10 @@
 
     document.addEventListener("DOMContentLoaded", function() {
 	ui.init();
-	board.init();
+	board.init(); // XXX need this for custom mode
 
-	menu();
+	menu.init();
+	// XXX standard.init(); custom.init() ...
+
     }, false);
 })();

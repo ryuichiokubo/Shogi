@@ -132,29 +132,48 @@
 	});
     };
 
-    var menu = function () {
-	var menuDialog = document.getElementById('menu');
-	var board = document.getElementById('board');
-	var mokume = document.getElementById('mokume');
-	var standBtn = document.getElementById('stand-button');
-	var custoBtn = document.getElementById('custo-button');
+    var elems = {
+	menuDialog: null,
+	board: null,
+	mokume: null,
+	standBtn: null,
+	custoBtn: null,
 
-	var dismissMenu = function() {
-	    menuDialog.style.display = "none";
-	    board.style.display = "block";
-	    mokume.style.display = "none";
-	};
+	setElems: function() {
+	    this.menuDialog = new DomElem('menu');
+	    this.board = new DomElem('board');
+	    this.mokume = new DomElem('mokume');
+	    this.standBtn = new DomElem('stand-button');
+	    this.custoBtn = new DomElem('custo-button');
+	},
 
-	standBtn.addEventListener('click', function() {
-	    dismissMenu();
-	    standard();
-	});
-	custoBtn.addEventListener('click', function() {
-	    dismissMenu();
-	    customize();
-	});
+	setListeners: () {
+	    this.standBtn.on('click', function() {
+	        dismissMenu();
+	        standard();
+	    });
+
+	    this.custoBtn.on('click', function() {
+	        dismissMenu();
+	        customize();
+	    });
+	}
     };
 
-    this.menu = menu;
+    var dismissMenu = function() {
+        elems.menuDialog.hide();
+        elems.board.show();
+        elems.mokume.hide();
+    };
+
+    var init = function () {
+	elems.setElems();
+	elems.setListeners();
+    };
+
+
+    this.menu = {
+	init: init
+    };
 
 }).call(this);

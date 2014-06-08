@@ -70,5 +70,5 @@
     "passfail"      : false,
     "white"         : false,
 
-    "predef"        : [ "def", "board", "main", "menu", "ui" ]
+    "predef"        : [ "def", "board", "main", "menu", "ui", "DomElem" ]
 }
