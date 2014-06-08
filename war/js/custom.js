@@ -1,9 +1,23 @@
 (function() {
     "use strict";
 
+    var elems = {
+	custoAreas: null,
+	extraPieces: null,
+	//carousel: null,
+
+	setElems: function() {
+	    //this.carousel = new DomElem('extra');
+	    this.custoAreas = new DomElem(document.querySelectorAll('.customize')); // two divs above and below the board to show help text and extra pieces
+	    this.extraPieces = new DomElem(document.querySelectorAll("#extra .piece"));
+	}
+    };
+
+    var init = function() {
+	elems.setElems();
+    };
+
     var activate = function() {
-	var custoElems = document.querySelectorAll('.customize');
-	var extraPieces = document.querySelectorAll("#extra .piece");
 	var carousel = document.getElementById('extra');
 	var setTipText = function(text) {
 	    document.getElementById('customize-tip').textContent = text;
@@ -21,16 +35,8 @@
 	    }
 	};
 
-	var show = function() {
-	    for (var i = 0; i < custoElems.length; i++) {
-		custoElems[i].style.display = "block";
-	    }
-	};
-
 	var extraPieceHandler = function(pieceClicked) {
-	    for (var i = 0; i < extraPieces.length; i++) {
-		extraPieces[i].style.transform = '';
-	    }
+	    elems.extraPieces.resetSelected();
 	    pieceClicked.target.style.transform = 'scale(1.2)';
 
 	    ui.resetAvailable();
@@ -91,11 +97,9 @@
 	    }, 15);
 	};
 
-	show();
+	elems.custoAreas.show();
 
-	for (var i = 0; i < extraPieces.length; i++) {
-	    extraPieces[i].addEventListener('click', extraPieceHandler);
-	}
+	elems.extraPieces.on('click', extraPieceHandler);
 
 	carousel.scrollLeft = 0;
 
@@ -110,16 +114,14 @@
 	startBtn.elem.addEventListener('click', function() {
 	    ui.resetAvailable();
 	    startBtn.disable();
-	    for (var i = 0; i < custoElems.length; i++) {
-		custoElems[i].style.display = "none";
-	    }
+	    elems.custoAreas.hide();
 	    main.init();
 	});
     };
 
 
     this.custom = {
-	//init: init,
+	init: init,
 	activate: activate
     };
 

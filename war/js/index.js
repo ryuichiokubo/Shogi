@@ -7,7 +7,7 @@
 	board.init(); // XXX need this for custom mode
 
 	menu.init();
-	// XXX standard.init(); custom.init() ...
+	custom.init();
 
     }, false);
 })();
