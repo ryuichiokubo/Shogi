@@ -15,12 +15,12 @@
 
 	    this.mokume = new DomElem('mokume');
 
-	    this.standBtn = new DomElem('stand-button', 'click', function() {
+	    this.standBtn = new DomElem('stand-button', function() {
 	        dismissMenu();
 	        main.activate();
 	    });
 
-	    this.custoBtn = new DomElem('custo-button', 'click', function() {
+	    this.custoBtn = new DomElem('custo-button', function() {
 	        dismissMenu();
 	        custom.activate();
 	    });

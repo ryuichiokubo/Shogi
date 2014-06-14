@@ -1,11 +1,11 @@
 (function() {
     "use strict";
 
-    var DomElems = function DomElems(dom, type, listener) {
+    var DomElems = function(dom, clickListener) {
 	this.elems = (typeof dom === "string") ? document.querySelectorAll(dom) : dom;
 
-	if (type && listener) {
-	    this.on(type, listener);
+	if (clickListener) {
+	    this.on('click', clickListener);
 	}
     };
 

@@ -64,19 +64,19 @@
 	setElems: function() {
 	    this.custoAreas = new DomElems('.customize');
 
-	    this.extraPieces = new DomElems('#extra .piece', 'click', extraPieceHandler);
+	    this.extraPieces = new DomElems('#extra .piece', extraPieceHandler);
 
 	    this.carousel = new DomElem('extra');
 
-	    this.carouselLeft = new DomElem('carousel-left', 'click', function() {
+	    this.carouselLeft = new DomElem('carousel-left', function() {
 		elems.carousel.scrollMove(60, true);
 	    });
 
-	    this.carouselRight = new DomElem('carousel-right', 'click', function() {
+	    this.carouselRight = new DomElem('carousel-right', function() {
 		elems.carousel.scrollMove(60);
 	    });
 
-	    this.start = new DomElem('start', 'click', function() {
+	    this.start = new DomElem('start', function() {
 	        ui.resetAvailable(); // XXX ui ...
 	        elems.start.disable();
 	        elems.custoAreas.hide();

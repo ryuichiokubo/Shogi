@@ -1,13 +1,14 @@
 (function() {
     "use strict";
 
-    var DomElem = function DomElem(dom, type, listener) {
+    var DomElem = function(domSeed, clickListener) {
 	// TODO: check NodeType, accept selector as parameter
-	this.elem = (typeof dom === "string") ? document.getElementById(dom) : dom;
+	this.elem = (typeof domSeed === "string") ? document.getElementById(domSeed) : domSeed;
 
-	if (type && listener) {
-	    this.on(type, listener);
+	if (clickListener) {
+	    this.on('click', clickListener);
 	}
+
     };
 
     DomElem.prototype.on = function(type, fn) {
@@ -77,6 +78,7 @@
     	   }
         }, 15);
     };
+
 
     this.DomElem = DomElem;
 
