@@ -1,84 +1,91 @@
 (function() {
     "use strict";
 
+    var squareSelect = function(posClicked) {
+       elems.pieceClicked.deselect();
+    
+       var posClass = ui.util.getPosClassFromElement(posClicked.target);
+       ui.setPiece(elems.pieceClicked.getId(), posClass, true, main.pieceSelect);
+    
+       var posNum = ui.util.convertPosClassToNum(posClass, true);
+       board.setPiece(posNum[0], posNum[1], elems.pieceClicked.getId(), true);
+    
+       // add the same piece to opponent as well
+       var oppoPosNum = [def.board.column - 1 - posNum[0], def.board.row - 1 - posNum[1]];
+       var oppoPosClass = ui.util.convertPosNumToClass(oppoPosNum[0], oppoPosNum[1]);
+       board.setPiece(oppoPosNum[0], oppoPosNum[1], elems.pieceClicked.getId(), false);
+       ui.setPiece(elems.pieceClicked.getId(), oppoPosClass, false, main.pieceSelect);
+    
+       ui.resetAvailable();
+    
+       if (elems.pieceClicked.getId() === 'o') {
+           elems.start.enable();
+       }
+    
+       if (elems.start.isEnabled()) {
+           elems.tip.setText("Add more or press Start.");
+       } else {
+           elems.tip.setText("Add one King (王将).");
+       }
+    };
+
+    var extraPieceHandler = function(event) {
+
+        elems.extraPieces.resetSelected();
+
+	elems.pieceClicked = new DomElem(event.target); // XXX create class to handle event object?
+	elems.pieceClicked.select();
+    
+        ui.resetAvailable();
+    
+        var initAvailPos = board.getInitAvailPos(elems.pieceClicked.getId());
+    
+        if (initAvailPos.length > 0) {
+	   elems.tip.setText("Put it on board.");
+        }
+ 
+        for (var i = 0; i < initAvailPos.length; i++) {
+	   var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
+	   ui.setAvailable(initAvailClass, squareSelect);
+        }
+    };
+
+
     var elems = {
-	custoAreas: null,
+	custoAreas: null, // two divs above and below the board to show help text and extra pieces
 	extraPieces: null,
 	//carousel: null,
+	start: null,
+	tip: null,
+	pieceClicked: null, // will have value when an extra piece is clicked
 
 	setElems: function() {
-	    //this.carousel = new DomElem('extra');
-	    this.custoAreas = new DomElem(document.querySelectorAll('.customize')); // two divs above and below the board to show help text and extra pieces
+	    this.custoAreas = new DomElem(document.querySelectorAll('.customize'));
 	    this.extraPieces = new DomElem(document.querySelectorAll("#extra .piece"));
+	    //this.carousel = new DomElem('extra');
+	    this.start = new DomElem('start');
+	    this.tip = new DomElem('customize-tip');
+	},
+
+	setListeners: function() { // XXX set listener when creating DomElem?
+	    this.extraPieces.on('click', extraPieceHandler);
+
+	    this.start.on('click', function() {
+	        ui.resetAvailable(); // XXX ui ...
+	        elems.start.disable();
+	        elems.custoAreas.hide();
+	        main.init(); // XXX not activate?
+	    });
 	}
     };
 
     var init = function() {
 	elems.setElems();
+	elems.setListeners();
     };
 
     var activate = function() {
 	var carousel = document.getElementById('extra');
-	var setTipText = function(text) {
-	    document.getElementById('customize-tip').textContent = text;
-	};
-	var startBtn = {
-	    elem: document.getElementById('start'),
-	    enable: function() {
-		this.elem.disabled = false;
-	    },
-	    disable: function() {
-		this.elem.disabled = true;
-	    },
-	    isEnabled: function() {
-		return (this.elem.disabled === false);
-	    }
-	};
-
-	var extraPieceHandler = function(pieceClicked) {
-	    elems.extraPieces.resetSelected();
-	    pieceClicked.target.style.transform = 'scale(1.2)';
-
-	    ui.resetAvailable();
-
-	    var selectedPiece = pieceClicked.target.id;
-	    var initAvailPos = board.getInitAvailPos(selectedPiece);
-
-	    if (initAvailPos.length > 0) {
-		setTipText("Put it on board.");
-	    }
-
-	    var squareSelect = function(posClicked) {
-		pieceClicked.target.style.transform = '';
-
-		var posClass = ui.util.getPosClassFromElement(posClicked.target);
-		ui.setPiece(selectedPiece, posClass, true, main.pieceSelect);
-                var posNum = ui.util.convertPosClassToNum(posClass, true);
-                board.setPiece(posNum[0], posNum[1], selectedPiece, true);
-
-		// add the same piece to opponent as well
-		var oppoPosNum = [def.board.column - 1 - posNum[0], def.board.row - 1 - posNum[1]];
-		var oppoPosClass = ui.util.convertPosNumToClass(oppoPosNum[0], oppoPosNum[1]);
-                board.setPiece(oppoPosNum[0], oppoPosNum[1], selectedPiece, false);
-		ui.setPiece(selectedPiece, oppoPosClass, false, main.pieceSelect);
-
-		ui.resetAvailable();
-
-		if (selectedPiece === 'o') {
-		    startBtn.enable();
-		}
-
-		if (startBtn.isEnabled()) {
-		    setTipText("Add more or press Start.");
-		} else {
-		    setTipText("Add one King (王将).");
-		}
-	    };
-	    for (var i = 0; i < initAvailPos.length; i++) {
-		var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
-		ui.setAvailable(initAvailClass, squareSelect);
-	    }
-	};
 
 	var scroll = function(amount, toRight) {
 	    var frame = 30;
@@ -99,8 +106,6 @@
 
 	elems.custoAreas.show();
 
-	elems.extraPieces.on('click', extraPieceHandler);
-
 	carousel.scrollLeft = 0;
 
 	document.getElementById("carousel-left").addEventListener('click', function() {
@@ -109,13 +114,6 @@
 
 	document.getElementById("carousel-right").addEventListener('click', function() {
 	    scroll(60, true);
-	});
-
-	startBtn.elem.addEventListener('click', function() {
-	    ui.resetAvailable();
-	    startBtn.disable();
-	    elems.custoAreas.hide();
-	    main.init();
 	});
     };
 
