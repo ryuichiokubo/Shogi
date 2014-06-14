@@ -1,10 +1,14 @@
 (function() {
     "use strict";
 
-    // @param: id of the element or dom element
-    var DomElem = function DomElem(param) {
+    // @dom: id of the element or dom element
+    var DomElem = function DomElem(dom, type, listener) {
 	// TODO: check NodeType, accept selector as parameter
-	this.elem = (typeof param === "string") ? document.getElementById(param) : param;
+	this.elem = (typeof dom === "string") ? document.getElementById(dom) : dom;
+
+	if (type && listener) {
+	    this.on(type, listener);
+	}
     };
 
     DomElem.prototype.applyToEach = function(fn) {

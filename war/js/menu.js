@@ -10,19 +10,17 @@
 
 	setElems: function() {
 	    this.menuDialog = new DomElem('menu');
-	    this.board = new DomElem('board');
-	    this.mokume = new DomElem('mokume');
-	    this.standBtn = new DomElem('stand-button');
-	    this.custoBtn = new DomElem('custo-button');
-	},
 
-	setListeners: function() {
-	    this.standBtn.on('click', function() {
+	    this.board = new DomElem('board');
+
+	    this.mokume = new DomElem('mokume');
+
+	    this.standBtn = new DomElem('stand-button', 'click', function() {
 	        dismissMenu();
 	        main.activate();
 	    });
 
-	    this.custoBtn.on('click', function() {
+	    this.custoBtn = new DomElem('custo-button', 'click', function() {
 	        dismissMenu();
 	        custom.activate();
 	    });
@@ -37,7 +35,6 @@
 
     var init = function () {
 	elems.setElems();
-	elems.setListeners();
     };
 
 

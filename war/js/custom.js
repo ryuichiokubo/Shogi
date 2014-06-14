@@ -63,38 +63,32 @@
 
 	setElems: function() {
 	    this.custoAreas = new DomElem(document.querySelectorAll('.customize'));
-	    this.extraPieces = new DomElem(document.querySelectorAll("#extra .piece"));
+
+	    this.extraPieces = new DomElem(document.querySelectorAll("#extra .piece"), 'click', extraPieceHandler);
+
 	    this.carousel = new DomElem('extra');
-	    this.carouselLeft = new DomElem('carousel-left');
-	    this.carouselRight = new DomElem('carousel-right');
-	    this.start = new DomElem('start');
-	    this.tip = new DomElem('customize-tip');
-	},
 
-	setListeners: function() { // XXX set listener when creating DomElem?
-	    this.extraPieces.on('click', extraPieceHandler);
+	    this.carouselLeft = new DomElem('carousel-left', 'click', function() {
+		elems.carousel.scrollMove(60, true);
+	    });
 
-	    this.start.on('click', function() {
+	    this.carouselRight = new DomElem('carousel-right', 'click', function() {
+		elems.carousel.scrollMove(60);
+	    });
+
+	    this.start = new DomElem('start', 'click', function() {
 	        ui.resetAvailable(); // XXX ui ...
 	        elems.start.disable();
 	        elems.custoAreas.hide();
 	        main.init(); // XXX not activate?
 	    });
 
-	    this.carouselLeft.on('click', function() {
-		elems.carousel.scrollMove(60, true);
-	    });
-
-	    this.carouselRight.on('click', function() {
-		elems.carousel.scrollMove(60);
-	    });
+	    this.tip = new DomElem('customize-tip');
 	}
     };
 
     var init = function() {
 	elems.setElems();
-	elems.setListeners();
-
 	elems.carousel.scrollSet(0);
     };
 
