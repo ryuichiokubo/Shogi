@@ -31,7 +31,7 @@
 
     var extraPieceHandler = function(event) {
 
-        elems.extraPieces.resetSelected();
+        elems.extraPieces.deselect();
 
 	elems.pieceClicked = new DomElem(event.target); // XXX create class to handle event object?
 	elems.pieceClicked.select();
@@ -62,9 +62,9 @@
 	pieceClicked: null, // will have value when an extra piece is clicked
 
 	setElems: function() {
-	    this.custoAreas = new DomElem(document.querySelectorAll('.customize'));
+	    this.custoAreas = new DomElems('.customize');
 
-	    this.extraPieces = new DomElem(document.querySelectorAll("#extra .piece"), 'click', extraPieceHandler);
+	    this.extraPieces = new DomElems('#extra .piece', 'click', extraPieceHandler);
 
 	    this.carousel = new DomElem('extra');
 
