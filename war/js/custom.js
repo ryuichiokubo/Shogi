@@ -66,7 +66,7 @@
 
 	    this.extraPieces = new DomElems('#extra .piece', extraPieceHandler);
 
-	    this.carousel = new DomElem('extra');
+	    this.carousel = new Carousel('extra', null);
 
 	    this.carouselLeft = new DomElem('carousel-left', function() {
 		elems.carousel.scrollMove(60, true);

@@ -8,7 +8,6 @@
 	if (clickListener) {
 	    this.on('click', clickListener);
 	}
-
     };
 
     DomElem.prototype.on = function(type, fn) {
@@ -52,31 +51,6 @@
 
     DomElem.prototype.deselect = function() {
 	this.elem.style.transform = '';
-    };
-
-    // TODO: scrollable interface
-    // XXX only sideways for now
-    DomElem.prototype.scrollSet = function(pos) {
-	this.elem.scrollLeft = pos;
-    };
-
-    DomElem.prototype.scrollMove = function(amount, back) {
-        var frame = 30;
-        var cntr = frame;
-	var elem = this.elem;
-
-        var timer = setInterval(function() {
-	    if (cntr > 0) {
-		if (back) {
-		    elem.scrollLeft = elem.scrollLeft - amount / frame;
-		} else {
-		    elem.scrollLeft = elem.scrollLeft + amount / frame;
-		}
-		cntr--;
-    	   } else {
-    	       clearTimeout(timer);
-    	   }
-        }, 15);
     };
 
 
