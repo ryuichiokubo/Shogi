@@ -54,7 +54,9 @@
     var elems = {
 	custoAreas: null, // two divs above and below the board to show help text and extra pieces
 	extraPieces: null,
-	//carousel: null,
+	carousel: null,
+	carouselLeft: null,
+	carouselRight: null,
 	start: null,
 	tip: null,
 	pieceClicked: null, // will have value when an extra piece is clicked
@@ -62,7 +64,9 @@
 	setElems: function() {
 	    this.custoAreas = new DomElem(document.querySelectorAll('.customize'));
 	    this.extraPieces = new DomElem(document.querySelectorAll("#extra .piece"));
-	    //this.carousel = new DomElem('extra');
+	    this.carousel = new DomElem('extra');
+	    this.carouselLeft = new DomElem('carousel-left');
+	    this.carouselRight = new DomElem('carousel-right');
 	    this.start = new DomElem('start');
 	    this.tip = new DomElem('customize-tip');
 	},
@@ -76,45 +80,26 @@
 	        elems.custoAreas.hide();
 	        main.init(); // XXX not activate?
 	    });
+
+	    this.carouselLeft.on('click', function() {
+		elems.carousel.scrollMove(60, true);
+	    });
+
+	    this.carouselRight.on('click', function() {
+		elems.carousel.scrollMove(60);
+	    });
 	}
     };
 
     var init = function() {
 	elems.setElems();
 	elems.setListeners();
+
+	elems.carousel.scrollSet(0);
     };
 
     var activate = function() {
-	var carousel = document.getElementById('extra');
-
-	var scroll = function(amount, toRight) {
-	    var frame = 30;
-	    var cntr = frame;
-	    var timer = setInterval(function() {
-		if (cntr > 0) {
-		    if (toRight) {
-			carousel.scrollLeft = carousel.scrollLeft + amount / frame;
-		    } else {
-			carousel.scrollLeft = carousel.scrollLeft - amount / frame;
-		    }
-		    cntr--;
-		} else {
-		    clearTimeout(timer);
-		}
-	    }, 15);
-	};
-
 	elems.custoAreas.show();
-
-	carousel.scrollLeft = 0;
-
-	document.getElementById("carousel-left").addEventListener('click', function() {
-	    scroll(60, false);
-	});
-
-	document.getElementById("carousel-right").addEventListener('click', function() {
-	    scroll(60, true);
-	});
     };
 
 
