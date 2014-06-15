@@ -31,9 +31,11 @@
 
     var extraPieceHandler = function(event) {
 
-        elems.extraPieces.deselect();
+        elems.extraPieces.forEach(function(elem) {
+	    elem.deselect();
+	});
 
-	elems.pieceClicked = new DomElem(event.target); // XXX create class to handle event object?
+	elems.pieceClicked = new Piece(event.target); // XXX create class to handle event object?
 	elems.pieceClicked.select();
     
         ui.resetAvailable();
@@ -52,8 +54,8 @@
 
 
     var elems = {
-	custoAreas: null, // two divs above and below the board to show help text and extra pieces
-	extraPieces: null,
+	custoAreas: [], // two divs above and below the board to show help text and extra pieces
+	extraPieces: [],
 	carousel: null,
 	carouselLeft: null,
 	carouselRight: null,
@@ -62,9 +64,17 @@
 	pieceClicked: null, // will have value when an extra piece is clicked
 
 	setElems: function() {
-	    this.custoAreas = new DomElems('.customize');
+	    var tmpDoms, i;
 
-	    this.extraPieces = new DomElems('#extra .piece', extraPieceHandler);
+	    tmpDoms = document.querySelectorAll('.customize');
+	    for (i = 0; i < tmpDoms.length; i++) {
+		this.custoAreas.push(new DomElem(tmpDoms[i]));
+	    }
+
+	    tmpDoms = document.querySelectorAll('#extra .piece');
+	    for (i = 0; i < tmpDoms.length; i++) {
+		this.extraPieces.push(new Piece(tmpDoms[i], extraPieceHandler));
+	    }
 
 	    this.carousel = new Carousel('extra', null);
 
@@ -79,7 +89,9 @@
 	    this.start = new Button('start', function() {
 	        ui.resetAvailable(); // XXX ui ...
 	        elems.start.disable();
-	        elems.custoAreas.hide();
+	        elems.custoAreas.forEach(function(elem) {
+		    elem.hide();
+		});
 	        main.init(); // XXX not activate?
 	    });
 
@@ -93,7 +105,9 @@
     };
 
     var activate = function() {
-	elems.custoAreas.show();
+	elems.custoAreas.forEach(function(elem) {
+	    elem.show();
+	});
     };
 
 

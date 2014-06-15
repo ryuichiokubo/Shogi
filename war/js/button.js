@@ -2,9 +2,10 @@
     "use strict";
 
     var Button = function() {
-	this.prototype = DomElem.prototype;
 	DomElem.apply(this, arguments);
     };
+
+    Button.prototype = DomElem.prototype;
 
     Button.prototype.enable = function() {
 	this.elem.disabled = false;

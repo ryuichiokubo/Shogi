@@ -18,9 +18,10 @@
     */
 
     var Carousel = function() {
-	this.prototype = DomElem.prototype;
 	DomElem.apply(this, arguments);
     };
+
+    Carousel.prototype = DomElem.prototype;
 
     // XXX get these functions from domInterface.scrollable
     Carousel.prototype.scrollSet = function(pos) {
