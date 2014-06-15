@@ -22,6 +22,7 @@
 	DomElem.apply(this, arguments);
     };
 
+    // XXX get these functions from domInterface.scrollable
     Carousel.prototype.scrollSet = function(pos) {
         this.elem.scrollLeft = pos;
     };

@@ -68,15 +68,15 @@
 
 	    this.carousel = new Carousel('extra', null);
 
-	    this.carouselLeft = new DomElem('carousel-left', function() {
+	    this.carouselLeft = new Button('carousel-left', function() {
 		elems.carousel.scrollMove(60, true);
 	    });
 
-	    this.carouselRight = new DomElem('carousel-right', function() {
+	    this.carouselRight = new Button('carousel-right', function() {
 		elems.carousel.scrollMove(60);
 	    });
 
-	    this.start = new DomElem('start', function() {
+	    this.start = new Button('start', function() {
 	        ui.resetAvailable(); // XXX ui ...
 	        elems.start.disable();
 	        elems.custoAreas.hide();

@@ -6,7 +6,7 @@
 	this.elem = (typeof domSeed === "string") ? document.getElementById(domSeed) : domSeed;
 
 	if (clickListener) {
-	    this.on('click', clickListener);
+	    this.prototype.on.apply(this, ['click', clickListener]);
 	}
     };
 
@@ -20,19 +20,6 @@
 
     DomElem.prototype.show = function() {
 	this.elem.style.display = "block";
-    };
-
-    // TODO: button interface
-    DomElem.prototype.enable = function() {
-	this.elem.disabled = false;
-    };
-
-    DomElem.prototype.disable = function() {
-	this.elem.disabled = true;
-    };
-
-    DomElem.prototype.isEnabled = function() {
-	return (this.elem.disabled === false);
     };
 
     // TODO: text interface

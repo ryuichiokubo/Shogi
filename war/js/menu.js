@@ -2,25 +2,25 @@
     "use strict";
 
     var elems = {
-	menuDialog: null,
+	menuArea: null,
 	board: null,
 	mokume: null,
 	standBtn: null,
 	custoBtn: null,
 
 	setElems: function() {
-	    this.menuDialog = new DomElem('menu');
+	    this.menuArea = new DomElem('menu');
 
 	    this.board = new DomElem('board');
 
 	    this.mokume = new DomElem('mokume');
 
-	    this.standBtn = new DomElem('stand-button', function() {
+	    this.standBtn = new Button('stand-button', function() {
 	        dismissMenu();
 	        main.activate();
 	    });
 
-	    this.custoBtn = new DomElem('custo-button', function() {
+	    this.custoBtn = new Button('custo-button', function() {
 	        dismissMenu();
 	        custom.activate();
 	    });
@@ -28,7 +28,7 @@
     };
 
     var dismissMenu = function() {
-        elems.menuDialog.hide();
+        elems.menuArea.hide();
         elems.board.show();
         elems.mokume.hide();
     };
