@@ -242,9 +242,9 @@
     };
     
     var init = function() {
-	var turnSelect = document.getElementById('turn-select').selectedOptions.item(0).value;
+	var turnSelect = document.getElementById('turn-select').selectedIndex;
 	// XXX save in local storage to keep selection after reloading
-	if (turnSelect === 'human') {
+	if (turnSelect === 0) {
 	    gameState = GAME_STATE.TURN_HUMAN;
 	} else {
 	    gameState = GAME_STATE.TURN_AI;
