@@ -40,6 +40,7 @@
     
         ui.resetAvailable();
     
+	// initially available position
         var initAvailPos = board.getInitAvailPos(elems.pieceClicked.getId());
     
         if (initAvailPos.length > 0) {
@@ -47,7 +48,7 @@
         }
  
         for (var i = 0; i < initAvailPos.length; i++) {
-	   var initAvailClass = ui.util.convertPosNumToClass(initAvailPos[i][0], initAvailPos[i][1]);
+	   var initAvailClass = initAvailPos[i].asClassName();
 	   ui.setAvailable(initAvailClass, squareSelect);
         }
     };

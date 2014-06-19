@@ -71,8 +71,8 @@
 	    // mochigoma
 	    inhandAvailPos = board.getInhandAvailPos(type);
 	    for (i = 0; i < inhandAvailPos.length; i++) {
-		inhandAvailClass = ui.util.convertPosNumToClass(inhandAvailPos[i][0], inhandAvailPos[i][1]);
-		set(inhandAvailClass, inhandAvailPos[i][0], inhandAvailPos[i][1]);
+		inhandAvailClass = inhandAvailPos[i].asClassName();
+		set(inhandAvailClass, inhandAvailPos[i].x, inhandAvailPos[i].y);
 	    }
 	} else {
 	    move = def.piece[type].move;

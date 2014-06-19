@@ -120,7 +120,7 @@
 	    for (i = 0; i < square.length; i++) {
 		for (j = 0; j < square[i].length; j++) {
 		    if (squareAvailable(square[i][j]) && !isNihu(type, i)) {
-			pos.push([i, j]);
+			pos.push(new Position(i, j));
 		    }
 		}
 	    }
@@ -142,7 +142,7 @@
 	    for (i = 0; i < square.length; i++) {
 		for (j = 0; j < square[i].length; j++) {
 		    if (squareAvailable(square[i][j]) && inOwnArea(i, j) && !isNihu(type, i)) {
-			pos.push([i, j]);
+			pos.push(new Position(i, j));
 		    }
 		}
 	    }
