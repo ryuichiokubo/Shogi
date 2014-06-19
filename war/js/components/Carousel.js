@@ -1,27 +1,12 @@
 (function() {
     "use strict";
 
-    /* 
-    __extends = function(child, parent) {
-	for (var key in parent) {
-	    if (__hasProp.call(parent, key))
-		child[key] = parent[key];
-	}
-	function ctor() {
-	    this.constructor = child;
-	}
-	ctor.prototype = parent.prototype;
-	child.prototype = new ctor();
-	child.__super__ = parent.prototype;
-	return child;
-    };
-    */
-
     var Carousel = function() {
 	DomElem.apply(this, arguments);
     };
 
-    Carousel.prototype = DomElem.prototype;
+    Carousel.prototype = Object.create(DomElem.prototype);
+    Carousel.prototype.constructor = Carousel;
 
     // XXX get these functions from domInterface.scrollable
     Carousel.prototype.scrollSet = function(pos) {

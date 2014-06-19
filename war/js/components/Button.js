@@ -5,7 +5,8 @@
 	DomElem.apply(this, arguments);
     };
 
-    Button.prototype = DomElem.prototype;
+    Button.prototype = Object.create(DomElem.prototype);
+    Button.prototype.constructor = Button;
 
     Button.prototype.enable = function() {
 	this.elem.disabled = false;

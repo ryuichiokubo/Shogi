@@ -5,7 +5,8 @@
 	DomElem.apply(this, arguments);
     };
 
-    Piece.prototype = DomElem.prototype;
+    Piece.prototype = Object.create(DomElem.prototype);
+    Piece.prototype.constructor = Piece;
 
     Piece.prototype.getId = function() {
 	return this.elem.id;

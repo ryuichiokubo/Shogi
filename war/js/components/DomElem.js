@@ -5,7 +5,7 @@
 	this.elem = (typeof domSeed === "string") ? document.getElementById(domSeed) : domSeed;
 
 	if (clickListener) {
-	    DomElem.prototype.on.apply(this, ['click', clickListener]);
+	    this.on('click', clickListener);
 	}
     };
 
