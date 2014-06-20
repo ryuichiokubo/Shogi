@@ -109,7 +109,6 @@
 	},
 
 	setAvailable: function(availClass, handler) {
-	    // XXX create board object (UI), add method to get Position object and mark available
 	    var div;
 
 	    div = document.createElement('div');

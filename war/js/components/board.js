@@ -20,6 +20,16 @@
         this.elem.appendChild(div);
     };
 
+    Board.prototype.resetAvailable = function() {
+	var availElems;
+	
+	availElems = this.elem.querySelectorAll(".available");
+	for (var i = 0; i < availElems.length; i++) {
+	    this.elem.removeChild(availElems[i]);
+	}
+    };
+
+
     // singleton
     var board = null;
 

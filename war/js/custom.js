@@ -16,7 +16,7 @@
        game.setPiece(oppoPosNum[0], oppoPosNum[1], elems.pieceClicked.getId(), false);
        ui.setPiece(elems.pieceClicked.getId(), oppoPosClass, false, main.pieceSelect);
     
-       ui.resetAvailable();
+       elems.board.resetAvailable();
     
        if (elems.pieceClicked.getId() === 'o') {
            elems.start.enable();
@@ -38,17 +38,17 @@
 	elems.pieceClicked = new Piece(event.target); // XXX create class to handle event object?
 	elems.pieceClicked.select();
     
-        ui.resetAvailable();
+        elems.board.resetAvailable();
     
 	// initially available position
         var initAvailPos = game.getInitAvailPos(elems.pieceClicked.getId());
     
         if (initAvailPos.length > 0) {
 	   elems.tip.setText("Put it on board.");
-        }
  
-        for (var i = 0; i < initAvailPos.length; i++) {
-	   elems.board.setAvailable(initAvailPos[i], squareSelect);
+	    for (var i = 0; i < initAvailPos.length; i++) {
+		elems.board.setAvailable(initAvailPos[i], squareSelect);
+	    }
         }
     };
 
@@ -90,7 +90,7 @@
 	    });
 
 	    this.start = new Button('start', function() {
-	        ui.resetAvailable(); // XXX ui ...
+	        elems.board.resetAvailable();
 	        elems.start.disable();
 	        elems.custoAreas.forEach(function(elem) {
 		    elem.hide();
