@@ -3,10 +3,13 @@
 
     var Board = function() {
 	DomElem.apply(this, arguments);
+	this.data = game; // XXX game should not be accessed globally
     };
 
     Board.prototype = Object.create(DomElem.prototype);
     Board.prototype.constructor = Board;
+
+    Board.SETTINGS = def.board;
 
     Board.prototype.setAvailable = function(availPos, handler) {
 	console.assert(availPos instanceof Position);
@@ -35,14 +38,22 @@
 
 	piece.addClass(pos.asClassName());
         this.elem.appendChild(piece.elem);
+
+	this.data.setPiece(pos.x, pos.y, piece.type, piece.owner); // XXX game should also take objects, not raw values
+    };
+
+    Board.prototype.getInitAvailPos = function(type) {
+	console.assert(Piece.TYPES[type]);
+	
+	return this.data.getInitAvailPos(type);
     };
 
     // singleton
     var board = null;
 
     Object.defineProperty(this, "board", {
-	configurable : false,
-	enumerable : true,
+	configurable: false,
+	enumerable: true,
 
 	get: function() {
 	    if (!board) {

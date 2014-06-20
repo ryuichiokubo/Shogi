@@ -12,7 +12,6 @@
        });
 
        elems.board.setPiece(pos, piece);
-       game.setPiece(pos.x, pos.y, piece.type, piece.owner); // XXX game should also take objects, not raw values
     
        // add the same piece to opponent as well
        var youPos = new Position(def.board.column - 1 - pos.x, def.board.row - 1 - pos.y);
@@ -23,11 +22,10 @@
        });
 
        elems.board.setPiece(youPos, youPiece);
-       game.setPiece(youPos.x, youPos.y, youPiece.type, youPiece.owner);
     
        elems.board.resetAvailable();
     
-       if (elems.pieceClicked.getId() === 'o') {
+       if (elems.pieceClicked.getId() === 'o') { // XXX enum?
            elems.start.enable();
        }
     
@@ -50,7 +48,7 @@
         elems.board.resetAvailable();
     
 	// initially available position
-        var initAvailPos = game.getInitAvailPos(elems.pieceClicked.getId());
+        var initAvailPos = elems.board.getInitAvailPos(elems.pieceClicked.getId());
     
         if (initAvailPos.length > 0) {
 	   elems.tip.setText("Put it on board.");
