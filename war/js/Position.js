@@ -22,6 +22,10 @@
         }
     };
 
+    var fromArray = function(arr) {
+	this.x = arr[0];
+	this.y = arr[1];
+    };
 
     var Position = function(arg1, arg2) {
 
@@ -30,6 +34,9 @@
 
 	} else if (!arg2 && arg1.className) {
 	    fromDom.apply(this, arguments);
+
+	} else if (arg1 instanceof Array) {
+	    fromArray.apply(this, arguments);
 	}
 
 	console.assert(typeof this.x === 'number' && typeof this.y === 'number');

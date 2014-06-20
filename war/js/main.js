@@ -3,6 +3,70 @@
 
     // Main controller
     
+    // Initial pieces and their position
+    var standardSet = [
+        {
+            piece: 'hu',
+            pos: [0, 3],
+            owner: Piece.OWNER.ME
+        },
+        {
+            piece: 'o',
+            pos: [0, 4],
+            owner: Piece.OWNER.ME
+        },
+        {
+            piece: 'kin',
+            pos: [1, 4],
+            owner: Piece.OWNER.ME
+        },
+        {
+            piece: 'gin',
+            pos: [2, 4],
+            owner: Piece.OWNER.ME
+        },
+        {
+            piece: 'kaku',
+            pos: [3, 4],
+            owner: Piece.OWNER.ME
+        },
+        {
+            piece: 'hisha',
+            pos: [4, 4],
+            owner: Piece.OWNER.ME
+        },
+        {
+            piece: 'hisha',
+            pos: [0, 0],
+            owner: Piece.OWNER.YOU
+        },
+        {
+            piece: 'kaku',
+            pos: [1, 0],
+            owner: Piece.OWNER.YOU
+        },
+        {
+            piece: 'gin',
+            pos: [2, 0],
+            owner: Piece.OWNER.YOU
+        },
+        {
+            piece: 'kin',
+            pos: [3, 0],
+            owner: Piece.OWNER.YOU
+        },
+        {
+            piece: 'o',
+            pos: [4, 0],
+            owner: Piece.OWNER.YOU
+        },
+        {
+            piece: 'hu',
+            pos: [4, 1],
+            owner: Piece.OWNER.YOU
+        }
+    ];
+
     var GAME_STATE = {
 	OFF: 0,
 	TURN_HUMAN: 1,
@@ -241,23 +305,21 @@
 	}
     };
     
-    var activate = function() {
-        var setInitialPieces = function() {
-            var posNum;
-
-            for (var i = 0; i < def.init.length; i++) {
-		ui.setPiece(def.init[i].piece, def.init[i].pos, def.init[i].mine, main.pieceSelect);
-
-                posNum = ui.util.convertPosClassToNum(def.init[i].pos, def.init[i].mine);
-                game.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
-            }
-        };
-
-        setInitialPieces();
-	init();
+    var setInitialPieces = function() {
+        var pos, piece, i;
+    
+        for (i = 0; i < standardSet.length; i++) {
+	    pos = new Position(standardSet[i].pos);
+	    piece = new Piece({
+		type: standardSet[i].piece,
+	   	owner: standardSet[i].owner,
+	   	handler: main.pieceSelect
+	    });
+	    elems.board.setPiece(pos, piece);
+        }
     };
 
-    var init = function() {
+    var activate = function() {
 	var turnSelect = document.getElementById('turn-select').selectedOptions.item(0).value;
 	// XXX save in local storage to keep selection after reloading
 	if (turnSelect === 'human') {
@@ -271,10 +333,23 @@
 	}
     };
 
+    var elems = {
+	board: null,
+	
+	setElems: function() {
+	    this.board = board;
+	}
+    };
+
+    var init = function() {
+	elems.setElems();
+    };
+
     var main = {
 	init: init,
 	activate: activate,
-	pieceSelect: pieceSelect
+	pieceSelect: pieceSelect,
+        setInitialPieces: setInitialPieces
     };
     
     this.main = main;

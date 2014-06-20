@@ -107,74 +107,9 @@
     };
 
 
-    // Initial pieces and their position
-    var init = [
-        {
-            piece: 'hu',
-            pos: 'one yon',
-            mine: true
-        },
-        {
-            piece: 'o',
-            pos: 'one go',
-            mine: true
-        },
-        {
-            piece: 'kin',
-            pos: 'two go',
-            mine: true
-        },
-        {
-            piece: 'gin',
-            pos: 'three go',
-            mine: true
-        },
-        {
-            piece: 'kaku',
-            pos: 'four go',
-            mine: true
-        },
-        {
-            piece: 'hisha',
-            pos: 'five go',
-            mine: true
-        },
-        {
-            piece: 'hisha',
-            pos: 'one ichi',
-            mine: false
-        },
-        {
-            piece: 'kaku',
-            pos: 'two ichi',
-            mine: false
-        },
-        {
-            piece: 'gin',
-            pos: 'three ichi',
-            mine: false
-        },
-        {
-            piece: 'kin',
-            pos: 'four ichi',
-            mine: false
-        },
-        {
-            piece: 'o',
-            pos: 'five ichi',
-            mine: false
-        },
-        {
-            piece: 'hu',
-            pos: 'five ni',
-            mine: false
-        }
-    ];
-
     this.def = {
         piece: piece,
-	board: board,
-        init: init
+	board: board
     };
     
 }).call(this);

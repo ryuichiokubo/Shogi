@@ -17,6 +17,7 @@
 
 	    this.standBtn = new Button('stand-button', function() {
 	        dismissMenu();
+	        main.setInitialPieces();
 	        main.activate();
 	    });
 

@@ -25,7 +25,7 @@
     
        elems.board.resetAvailable();
     
-       if (elems.pieceClicked.getId() === 'o') { // XXX enum?
+       if (elems.pieceClicked.getId() === 'o') {
            elems.start.enable();
        }
     
@@ -102,7 +102,7 @@
 	        elems.custoAreas.forEach(function(elem) {
 		    elem.hide();
 		});
-	        main.init(); // XXX not activate?
+	        main.activate();
 	    });
 
 	    this.tip = new DomElem('customize-tip');
