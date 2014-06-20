@@ -8,12 +8,12 @@
        ui.setPiece(elems.pieceClicked.getId(), posClass, true, main.pieceSelect);
     
        var posNum = ui.util.convertPosClassToNum(posClass, true);
-       board.setPiece(posNum[0], posNum[1], elems.pieceClicked.getId(), true);
+       game.setPiece(posNum[0], posNum[1], elems.pieceClicked.getId(), true);
     
        // add the same piece to opponent as well
        var oppoPosNum = [def.board.column - 1 - posNum[0], def.board.row - 1 - posNum[1]];
        var oppoPosClass = ui.util.convertPosNumToClass(oppoPosNum[0], oppoPosNum[1]);
-       board.setPiece(oppoPosNum[0], oppoPosNum[1], elems.pieceClicked.getId(), false);
+       game.setPiece(oppoPosNum[0], oppoPosNum[1], elems.pieceClicked.getId(), false);
        ui.setPiece(elems.pieceClicked.getId(), oppoPosClass, false, main.pieceSelect);
     
        ui.resetAvailable();
@@ -41,7 +41,7 @@
         ui.resetAvailable();
     
 	// initially available position
-        var initAvailPos = board.getInitAvailPos(elems.pieceClicked.getId());
+        var initAvailPos = game.getInitAvailPos(elems.pieceClicked.getId());
     
         if (initAvailPos.length > 0) {
 	   elems.tip.setText("Put it on board.");

@@ -70,5 +70,5 @@
     "passfail"      : false,
     "white"         : false,
 
-    "predef"        : [ "def", "board", "main", "menu", "ui", "Carousel", "Button", "Piece", "DomElem", "Position", "custom" ]
+    "predef"        : [ "def", "game", "board", "main", "menu", "ui", "Carousel", "Button", "Piece", "DomElem", "Position", "custom" ]
 }

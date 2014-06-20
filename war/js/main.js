@@ -18,7 +18,7 @@
 
 	var set = function(availClass, availPosX, availPosY) {
 	    ui.setAvailable(availClass, squareSelect);
-	    board.setAvailable(availPosX, availPosY);
+	    game.setAvailable(availPosX, availPosY);
 	};
 
 	var nextVal = function(val) {
@@ -43,7 +43,7 @@
             avail[1] = selectedNum[1] + moveY;
             
             availClass = ui.util.convertPosNumToClass(avail[0], avail[1]); // false if out of board
-            currentPiece = board.getPiece(avail[0], avail[1]);
+            currentPiece = game.getPiece(avail[0], avail[1]);
 
             if (availClass && (!currentPiece || currentPiece.mine !== true)) {
 		// in board, square is empty or opponent piece
@@ -69,7 +69,7 @@
 	// Calculate possible moves from selected position and move definition of each piece type.
         if (ui.isSelectedInhand()) {
 	    // mochigoma
-	    inhandAvailPos = board.getInhandAvailPos(type);
+	    inhandAvailPos = game.getInhandAvailPos(type);
 	    for (i = 0; i < inhandAvailPos.length; i++) {
 		inhandAvailClass = inhandAvailPos[i].asClassName();
 		set(inhandAvailClass, inhandAvailPos[i].x, inhandAvailPos[i].y);
@@ -84,7 +84,7 @@
     
     var resetAvailable = function() {
 	ui.resetAvailable();
-	board.resetAvailable();
+	game.resetAvailable();
     };
 
     var pieceSelect = function(event) {
@@ -136,24 +136,24 @@
 	}
 
 	// move to InHand area if there is an existing piece
-	if (board.getPiece(data.toX, data.toY)) {
+	if (game.getPiece(data.toX, data.toY)) {
 	    ui.moveToHand(toPiece, false);
 	    toType = ui.util.getTypeFromElem(toPiece);
 	    toTypeDem = def.piece[toType].dem || toType; // XXX add proper method in ui
-	    board.addCaptive(toType, false);	    
+	    game.addCaptive(toType, false);	    
 	    winCheck(toPiece, true);
 	}
 
 	// move piece in board object
-        board.setPiece(data.toX, data.toY, data.type, false);
+        game.setPiece(data.toX, data.toY, data.type, false);
 	if (isCaptive) {
-	    board.removeCaptive(data.type, false);
+	    game.removeCaptive(data.type, false);
 	} else {
-	    board.removePiece(data.fromX, data.fromY);
+	    game.removePiece(data.fromX, data.fromY);
 	}
-	board.resetAvailable();
+	game.resetAvailable();
 
-	board.debug();
+	game.debug();
     };
 
     var moveSelected = function(newPosClass, isInhand) {
@@ -182,22 +182,22 @@
 
         newPosNum = ui.util.convertPosClassToNum(newPosClass);
 	if (isInhand) {
-	    board.removeCaptive(type, true);
+	    game.removeCaptive(type, true);
 	} else {
 	    oldPosClass = ui.util.getPosClassFromElement(ui.selected);
 	    oldPosNum = ui.util.convertPosClassToNum(oldPosClass);
 	    type = checkPromotionAndType(type, newPosNum, oldPosNum);
-	    board.removePiece(oldPosNum[0], oldPosNum[1]);
+	    game.removePiece(oldPosNum[0], oldPosNum[1]);
 	}
 
-        board.setPiece(newPosNum[0], newPosNum[1], type, true);
+        game.setPiece(newPosNum[0], newPosNum[1], type, true);
 
 	ui.moveSelected(newPosClass);
 	resetAvailable();
         
 	if (gameState === GAME_STATE.TURN_HUMAN) {
 	    gameState = GAME_STATE.TURN_AI;
-	    board.upload(function(res) {
+	    game.upload(function(res) {
 		gameState = GAME_STATE.TURN_HUMAN;
 		moveAi(res);
 	    });
@@ -230,12 +230,12 @@
 	    posClass = ui.util.getPosClassFromElement(event.target);
             posNum = ui.util.convertPosClassToNum(posClass);
 
-	    if (board.getAvailable(posNum[0], posNum[1])) {
+	    if (game.getAvailable(posNum[0], posNum[1])) {
 	        winCheck(event.target, false);
 	        type = ui.util.getTypeFromElem(event.target);
 	        typeDem = def.piece[type].dem || type; // XXX add proper method in ui
 	        ui.moveToHand(event.target, true);
-	        board.addCaptive(typeDem, true);
+	        game.addCaptive(typeDem, true);
 	        moveSelected(posClass); // XXX structure better... it has to be called in the end to upload
 	    }
 	}
@@ -249,7 +249,7 @@
 		ui.setPiece(def.init[i].piece, def.init[i].pos, def.init[i].mine, main.pieceSelect);
 
                 posNum = ui.util.convertPosClassToNum(def.init[i].pos, def.init[i].mine);
-                board.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
+                game.setPiece(posNum[0], posNum[1], def.init[i].piece, def.init[i].mine);
             }
         };
 
@@ -264,7 +264,7 @@
 	    gameState = GAME_STATE.TURN_HUMAN;
 	} else {
 	    gameState = GAME_STATE.TURN_AI;
-	    board.upload(function(res) {
+	    game.upload(function(res) {
 		gameState = GAME_STATE.TURN_HUMAN;
 		moveAi(res);
 	    });

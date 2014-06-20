@@ -36,7 +36,7 @@
         }
     };
 
-    var board = {
+    var game = {
 
 	init: function() {
 	    for (var i = 0; i < def.board.column; i++) {
@@ -182,7 +182,7 @@
 	    xhr.setRequestHeader("Content-Type", "application/json");
 	    xhr.send(JSON.stringify(data));
 
-	    //board.debug();
+	    //game.debug();
 	},
 
         debug: function() {
@@ -191,6 +191,6 @@
         }
     };
     
-    this.board = board;
+    this.game = game; // rename to boardData?
     
 }).call(this);
