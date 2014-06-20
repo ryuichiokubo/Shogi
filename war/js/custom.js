@@ -48,13 +48,13 @@
         }
  
         for (var i = 0; i < initAvailPos.length; i++) {
-	   var initAvailClass = initAvailPos[i].asClassName();
-	   ui.setAvailable(initAvailClass, squareSelect);
+	   elems.board.setAvailable(initAvailPos[i], squareSelect);
         }
     };
 
 
     var elems = {
+	board: null,
 	custoAreas: [], // two divs above and below the board to show help text and extra pieces
 	extraPieces: [],
 	carousel: null,
@@ -66,6 +66,8 @@
 
 	setElems: function() {
 	    var tmpDoms, i;
+
+	    this.board = board;
 
 	    tmpDoms = document.querySelectorAll('.customize');
 	    for (i = 0; i < tmpDoms.length; i++) {
