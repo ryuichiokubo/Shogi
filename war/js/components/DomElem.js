@@ -21,6 +21,11 @@
 	this.elem.style.display = "block";
     };
 
+    DomElem.prototype.addClass = function(className) {
+	var oldAttr = this.elem.getAttribute('class');
+	this.elem.setAttribute('class', oldAttr + ' ' + className);
+    };
+
     // TODO: text interface
     DomElem.prototype.setText = function(text) {
 	this.elem.textContent = text; // XXX get id of text for translation

@@ -98,7 +98,7 @@
     };
 
 
-    // Board setting
+    // Board setting // XXX move to board.js?
     var board = {
 	row: 5,
 	column: 5,

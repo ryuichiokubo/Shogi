@@ -29,6 +29,13 @@
 	}
     };
 
+    Board.prototype.setPiece = function(pos, piece) {
+	console.assert(pos instanceof Position);
+	console.assert(piece instanceof Piece);
+
+	piece.addClass(pos.asClassName());
+        this.elem.appendChild(piece.elem);
+    };
 
     // singleton
     var board = null;

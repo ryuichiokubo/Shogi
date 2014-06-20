@@ -4,10 +4,26 @@
     var rowNames = ['one', 'two', 'three', 'four', 'five'];
     var columnNames = ['ichi', 'ni', 'san', 'yon', 'go'];
 
-    var Position = function(x, y) {
-	// XXX take dom element (class name) as argument
-	this.x = x;
-	this.y = y;
+    var Position = function(arg1, arg2) {
+
+	if (typeof arg1 === 'number' && typeof arg2 === 'number') {
+	    this.x = arg1;
+	    this.y = arg2;
+
+	} else if (!arg2 && arg1.className) { // raw DOM element
+    	    var classes = arg1.className.split(' ');
+
+    	    for (var i = 0; i < classes.length; i++) {
+    	        if (rowNames.indexOf(classes[i]) > -1) {
+		    this.x = rowNames.indexOf(classes[i]);
+		}
+    	        if (columnNames.indexOf(classes[i]) > -1 ) {
+		    this.y = columnNames.indexOf(classes[i]);
+		}
+	    }
+	}
+
+	console.assert(typeof this.x === 'number' && typeof this.y === 'number');
     };
 
     Position.prototype.asArray = function() {
@@ -18,7 +34,7 @@
     	if (rowNames[this.x] && columnNames[this.y]) {
     	    return rowNames[this.x] + ' ' + columnNames[this.y];
     	} else {
-	    // XXX should throw error
+	    // XXX should throw error?
     	    return false;
     	}
     };

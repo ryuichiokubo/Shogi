@@ -1,20 +1,29 @@
 (function() {
     "use strict";
 
-    var squareSelect = function(posClicked) {
+    var squareSelect = function(event) {
        elems.pieceClicked.deselect();
     
-       var posClass = ui.util.getPosClassFromElement(posClicked.target);
-       ui.setPiece(elems.pieceClicked.getId(), posClass, true, main.pieceSelect);
-    
-       var posNum = ui.util.convertPosClassToNum(posClass, true);
-       game.setPiece(posNum[0], posNum[1], elems.pieceClicked.getId(), true);
+       var pos = new Position(event.target);
+       var piece = new Piece({
+	   type: elems.pieceClicked.getId(),
+	   owner: Piece.OWNER.ME,
+	   handler: main.pieceSelect
+       });
+
+       elems.board.setPiece(pos, piece);
+       game.setPiece(pos.x, pos.y, piece.type, piece.owner); // XXX game should also take objects, not raw values
     
        // add the same piece to opponent as well
-       var oppoPosNum = [def.board.column - 1 - posNum[0], def.board.row - 1 - posNum[1]];
-       var oppoPosClass = ui.util.convertPosNumToClass(oppoPosNum[0], oppoPosNum[1]);
-       game.setPiece(oppoPosNum[0], oppoPosNum[1], elems.pieceClicked.getId(), false);
-       ui.setPiece(elems.pieceClicked.getId(), oppoPosClass, false, main.pieceSelect);
+       var youPos = new Position(def.board.column - 1 - pos.x, def.board.row - 1 - pos.y);
+       var youPiece = new Piece({
+	   type: piece.type,
+	   owner: Piece.OWNER.YOU,
+	   handler: main.pieceSelect
+       });
+
+       elems.board.setPiece(youPos, youPiece);
+       game.setPiece(youPos.x, youPos.y, youPiece.type, youPiece.owner);
     
        elems.board.resetAvailable();
     
@@ -35,7 +44,7 @@
 	    elem.deselect();
 	});
 
-	elems.pieceClicked = new Piece(event.target); // XXX create class to handle event object?
+	elems.pieceClicked = new Piece({domSeed: event.target}); // XXX create class to handle event object?
 	elems.pieceClicked.select();
     
         elems.board.resetAvailable();
@@ -76,7 +85,7 @@
 
 	    tmpDoms = document.querySelectorAll('#extra .piece');
 	    for (i = 0; i < tmpDoms.length; i++) {
-		this.extraPieces.push(new Piece(tmpDoms[i], extraPieceHandler));
+		this.extraPieces.push(new Piece({domSeed: tmpDoms[i], handler: extraPieceHandler}));
 	    }
 
 	    this.carousel = new Carousel('extra', null);
